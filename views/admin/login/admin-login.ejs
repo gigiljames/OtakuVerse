@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="admin/login/admin-login.css" />
+    <%- include('../../partials/font-links.ejs') %>
+    <title>OtakuVerse Login</title>
+  </head>
+  <body>
+    <div class="main">
+      <div class="left-section">
+        <div class="left-outer">
+          <div class="left-line1">OtakuVerse</div>
+          <div class="left-line2">
+            Your Ultimate Destination for Authentic Anime Merchandise, Where
+            Every Fan Can Bring Their Favourite Worlds and Characters to Life!
+          </div>
+        </div>
+      </div>
+      <div class="right-section">
+        <div class="right-outer">
+          <div class="form-container">
+            <div class="form-title">Log in</div>
+            <form id="login-form">
+              <div class="input-container">
+                <label for="email-input">Email</label>
+                <input id="email-input" class="login-input" type="text" />
+              </div>
+              <div class="input-container">
+                <label for="password-input">Password</label>
+                <input id="password-input" class="login-input" type="text" />
+              </div>
+              <input class="login-button" type="submit" value="Log In" />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

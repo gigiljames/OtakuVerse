@@ -9,7 +9,7 @@ const router = express.Router();
 router.use(express.static("public"));
 
 //Login
-// router.get("/admin", login.getPage);
+router.get("/", login.getPage);
 // router.post("/", login.verifyCeredentials);
 //Home
 // router.get("/home", home.getPage);

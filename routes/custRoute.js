@@ -6,10 +6,16 @@ const signup = require("../controllers/customer/custSignupController");
 const router = express.Router();
 router.use(express.static("public"));
 
+//Home
+router.get("/", home.getPage);
+
 //Login
-router.get("/", login.getPage);
+router.get("/login", login.getPage);
+router.get("/forgotpassword", login.forgotPassword);
+router.get("/forgotpassword/otp", login.enterOTP);
+router.get("/resetpassword", login.resetPassword);
 
 //Signup
 router.get("/signup", signup.getPage);
-
+router.get("/signup/otp", signup.enterOTP);
 module.exports = router;

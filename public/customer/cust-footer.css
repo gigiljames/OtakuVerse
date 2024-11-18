@@ -1,0 +1,126 @@
+footer #contact-form {
+  display: flex;
+  flex-direction: column;
+  color: #a7a7a7;
+  gap: 10px;
+}
+
+footer .contact-form-outer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+footer .copyright-text {
+  color: white;
+  font-size: 18px;
+}
+
+footer .form-title {
+  color: #e4e4e4;
+  text-align: center;
+}
+
+footer .footer-title {
+  font-family: "Micro 5", sans-serif;
+  font-size: 46px;
+  background-image: linear-gradient(black, black);
+  color: white;
+  -webkit-text-stroke-width: 8px;
+  -webkit-text-stroke-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  padding-left: 5px;
+  margin-bottom: 20px;
+}
+
+footer .footer-top {
+  display: flex;
+  background-color: #2a2a2a;
+}
+
+footer .footer-top-left {
+  width: 70%;
+  margin: 20px 0px 20px 80px;
+  border-right: 1px solid #353535;
+  box-sizing: border-box;
+}
+
+footer .footer-top-right {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0px;
+  box-sizing: border-box;
+}
+
+footer .footer-bottom {
+  height: 50px;
+  display: flex;
+  background-color: black;
+  padding: 0 80px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer .footer-links {
+  /* display: grid;
+  grid-template-columns: 80px 80px 80px 80px 80px 80px 80px 120px 80px 80px 80px;
+  grid-template-rows: 30px 30px 30px;
+  grid-auto-flow: row;
+  font-size: 12px; */
+  display: flex;
+  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+footer .footer-links a {
+  text-decoration: none;
+  color: #868686;
+}
+
+footer .footer-subtitle {
+  color: white;
+  margin-bottom: 20px;
+}
+
+footer .input-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+footer input,
+footer #message {
+  background-color: #353535;
+  color: #e4e4e4;
+  border: 0;
+  border-radius: 3px;
+  width: 200px;
+  height: 25px;
+  box-sizing: border-box;
+}
+
+footer label {
+  font-size: 12px;
+}
+
+footer #message {
+  height: 70px;
+  resize: none;
+}
+
+footer .send-button {
+  width: 100px;
+  background-color: #7ea2cf;
+  color: #e2e2e2;
+  font-size: 12px;
+  align-self: flex-end;
+}
+
+footer .social-media-icons img {
+  height: 30px;
+  border-radius: 50%;
+}

@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.banner-outer {
+  display: flex;
+  background-color: #0f2d50;
+  height: 350px;
+  padding: 0 100px;
+}
+
+.banner-text {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  padding: 2%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-text-line1 {
+  font-family: "Bungee Shade", sans-serif;
+  font-size: 60px;
+  color: #ff5555;
+  width: 100%;
+}
+
+.banner-text-line2 {
+  font-family: "Micro 5", sans-serif;
+  color: #66d351;
+  font-size: 80px;
+  width: 100%;
+}
+
+.banner-text-line3 {
+  font-family: "Pixelify sans", sans-serif;
+  color: white;
+  font-size: 20px;
+  width: 100%;
+}
+
+.banner-images-outer {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+.banner-images-inner {
+  background-color: black;
+  height: 300px;
+  border-radius: 10px;
+  width: 100%;
+}

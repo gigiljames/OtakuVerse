@@ -10,5 +10,5 @@ app.listen(process.env.PORT, () => {
   console.log(`Listening at PORT ${process.env.PORT}`);
 });
 
-app.use("/admin/", adminRoute);
+app.use("/admin", adminRoute);
 app.use("/", custRoute);
