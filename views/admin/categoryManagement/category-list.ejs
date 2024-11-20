@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Management</title>
+    <link rel="stylesheet" href="/admin/admin-navbar.css" />
+    <link rel="stylesheet" href="/admin/categoryManagement/category-list.css" />
+    <%- include('../../partials/font-links.ejs') %>
+  </head>
+  <body>
+    <%- include('../../partials/admin-navbar.ejs') %>
+    <div class="title-row">
+      <div class="title">Category Management</div>
+      <button class="add-category-button">Add Category</button>
+    </div>
+    <div class="category-list">
+      <a href=""><div class="category-button">Tshirts</div></a>
+      <a href=""><div class="category-button">Home & Decor</div></a>
+      <a href=""><div class="category-button">Tshirts</div></a>
+      <a href=""><div class="category-button">Tshirts</div></a>
+      <a href=""><div class="category-button">Tshirts</div></a>
+      <a href=""><div class="category-button">Tshirts</div></a>
+    </div>
+    <div class="add-category-form-outer">
+      <span class="material-symbols-outlined close-button"> close </span>
+      <div class="add-category-form-inner">
+        <div class="form-title">Add Category</div>
+        <form id="add-category-form">
+          <div class="input-container">
+            <label for="cat-name">Category Name</label>
+            <input id="cat-name" type="text" />
+          </div>
+          <div class="input-container">
+            <label for="cat-desc">Category Description</label>
+            <textarea id="cat-desc"></textarea>
+          </div>
+          <input class="submit-button" type="submit" value="SUBMIT" />
+        </form>
+      </div>
+    </div>
+    <script src="/js/cust-navbar.js"></script>
+  </body>
+</html>

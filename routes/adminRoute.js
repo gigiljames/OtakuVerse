@@ -9,14 +9,21 @@ const router = express.Router();
 router.use(express.static("public"));
 
 //Login
-router.get("/", login.getPage);
+router.get("/login", login.getPage);
 // router.post("/", login.verifyCeredentials);
+
 //Home
-// router.get("/home", home.getPage);
-//Customer management
+router.get("/", home.getPage);
 
 //Category management
+router.get("/category-management", categoryManagement.getPage);
+router.get("/category-management/category", categoryManagement.viewCategory);
+
+//Customer management
+router.get("/customer-management", customerManagement.getPage);
 
 //Product management
+router.get("/product-management", productManagement.getPage);
+router.get("/product-management/product", productManagement.viewProduct);
 
 module.exports = router;

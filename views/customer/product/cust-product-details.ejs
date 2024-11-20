@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OtakuVerse Home</title>
+    <%- include('../../partials/font-links.ejs') %>
+    <link rel="stylesheet" href="customer/cust-navbar.css" />
+    <link rel="stylesheet" href="customer/product/cust-product-details.css" />
+    <link rel="stylesheet" href="customer/cust-footer.css" />
+  </head>
+  <body>
+    <%- include('../../partials/cust-navbar.ejs') %>
+    <section class="section-1">
+      <div class="image-collection">
+        <img />
+      </div>
+      <div class="basic-details">
+        <div class="line1">
+          <div class="product-title">
+            Roronoa Zoro Action Figure - One Piece Limited Edition
+          </div>
+          <div class="category">Anime figurines</div>
+          <div class="product-rating">
+            <div class="star-rating">⭐⭐⭐⭐⭐</div>
+            <div class="review-count">(3 reviews)</div>
+          </div>
+        </div>
+        <div class="line2">
+          <div class="product-pricing">
+            <div class="ov-price">₹399</div>
+            <div class="original-price">₹540</div>
+          </div>
+          <div class="quantity">
+            <div class="quantity-input-container">
+              QTY
+              <input type="number" />
+            </div>
+          </div>
+        </div>
+        <div class="line3">
+          <button class="add-to-cart-button">
+            Add to cart<span class="material-symbols-outlined">
+              shopping_cart
+            </span>
+          </button>
+          <button class="add-to-wishlist-button">
+            Add to wishlist
+            <span class="material-symbols-outlined"> favorite </span>
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="details-section">
+      <div class="product-desc">
+        <div class="product-desc-title">Product Description</div>
+        <div class="product-desc-content">
+          Bring home the fierce determination and power of Roronoa Zoro with
+          this intricately designed action figure, inspired by his iconic
+          appearance in One Piece. This collectible features Zoro in a dynamic
+          pose, wielding his signature three swords with precision. The figure
+          is crafted with high-quality PVC material, showcasing exceptional
+          detail from his scarred chest to his iconic green haramaki. A
+          must-have for any fan of the Straw Hat Pirates, this Zoro action
+          figure will stand out in any collection, adding a bold touch to your
+          anime display!
+        </div>
+      </div>
+      <div class="product-details">
+        <div class="product-details-title">Product Details</div>
+        <div class="product-details-content">
+          Material: High-quality PVC Height: 12 inches Packaging: Comes in a
+          collectible box Includes: Interchangeable arms and three swords
+        </div>
+      </div>
+    </section>
+    <section class="review-section"></section>
+    <%-include('../../partials/cust-footer.ejs') %>
+    <script src="js/cust-navbar.js"></script>
+  </body>
+</html>
