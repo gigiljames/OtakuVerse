@@ -3,13 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Home</title>
+    <title>Customer Management</title>
     <link rel="stylesheet" href="/admin/admin-navbar.css" />
-    <link rel="stylesheet" href="/admin/home/admin-home.css" />
+    <link rel="stylesheet" href="/admin/customerManagement/customer-list.css" />
     <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
     <%- include('../../partials/admin-navbar.ejs') %>
+    <div class="title-row">
+      <div class="title">Customer Management</div>
+      <button class="add-button">Add Customer</button>
+    </div>
+    <div class="category-list">
+      <% if(customerList.length===0){ %>
+        <div>Nothing to show here.</div>
+      <%}else{%>
+      <table>
+        <tr>
+          <th>Customer ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Account status</th>
+        </tr>
+      <% for(let i=0;i<customerList.length;i++){ %>
+        <tr>
+          <td><%= customerList[i]._id %></td>
+          <td><%= customerList[i].customer_name %></td>
+          <td><%= customerList[i].customer_email %></td>
+          <td><%= customerList[i].account_status %></td>
+        </tr>
+      <% } %>
+      <%}%>
+      </table>
+    </div>
+    <div class="add-form-outer">
+      <span class="material-symbols-outlined close-button"> close </span>
+      <div class="add-form-inner">
+        <div class="form-title">Add Customer</div>
+        <form id="add-form" method="POST" action="/admin/add-customer">
+          <div class="input-container">
+            <label for="fullname-input">Full name</label>
+            <input id="fullname-input" class="login-input" type="text" name="name"/>
+          </div>
+          <div id="fullname-error" class="error-container"></div>
+          <div class="input-container">
+            <label for="email-input">Email</label>
+            <input id="email-input" type="text" name="email"/>
+          </div>
+          <div id="email-error" class="error-container"></div>
+          <!-- <div class="password-instructions">
+            (The password should contain at least 8 characters, including
+            uppercase and lowercase letters, numbers, and symbols. )
+          </div> -->
+          <div class="input-container">
+            <label for="password-input">Password</label>
+            <input
+              id="password-input"
+              type="password"
+              name="password"
+            />
+          </div>
+          <div id="password-error" class="error-container"></div>
+          <div class="input-container">
+            <label for="status-input">Account status</label>
+            <select id="status-input" name="status">
+              <option value="active">Active</option>
+              <option value="banned">Banned</option>
+            </select>
+          </div>
+          <div id="repassword-error" class="error-container"></div>
+          <input class="submit-button" type="submit" value="SUBMIT" />
+        </form>
+      </div>
+    </div>
     <script src="/js/cust-navbar.js"></script>
+    <script src="/js/customer-list.js"></script>
   </body>
 </html>

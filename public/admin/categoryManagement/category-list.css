@@ -1,23 +1,23 @@
-.add-category-button {
+.add-button {
   height: 40px;
   width: 120px;
   border: 0;
   background-color: rgb(58, 225, 80);
   border-radius: 5px;
   margin-right: 20px;
+  cursor: pointer;
 }
 
-#add-category-form {
+#add-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.add-category-form-outer {
+.add-form-outer {
   height: 100vh;
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.605);
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   position: fixed;
@@ -25,7 +25,7 @@
   z-index: 6;
 }
 
-.add-category-form-inner {
+.add-form-inner {
   background-color: white;
   border-radius: 10px;
   padding: 40px;
@@ -68,6 +68,12 @@ body {
   color: white;
   transform: scale(2);
   cursor: pointer;
+}
+
+.error-container {
+  height: 20px;
+  color: red;
+  font-size: 14px;
 }
 
 .form-title {
@@ -115,6 +121,7 @@ body {
   color: white;
   font-weight: 700;
   cursor: pointer;
+  margin-top: 10px;
 }
 
 .title-row {

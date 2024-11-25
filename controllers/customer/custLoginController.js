@@ -14,9 +14,15 @@ const enterOTP = async (req, res) => {
   res.render("customer/login/cust-forgotpassword-otp");
 };
 
+const verify = async (req, res) => {
+  const { email, password } = req.body;
+  res.send({ email, password });
+};
+
 module.exports = {
   getPage,
   forgotPassword,
   resetPassword,
   enterOTP,
+  verify,
 };

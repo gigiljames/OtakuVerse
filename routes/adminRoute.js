@@ -17,10 +17,13 @@ router.get("/", home.getPage);
 
 //Category management
 router.get("/category-management", categoryManagement.getPage);
-router.get("/category-management/category", categoryManagement.viewCategory);
+router.get("/category/:id", categoryManagement.viewCategory);
+router.post("/add-category", categoryManagement.addCategory);
+router.patch("/edit-category/:id", categoryManagement.editCategory);
 
 //Customer management
 router.get("/customer-management", customerManagement.getPage);
+router.post("/add-customer", customerManagement.addCustomer);
 
 //Product management
 router.get("/product-management", productManagement.getPage);

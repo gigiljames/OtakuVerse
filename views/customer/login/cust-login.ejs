@@ -36,15 +36,27 @@
               <div class="or-text">OR</div>
               <div class="or-line"></div>
             </div>
-            <form id="login-form">
+            <form id="login-form" method="POST" action="/login">
               <div class="input-container">
                 <label for="email-input">Email</label>
-                <input id="email-input" class="login-input" type="text" />
+                <input
+                  id="email-input"
+                  class="login-input"
+                  name="email"
+                  type="text"
+                />
               </div>
+              <div id="email-error" class="error-container"></div>
               <div class="input-container">
                 <label for="password-input">Password</label>
-                <input id="password-input" class="login-input" type="text" />
+                <input
+                  id="password-input"
+                  class="login-input"
+                  name="password"
+                  type="password"
+                />
               </div>
+              <div id="password-error" class="error-container"></div>
               <input class="login-button" type="submit" value="Log In" />
             </form>
             <div class="signup-redirect">
@@ -60,5 +72,6 @@
         </div>
       </div>
     </div>
+    <script src="/js/cust-login.js"></script>
   </body>
 </html>

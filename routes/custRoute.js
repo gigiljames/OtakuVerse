@@ -12,6 +12,7 @@ router.get("/", home.getPage);
 
 //Login
 router.get("/login", login.getPage);
+router.post("/login", login.verify);
 router.get("/forgotpassword", login.forgotPassword);
 router.get("/forgotpassword/otp", login.enterOTP);
 router.get("/resetpassword", login.resetPassword);

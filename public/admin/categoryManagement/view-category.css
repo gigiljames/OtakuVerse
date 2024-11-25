@@ -1,0 +1,93 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.button-group {
+  display: flex;
+  gap: 30px;
+}
+
+.cat-details {
+  padding: 60px 20% 30px 5%;
+}
+
+#edit-cat-form .confirm-button {
+  width: 200px;
+  height: 35px;
+  border: 0;
+  color: white;
+  background-color: rgb(0, 169, 0);
+  font-size: 15px;
+}
+
+#edit-cat-form .confirm-button:disabled {
+  background-color: grey;
+}
+
+.error-container {
+  color: red;
+  height: 20px;
+  font-size: 14px;
+}
+
+.delete-button a {
+  height: 35px;
+  width: 200px;
+  background-color: red;
+  border-radius: 5px;
+  display: block;
+  text-align: center;
+  line-height: 35px;
+  text-decoration: none;
+  color: white;
+  font-size: 15px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 40px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#edit-cat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#edit-cat-form label {
+  font-size: 14px;
+  color: #7e869e;
+}
+
+#edit-cat-form input {
+  width: 300px;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding-left: 10px;
+}
+
+#edit-cat-form textarea {
+  resize: none;
+  width: 620px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 300px;
+  padding: 10px;
+  font-family: "Inter", sans-serif;
+}
+
+.row-1 {
+  display: flex;
+  gap: 20px;
+}
