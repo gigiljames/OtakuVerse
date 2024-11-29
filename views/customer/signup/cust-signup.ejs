@@ -23,7 +23,7 @@
         <div class="right-outer">
           <div class="form-container">
             <div class="form-title">Sign Up</div>
-            <a href="" class="google-button">
+            <a href="/auth/google" class="google-button">
               <img
                 src="icons/google.png"
                 class="google-icon"
@@ -39,12 +39,22 @@
             <form id="login-form" method="POST" action="/signup">
               <div class="input-container">
                 <label for="fullname-input">Full name</label>
-                <input id="fullname-input" class="login-input" type="text" />
+                <input
+                  id="fullname-input"
+                  class="login-input"
+                  type="text"
+                  name="name"
+                />
               </div>
               <div id="fullname-error" class="error-container"></div>
               <div class="input-container">
                 <label for="email-input">Email</label>
-                <input id="email-input" class="login-input" type="text" />
+                <input
+                  id="email-input"
+                  class="login-input"
+                  type="text"
+                  name="email"
+                />
               </div>
               <div id="email-error" class="error-container"></div>
               <div class="password-instructions">
@@ -57,6 +67,7 @@
                   id="password-input"
                   class="login-input"
                   type="password"
+                  name="password"
                 />
               </div>
               <div id="password-error" class="error-container"></div>
@@ -68,9 +79,12 @@
                   type="password"
                 />
               </div>
-              <div id="repassword-error" class="error-container"></div>
+              <div id="repassword-error" class="error-container">
+                <%if(locals.message){%> <%=message%> <%}%>
+              </div>
               <input class="login-button" type="submit" value="Sign Up" />
             </form>
+
             <div class="login-redirect">
               Already have an account?
               <a href="/login" class="login-form-link">Log In</a>

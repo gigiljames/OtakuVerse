@@ -11,34 +11,57 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    product_specs: {
+      type: String,
+      required: true,
+    },
     category: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "category",
+      ref: "Category",
     },
     price: {
       type: Number,
       required: true,
+      min: 0,
     },
     discount: {
       type: Number,
       required: true,
+      min: 0,
     },
-    isEnabled: {
+    is_enabled: {
       type: Boolean,
       required: true,
       default: true,
     },
-    productVariants: [
+    is_deleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    variants: [
       {
         type: Schema.Types.ObjectId,
-        ref: "productVariants",
+        ref: "ProductVariant",
+      },
+    ],
+    product_images: [
+      {
+        filename: {
+          type: String,
+          required: true,
+        },
+        filepath: {
+          type: String,
+          required: true,
+        },
       },
     ],
     reviews: [
       {
         type: Schema.Types.ObjectId,
-        ref: "productReviews",
+        ref: "ProductReview",
       },
     ],
   },

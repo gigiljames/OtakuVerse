@@ -3,13 +3,23 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+#banner-images {
+  border: none;
+  height: fit-content;
+  padding: 0;
+}
+
+.banner-images img {
+  height: 75px;
+}
+
 .button-group {
   display: flex;
   gap: 30px;
 }
 
 .cat-details {
-  padding: 60px 20% 30px 5%;
+  padding: 60px 30% 30px 10%;
 }
 
 #edit-cat-form .confirm-button {
@@ -19,6 +29,7 @@ body {
   color: white;
   background-color: rgb(0, 169, 0);
   font-size: 15px;
+  border-radius: 5px;
 }
 
 #edit-cat-form .confirm-button:disabled {
@@ -31,23 +42,49 @@ body {
   font-size: 14px;
 }
 
-.delete-button a {
+.delete-button input {
   height: 35px;
   width: 200px;
   background-color: red;
   border-radius: 5px;
-  display: block;
   text-align: center;
   line-height: 35px;
   text-decoration: none;
   color: white;
   font-size: 15px;
+  border: 0;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 38px;
   font-weight: 700;
   margin-bottom: 40px;
+}
+
+.image-collection {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-auto-flow: row;
+  gap: 10px;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.image-card {
+  padding: 10px;
+  background-color: #9399ac;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.image-card .delete-icon {
+  color: rgb(227, 34, 34);
 }
 
 .input-container {
@@ -59,7 +96,7 @@ body {
 #edit-cat-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
 #edit-cat-form label {
@@ -67,13 +104,13 @@ body {
   color: #7e869e;
 }
 
-#edit-cat-form input {
+.input-container input {
   width: 300px;
   height: 40px;
   border-radius: 5px;
   border: 1px solid black;
   box-sizing: border-box;
-  padding-left: 10px;
+  padding: 0 10px;
 }
 
 #edit-cat-form textarea {
@@ -85,6 +122,10 @@ body {
   height: 300px;
   padding: 10px;
   font-family: "Inter", sans-serif;
+}
+
+.remove-banner-images-section {
+  padding: 20px 0;
 }
 
 .row-1 {

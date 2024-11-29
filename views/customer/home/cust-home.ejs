@@ -30,165 +30,40 @@
       </div>
     </section>
     <section class="products-section">
+      <%if(locals.displayData){%> <%displayData.forEach((data,index)=>{%>
       <div class="category-wise">
         <div class="title-row">
-          <div class="category-title">ANIME FIGURINES</div>
+          <div class="category-title"><%=data.categoryInfo.category_name%></div>
           <div class="see-more"><a href="">see more >></a></div>
         </div>
         <div class="product-cards">
-          <div class="product-card">
-            <div class="product-image">
-              <img
-                src="https://images.pexels.com/photos/15752372/pexels-photo-15752372/free-photo-of-camera-menu-on-screen.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="product-image"
-              />
+          <%data.productList.forEach((product, index)=>{%>
+          <a href="/product/<%=product._id%>">
+            <div class="product-card">
+              <div class="product-image">
+                <img
+                  src="https://images.pexels.com/photos/15752372/pexels-photo-15752372/free-photo-of-camera-menu-on-screen.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+                  alt="product-image"
+                />
+              </div>
+              <div class="product-title"><%=product.product_name%></div>
+              <div class="product-rating">
+                <div class="star-rating">⭐⭐⭐⭐⭐</div>
+                <div class="review-count">(3 reviews)</div>
+              </div>
+              <div class="product-pricing">
+                <div class="ov-price">
+                  ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
+                </div>
+                <div class="original-price">₹<%=product.price%></div>
+              </div>
             </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
+          </a>
+          <%})%>
         </div>
       </div>
-      <div class="category-wise">
-        <div class="title-row">
-          <div class="category-title">ANIME FIGURINES</div>
-          <div class="see-more"><a href="">see more >></a></div>
-        </div>
-        <div class="product-cards">
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-          <div class="product-card">
-            <div class="product-image">
-              <img src="" alt="product-image" />
-            </div>
-            <div class="product-title">Product name</div>
-            <div class="product-rating">
-              <div class="star-rating">⭐⭐⭐⭐⭐</div>
-              <div class="review-count">(3 reviews)</div>
-            </div>
-            <div class="product-pricing">
-              <div class="ov-price">₹399</div>
-              <div class="original-price">₹540</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <hr />
+      <%})%> <%}%>
     </section>
     <%- include('../../partials/cust-footer.ejs') %>
     <script src="js/cust-navbar.js"></script>

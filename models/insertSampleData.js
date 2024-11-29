@@ -4,12 +4,15 @@ const Category = require("./categoryModel");
 const Admin = require("./adminModel");
 const ProductVariant = require("./productVariantModel");
 const ProductReview = require("./productReviewModel");
+const bcrypt = require("bcrypt");
 
 const adminInsertion = async () => {
   try {
+    const password = "";
+    const passwordHash = await bcrypt.hash(password, 10);
     const admin = new Admin({
-      username: "123",
-      password: "123",
+      username: "admin@123",
+      password: passwordHash,
     });
     const saveConfirmation = await admin.save();
     if (saveConfirmation) {

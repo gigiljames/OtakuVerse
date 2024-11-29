@@ -14,7 +14,7 @@ const categorySchema = new Schema(
     products: [
       {
         type: Schema.Types.ObjectId,
-        ref: "products",
+        ref: "Product",
       },
     ],
     is_enabled: {
@@ -22,7 +22,23 @@ const categorySchema = new Schema(
       required: true,
       default: true,
     },
-    banner_images: {},
+    is_deleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    banner_images: [
+      {
+        filename: {
+          type: String,
+          required: true,
+        },
+        filepath: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

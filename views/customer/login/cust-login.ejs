@@ -23,7 +23,7 @@
         <div class="right-outer">
           <div class="form-container">
             <div class="form-title">Log in</div>
-            <a href="" class="google-button">
+            <a href="/auth/google" class="google-button">
               <img
                 src="icons/google.png"
                 class="google-icon"
@@ -56,7 +56,9 @@
                   type="password"
                 />
               </div>
-              <div id="password-error" class="error-container"></div>
+              <div id="password-error" class="error-container">
+                <%if(locals.message){%> <%=message%> <%}%>
+              </div>
               <input class="login-button" type="submit" value="Log In" />
             </form>
             <div class="signup-redirect">

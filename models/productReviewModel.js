@@ -6,10 +6,12 @@ const productReviewsSchema = new Schema(
     customer_id: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: "Customer",
     },
     product_id: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: "Product",
     },
     rating: {
       type: String,

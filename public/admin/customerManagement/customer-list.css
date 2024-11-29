@@ -39,6 +39,26 @@ body {
   gap: 30px;
 }
 
+.block-button {
+  background-color: red;
+}
+
+.block-button,
+.unblock-button {
+  display: inline-block;
+  width: 80px;
+  height: 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  padding: 3px;
+  text-align: center;
+}
+
+.unblock-button {
+  background-color: green;
+}
+
 .close-button {
   position: fixed;
   top: 20px;
@@ -46,6 +66,10 @@ body {
   color: white;
   transform: scale(2);
   cursor: pointer;
+}
+
+.customer-list {
+  padding: 0% 25% 2% 6%;
 }
 
 .error-container {
@@ -74,7 +98,7 @@ body {
   border: 1px solid black;
   border-radius: 5px;
   box-sizing: border-box;
-  padding-left: 10px;
+  padding: 0 10px;
 }
 
 .input-container label {
@@ -92,12 +116,35 @@ body {
   resize: none;
 }
 
+.pagination-links {
+  text-align: center;
+}
+
+.pagination-links a {
+  border: 1px solid black;
+  padding: 2px 4px;
+  border-radius: 2px;
+  min-width: 20px;
+  display: inline-block;
+  text-decoration: none;
+  color: rgb(89, 136, 228);
+}
+
+.pagination-links .selected-offset {
+  background-color: rgb(89, 136, 228);
+  color: white;
+}
+
 .password-instructions {
   font-size: 11px;
   width: 400px;
   margin-bottom: 10px;
   text-align: justify;
   color: #c5c5c5;
+}
+
+.prev-next-buttons {
+  width: 80px;
 }
 
 .submit-button {
@@ -110,6 +157,27 @@ body {
   font-weight: 700;
   cursor: pointer;
   margin-top: 10px;
+}
+
+table {
+  border: 1px solid rgb(167, 167, 167);
+  border-collapse: collapse;
+  border-radius: 7px;
+}
+
+#table-headers {
+  color: white;
+  background-color: rgb(36, 36, 36);
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(218, 218, 218);
+}
+
+td,
+th {
+  border: 1px solid rgb(168, 168, 168);
+  padding: 7px;
 }
 
 .title-row {

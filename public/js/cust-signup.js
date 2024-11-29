@@ -5,7 +5,7 @@ const passwordError = document.getElementById("password-error");
 const repasswordError = document.getElementById("repassword-error");
 const errorContainers = document.getElementsByClassName("error-container");
 const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#*?&])[A-Za-z\d@#$!%*?&]{8,}$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 signupForm.addEventListener("submit", (event) => {

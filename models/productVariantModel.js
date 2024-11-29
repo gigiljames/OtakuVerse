@@ -5,7 +5,7 @@ const productVariantsSchema = new Schema(
   {
     product_id: {
       type: Schema.Types.ObjectId,
-      ref: "products",
+      ref: "Product",
     },
     colour: {
       type: String,
@@ -16,8 +16,8 @@ const productVariantsSchema = new Schema(
     stock_quantity: {
       type: Number,
       required: true,
+      min: 0,
     },
-    product_images: [],
   },
   { timestamps: true }
 );

@@ -4,12 +4,24 @@
       <span id="burger-menu" class="material-symbols-outlined"> menu </span>
     </div>
     <div class="logo"><a href="/">OtakuVerse</a></div>
+
+    <%if(locals.customerData){%>
     <div class="cart-icon">
       <span class="material-symbols-outlined"> shopping_cart </span>
     </div>
     <div id="user-dp" class="user-dp">
       <img src="/img/user-dp.png" alt="user-dp" />
     </div>
+    <%} else{%>
+    <div class="navbar-button-group">
+      <a href="/login"
+        ><button class="navbar-button login-button">Login</button></a
+      >
+      <a href="/signup"
+        ><button class="navbar-button signup-button">Signup</button></a
+      >
+    </div>
+    <%}%>
   </div>
   <div id="menu" class="menu">
     <div class="burger-menu">
@@ -43,6 +55,6 @@
     <div class="user-menu-item"><a href="">Profile</a></div>
     <div class="user-menu-item"><a href="">Orders</a></div>
     <div class="user-menu-item"><a href="">Wishlist</a></div>
-    <div class="user-menu-item"><a href="">Logout</a></div>
+    <div class="user-menu-item"><a href="/logout">Logout</a></div>
   </div>
 </nav>

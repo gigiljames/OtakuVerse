@@ -1,0 +1,203 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.add-button {
+  height: 40px;
+  width: 120px;
+  border: 0;
+  background-color: rgb(58, 225, 80);
+  border-radius: 5px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+#add-form {
+  display: flex;
+  /* gap: 20px; */
+  /* flex-direction: column; */
+}
+
+.add-form-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form-outer {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.605);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 6;
+}
+
+.add-form-inner {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.block-button {
+  background-color: red;
+}
+
+.block-button,
+.unblock-button {
+  display: inline-block;
+  width: 80px;
+  height: 20px;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  padding: 3px;
+  text-align: center;
+}
+
+.unblock-button {
+  background-color: green;
+}
+
+.close-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: white;
+  transform: scale(2);
+  cursor: pointer;
+}
+
+.customer-list {
+  padding: 0% 25% 2% 6%;
+}
+
+.error-container {
+  height: 20px;
+  color: red;
+  font-size: 14px;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-container input,
+.input-container select {
+  width: 400px;
+  height: 36px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.input-container label {
+  font-size: 14px;
+  color: #7e869e;
+}
+
+.input-container textarea {
+  width: 400px;
+  height: 286px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: none;
+  padding: 10px;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+}
+
+.pagination-links {
+  text-align: center;
+}
+
+.pagination-links a {
+  border: 1px solid black;
+  padding: 2px 4px;
+  border-radius: 2px;
+  min-width: 20px;
+  display: inline-block;
+  text-decoration: none;
+  color: rgb(89, 136, 228);
+}
+
+.pagination-links .selected-offset {
+  background-color: rgb(89, 136, 228);
+  color: white;
+}
+
+.password-instructions {
+  font-size: 11px;
+  width: 400px;
+  margin-bottom: 10px;
+  text-align: justify;
+  color: #c5c5c5;
+}
+
+.prev-next-buttons {
+  width: 80px;
+}
+
+.submit-button {
+  width: 400px;
+  height: 36px;
+  border-radius: 5px;
+  background-color: rgb(58, 225, 80);
+  border: 0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+table {
+  border: 1px solid rgb(167, 167, 167);
+  border-collapse: collapse;
+  border-radius: 7px;
+  width: 100%;
+}
+
+#table-headers {
+  color: white;
+  background-color: rgb(36, 36, 36);
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(218, 218, 218);
+}
+
+td,
+th {
+  border: 1px solid rgb(168, 168, 168);
+  padding: 7px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4% 25% 2% 6%;
+}
+
+.title {
+  font-size: 38px;
+  font-weight: 700;
+}

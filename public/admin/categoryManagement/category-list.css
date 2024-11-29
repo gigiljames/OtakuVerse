@@ -95,6 +95,7 @@ body {
   border: 1px solid black;
   border-radius: 5px;
   box-sizing: border-box;
+  padding: 0 10px;
 }
 
 .input-container label {
@@ -110,6 +111,8 @@ body {
   border-radius: 5px;
   box-sizing: border-box;
   resize: none;
+  font-family: "Inter", sans-serif;
+  padding: 10px;
 }
 
 .submit-button {

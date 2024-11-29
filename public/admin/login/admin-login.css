@@ -3,6 +3,12 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.error-container {
+  height: 20px;
+  color: red;
+  font-size: 14px;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
@@ -66,6 +72,10 @@ body {
   flex-direction: column;
 }
 
+.input-container input {
+  font-size: 14px;
+}
+
 .input-container label {
   color: #7e869e;
   font-size: 12px;
@@ -83,7 +93,7 @@ body {
 }
 
 .left-line2 {
-  color: rgb(88, 156, 212);
+  color: rgb(255, 255, 255);
   font-size: 24px;
   padding-left: 10px;
   padding-right: 140px;
@@ -118,7 +128,7 @@ body {
 #login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
 .login-form-link {

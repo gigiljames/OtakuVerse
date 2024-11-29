@@ -23,14 +23,28 @@
         <div class="right-outer">
           <div class="form-container">
             <div class="form-title">Log in</div>
-            <form id="login-form">
+            <form id="login-form" method="POST" action="/admin/verify">
               <div class="input-container">
                 <label for="email-input">Email</label>
-                <input id="email-input" class="login-input" type="text" />
+                <input
+                  id="email-input"
+                  class="login-input"
+                  type="text"
+                  name="username"
+                />
               </div>
+              <div id="email-error" class="error-container"></div>
               <div class="input-container">
                 <label for="password-input">Password</label>
-                <input id="password-input" class="login-input" type="text" />
+                <input
+                  id="password-input"
+                  class="login-input"
+                  type="password"
+                  name="password"
+                />
+              </div>
+              <div id="password-error" class="error-container">
+                <%if(locals.message){%> <%=message%> <%}%>
               </div>
               <input class="login-button" type="submit" value="Log In" />
             </form>
@@ -38,5 +52,6 @@
         </div>
       </div>
     </div>
+    <script src="/js/admin-login.js"></script>
   </body>
 </html>

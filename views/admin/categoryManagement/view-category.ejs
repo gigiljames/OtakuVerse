@@ -11,11 +11,12 @@
   <body>
     <%- include('../../partials/admin-navbar.ejs') %>
     <section class="cat-details">
-      <div class="title">Category Mangement</div>
+      <div class="title">Category Management</div>
       <form
         id="edit-cat-form"
         action="/admin/edit-category/<%= categoryDetails._id %>?_method=PATCH"
         method="POST"
+        enctype="multipart/form-data"
       >
         <!-- <input type="hidden" name="_method" value="PATCH" /> -->
         <div class="row-1">
@@ -47,26 +48,57 @@
           <div class="error-container" id="cat-desc-error"></div>
         </div>
 
-        <div class="input-container">
-          <label for="banner-images">Banner images</label>
-
-          <input id="banner-images" type="file" />
-        </div>
-        <div class="button-group">
-          <input
-            class="confirm-button"
-            id="confirm-button"
-            type="submit"
-            value="Cofirm changes"
-            disabled
-          />
-          <div class="delete-button">
-            <a href="/admin/delete-category/<%= categoryDetails._id %>"
-              >Delete category</a
-            >
+        <div class="input-container banner-images">
+          <label for="banner-images">Add banner images</label>
+          <input id="banner-images" type="file" name="images" multiple />
+          <div id="image-preview" class="image-collection"></div>
+          <form></form>
+          <div class="button-group">
+            <input
+              class="confirm-button"
+              id="confirm-button"
+              type="submit"
+              value="Confirm changes"
+              form="edit-cat-form"
+              disabled
+            />
+          </div>
+          <div class="remove-banner-images-section">
+            <div>Remove banner images</div>
+            <div class="image-collection">
+              <% if (categoryDetails.banner_images ) { %>
+              <%categoryDetails.banner_images.forEach((banner, index) => { %>
+              <div class="image-card">
+                <img
+                  src="<%= banner.filepath %>"
+                  alt="<%= banner.filename %>"
+                />
+                <form
+                  id="delete-catbanner-form<%= index %>"
+                  method="POST"
+                  action="/admin/delete-catbanner/<%= categoryDetails._id %>/<%= banner._id %>?_method=DELETE"
+                >
+                  <button form="delete-catbanner-form<%= index %>">
+                    <span class="material-symbols-outlined delete-icon"
+                      >delete</span
+                    >
+                  </button>
+                </form>
+              </div>
+              <% }); %> <% } %>
+            </div>
           </div>
         </div>
       </form>
+      <div class="delete-button">
+        <form
+          method="POST"
+          action="/admin/delete-category/<%= categoryDetails._id%>?_method=DELETE"
+        >
+          <!-- <input type="hidden" name="_method" value="DELETE" /> -->
+          <input type="submit" id="delete-button" value="Delete category" />
+        </form>
+      </div>
     </section>
 
     <script src="/js/cust-navbar.js"></script>

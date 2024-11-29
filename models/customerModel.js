@@ -10,10 +10,15 @@ const customerSchema = new Schema(
     customer_email: {
       type: String,
       required: true,
+      unique: true,
+    },
+    google_id: {
+      type: String,
+      unique: true,
     },
     customer_password: {
       type: String,
-      required: true,
+      required: false,
     },
     account_status: {
       type: String,
