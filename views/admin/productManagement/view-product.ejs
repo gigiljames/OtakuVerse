@@ -166,18 +166,23 @@
           <button class="add-button">Add Variant</button>
         </div>
         <%if(locals.variants){%>
-        <div class="variant-list">
+        <div class="variant-cards">
           <%variants.variants.forEach((variant, index)=>{%>
           <div class="variant-card">
-            <div class="variant-colour"><%=variant.colour%></div>
-            <div class="variant-size"><%=variant.size%></div>
-            <div class="variant-stock"><%=variant.stock_quantity%></div>
+            <div class="variant-colour">Colour: <%=variant.colour%></div>
+            <div class="variant-size">Size: <%=variant.size%></div>
+            <div class="variant-stock">Stock: <%=variant.stock_quantity%></div>
             <form
               id="<%= productDetails._id %>"
               action="/admin/delete-variant/<%= productDetails._id %>/<%=variant._id%>?_method=DELETE"
               method="POST"
             >
-              <button form="<%= productDetails._id %>">Delete variant</button>
+              <button
+                class="delete-variant-button"
+                form="<%= productDetails._id %>"
+              >
+                Delete variant
+              </button>
             </form>
           </div>
           <%})%>

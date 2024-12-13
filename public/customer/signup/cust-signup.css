@@ -154,6 +154,11 @@ body {
   color: #c5c5c5;
 }
 
+.resend-row {
+  display: flex;
+  justify-content: space-between;
+}
+
 .right-section {
   width: 30%;
 }

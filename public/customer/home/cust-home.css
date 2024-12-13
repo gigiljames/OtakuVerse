@@ -80,8 +80,9 @@ body {
 }
 
 .product-cards {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  /* justify-content: space-between; */
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .product-cards a {

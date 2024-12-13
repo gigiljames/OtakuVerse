@@ -59,6 +59,14 @@ body {
   cursor: pointer;
 }
 
+.delete-variant-button {
+  border: 0;
+  padding: 7px;
+  background-color: rgb(232, 61, 61);
+  color: white;
+  border-radius: 5px;
+}
+
 #product-images {
   border: none;
   height: fit-content;
@@ -223,7 +231,7 @@ body {
 
 .variant-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 10px;
   grid-auto-flow: row;
   text-align: center;
@@ -234,4 +242,7 @@ body {
   flex-direction: column;
   gap: 5px;
   border-radius: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
 }

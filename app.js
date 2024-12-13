@@ -33,6 +33,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+//put in separate file, urls also
 mongoose
   .connect("mongodb://127.0.0.1:27017/OtakuVerse")
   .then((message) => {

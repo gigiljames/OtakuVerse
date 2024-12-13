@@ -1,0 +1,90 @@
+<%-include("../../partials/cust-template.ejs")%>
+<link href="/customer/order/cust-cart.css" rel="stylesheet"/>
+<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+<title>OtakuVerse Cart</title>
+</head>
+<body>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="title-row">Shopping Cart</div>
+        <div class="cart-container">
+          <div class="items-list">
+            <table>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Total price</th>
+              </tr>
+              <%items.forEach((item)=>{%>
+                <tr class="item-card">
+                    <%let product = item.product_id%>
+                    <%let variant = item.variant_id%>
+                    <td>
+                      <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
+                      <div class="product-og-price"><%=product.price%></div>
+                      <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))).toFixed(2)%></div>
+                      <div class="variant-colour">Colour: <%=variant.colour%></div>
+                      <div class="variant-size">Size: <%=variant.size%></div>
+                      <button class="remove-button" data-id="<%=item._id%>">
+                        Remove
+                        <span class="material-symbols-outlined">
+                          remove
+                        </span>
+                      </button>
+                    </td>
+                    <td>
+                      <div class="quantity"><%=item.quantity%></div>
+                    </td>
+                    <td>
+                      <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))*item.quantity).toFixed(2)%></div>
+                    </td>
+                  
+                </tr>
+              <%})%>
+            </table>
+          </div>
+          <div class="bill">
+            
+            <div class="bill-title">Bill</div>
+            <%if(bill.total_quantity>0){%>
+            <ul>
+              <li>
+                <span>Subtotal</span>
+                <span id="subtotal"><%=bill.subtotal%></span>
+              </li>
+              <li>
+                <span>Delivery Charges</span>
+                <span id="delivery-charges"><%=bill.delivery_charges%></span>
+              </li>
+              <li>
+                <span>Total</span>
+                <span id="total"><%=bill.total%></span>
+              </li>
+              <li><span>Discount</span>
+                <span id="discount"><%=bill.discount%></span>
+              </li>
+              <li><span>Free Delivery</span>
+                <span id="free-delivery"><%=bill.free_delivery%></span>
+              </li>
+              <li><span>Grand Total</span>
+                <span id="grand-total"><%=bill.grand_total%></span>
+              </li>
+              <li><span>You save</span> <span id="you-save"><%=bill.you_save%></span><span id="you-save-percent"> (<%=bill.you_save_percent%>%)</span>
+                <span></span>
+              </li>
+            </ul>
+            <a href="/checkout"><button class="checkout-button">Proceed to checkout</button></a>
+            <%}%>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-include("../../partials/cust-footer.ejs")%>
+  <script src="/js/cust-cart.js"></script>
+</body>
+</html>

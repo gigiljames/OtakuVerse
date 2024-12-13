@@ -4,7 +4,7 @@ body {
 }
 
 .error-container {
-  height: 20px;
+  min-height: 20px;
   color: red;
   font-size: 14px;
 }

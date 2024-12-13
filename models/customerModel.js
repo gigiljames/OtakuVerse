@@ -29,12 +29,12 @@ const customerSchema = new Schema(
     customer_addresses: [
       {
         type: Schema.Types.ObjectId,
-        ref: "addresses",
+        ref: "Address",
       },
     ],
     cart: {
       type: Schema.Types.ObjectId,
-      ref: "cart",
+      ref: "Cart",
     },
     wishlist: {
       type: Schema.Types.ObjectId,

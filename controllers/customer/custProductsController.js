@@ -12,6 +12,10 @@ const viewProduct = async (req, res) => {
       "customer_id",
       "customer_name"
     );
+    const recommendedData = await Product.find({
+      _id: { $ne: id },
+      category: product.category,
+    });
     const ratingSum = reviews.reduce((accumulator, value) => {
       accumulator = accumulator + Number(value.rating);
       return accumulator;
@@ -20,13 +24,23 @@ const viewProduct = async (req, res) => {
     if (isNaN(ratingAvg)) {
       ratingAvg = "Unrated";
     }
-    console.log(product);
     if (product) {
-      return res.render("customer/product/cust-product-details", {
-        product,
-        ratingAvg,
-        reviews,
-      });
+      if (req.session.user) {
+        return res.render("customer/product/cust-product-details", {
+          product,
+          ratingAvg,
+          reviews,
+          recommendedData,
+        });
+      } else {
+        return res.render("customer/product/cust-product-details", {
+          product,
+          ratingAvg,
+          reviews,
+          recommendedData,
+          isLoggedOut: true,
+        });
+      }
     }
     return res.send("Product doesn't exist");
   } catch (error) {

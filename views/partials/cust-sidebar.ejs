@@ -1,0 +1,47 @@
+<div class="sidebar">
+  <div class="sidebar-section-1">
+    <div class="section-title">General</div>
+    <ul>
+      <li>
+        <a href="/">
+          <span class="material-symbols-outlined">house</span>
+          Home
+        </a>
+      </li>
+      <li>
+        <a href="/profile">
+          <span class="material-symbols-outlined">account_circle</span>
+          Profile
+        </a>
+      </li>
+      <li>
+        <a href="/cart">
+          <span class="material-symbols-outlined">shopping_cart</span>
+          Cart
+        </a>
+      </li>
+      <li>
+        <a href="/orders">
+          <span class="material-symbols-outlined">orders</span>
+          Orders
+        </a>
+      </li>
+      <li>
+        <a href="/wishlist">
+          <span class="material-symbols-outlined">favorite</span>
+          Wishlist
+        </a>
+      </li>
+    
+    </ul>
+  </div>
+  <div class="sidebar-section-2">
+    <div class="section-title">Categories</div>
+    <ul>
+      <%categoryList.forEach((category, index)=>{%>
+        <li><a href="/<%=category.category_name.toLowerCase().replaceAll(" ","")%>"><%=category.category_name%></a></li>
+      <%})%>
+      
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,203 @@
+<%-include("../../partials/cust-template.ejs")%>
+<link href="/css/add-form.css" rel="stylesheet"/>
+<link href="/customer/order/cust-checkout.css" rel="stylesheet"/>
+<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+
+<title>OtakuVerse Checkout</title>
+</head>
+<body>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="title-row">Checkout</div>
+        <div class="order-container">
+          <div class="details-section">
+            <div class="address-section">
+              <div class="subtitle">Select address</div>
+              <div class="address-list">
+                <%addresses.forEach((address,index)=>{%>
+                  <div class="address-card">
+                    <div class="address-radio"><input id="address-<%=index%>" type="radio" name="address" value="<%=address._id%>"/></div>
+                    <label for="address-<%=index%>">
+                      <div class="address-card-data address-card-<%=index%>">
+                        <div class="input-container">
+                          <div class="info-title">Name</div>
+                          <div class="address-data"><%=address.recipient_name%></div>
+                          <input class="address-input name-input" name="name" type="text" value="<%=address.recipient_name%>"/>
+                          <div class="error-container name-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">Phone number</div>
+                          <div class="address-data"><%=address.phone_number%></div>
+                          <input class="address-input phno-input" name="phno" type="text" value="<%=address.phone_number%>" />
+                          <div class="error-container phno-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">Apartment</div>
+                          <div class="address-data"><%=address.apartment%></div>
+                          <input class="address-input apt-input" name="apt" type="text" value="<%=address.apartment%>"/>
+                          <div class="error-container apt-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">Street/Road</div>
+                          <div class="address-data"><%=address.street%></div>
+                          <input class="address-input street-input" name="street" type="text" value="<%=address.street%>"/>
+                          <div class="error-container street-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">City</div>
+                          <div class="address-data"><%=address.city%></div>
+                          <input class="address-input city-input" name="city" type="text" value="<%=address.city%>" />
+                          <div class="error-container city-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">State</div>
+                          <div class="address-data"><%=address.state%></div>
+                          <input class="address-input state-input" name="state" type="text" value="<%=address.state%>"/>
+                          <div class="error-container state-error"></div>
+                        </div>
+                        <div class="input-container">
+                          <div class="info-title">Pincode</div>
+                          <div class="address-data"><%=address.pincode%></div>
+                          <input class="address-input pin-input" name="pincode" type="text" value="<%=address.pincode%>"/>
+                          <div class="error-container pin-error"></div>
+                        </div>
+                        <div class="button-group edit-address-group">
+                          <button class="edit-address-button" tooltip="Edit address"><span class="material-symbols-outlined">
+                            edit_square
+                            </span></button>
+                        </div>
+                        <div class="button-group save-address-group">
+                          <div class="inner-group">
+                            <button class="save-address-button" data-id="<%=address._id%>">Save</button>
+                            <button class="cancel-address-button">Cancel</button>
+                          </div>
+                          <div class="error-container"></div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                <%})%>
+                
+                <button class="add-button">
+                  <span class="material-symbols-outlined">
+                  add_box
+                  </span>Add Address
+                </button>
+              </div>
+            </div>
+            <div class="payment-section">
+              <div class="subtitle">Select payment method</div>
+              <div class="method-list">
+                
+                <input id="upi" type="radio" name="paymentMethod" value="upi" disabled/>
+                <label for="upi">UPI</label>
+                
+                <input id="cod" type="radio" name="paymentMethod" value="cod"/>
+                <label for="cod">Cash on delivery</label>
+              </div>
+            </div>
+          </div>
+          <div class="bill">
+            <div class="bill-title">Bill</div>
+            <%if(bill.total_quantity>0){%>
+            <ul>
+              <li>
+                <span>Subtotal</span>
+                <span id="subtotal"><%=bill.subtotal%></span>
+              </li>
+              <li>
+                <span>Delivery Charges</span>
+                <span id="delivery-charges"><%=bill.delivery_charges%></span>
+              </li>
+              <li>
+                <span>Total</span>
+                <span id="total"><%=bill.total%></span>
+              </li>
+              <li><span>Discount</span>
+                <span id="discount"><%=bill.discount%></span>
+              </li>
+              <li><span>Free Delivery</span>
+                <span id="free-delivery"><%=bill.free_delivery%></span>
+              </li>
+              <li><span>Grand Total</span>
+                <span id="grand-total"><%=bill.grand_total%></span>
+              </li>
+              <li><span>You save</span> <span id="you-save"><%=bill.you_save%></span><span id="you-save-percent"> (<%=bill.you_save_percent%>%)</span>
+                <span></span>
+              </li>
+            </ul>
+            <button class="order-button">Place your order</button>
+            <%}%>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add-form-outer">
+    <span class="material-symbols-outlined close-button"> close </span>
+    <div class="add-form-inner">
+      <div class="form-title">Add Address</div>
+      <form id="add-form" method="POST" action="/add-address">
+        <div class="add-form-left">
+          <div class="input-container">
+            <label for="name-input">Recipient name</label>
+            <input id="name-input" class="login-input" type="text" name="name"/>
+            <div id="name-error" class="error-container"></div>
+          </div>
+          
+          <div class="input-container">
+            <label for="apt-input">Apartment</label>
+            <input id="apt-input" class="login-input" type="text" name="apt"/>
+            <div id="apt-error" class="error-container"></div>
+          </div>
+          
+          
+          <div class="input-container">
+            <label for="city-input">City</label>
+            <input id="city-input" class="login-input" type="text" name="city"/>
+            <div id="city-error" class="error-container"></div>
+          </div>
+          
+          <div class="input-container">
+            <label for="pin-input">Postal code</label>
+            <input id="pin-input" class="login-input" type="text" name="pin"/>
+            <div id="pin-error" class="error-container"></div>
+          </div>
+          
+        </div>
+        <div class="add-form-left">
+          <div class="input-container">
+            <label for="phno-input">Phone number</label>
+            <input id="phno-input" class="login-input" type="text" name="phno"/>
+            <div id="apt-error" class="error-container"></div>
+          </div>
+          
+          
+          <div class="input-container">
+            <label for="street-input">Street/Road</label>
+            <input id="street-input" class="login-input" type="text" name="street"/>
+            <div id="street-error" class="error-container"></div>
+          </div>
+          
+          <div class="input-container">
+            <label for="state-input">State</label>
+            <input id="state-input" class="login-input" type="text" name="state"/>
+            <div id="state-error" class="error-container"></div>
+          </div>
+          
+          
+          <input class="submit-button" type="submit" value="SUBMIT" />
+        </div>
+      </form>
+    </div>
+  </div>
+  <%-include("../../partials/cust-footer.ejs")%>
+  <script src="/js/cust-checkout.js"></script>
+  <script src="/js/cust-sidebar.js"></script>
+  <script src="/js/cust-navbar.js"></script>
+</body>
+</html>

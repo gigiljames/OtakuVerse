@@ -1,0 +1,111 @@
+.add-button {
+  height: 40px;
+  /* width: 130px; */
+  border: 0;
+  background-color: rgb(58, 225, 80);
+  border-radius: 5px;
+  margin-right: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+#add-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form-outer {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.605);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 6;
+}
+
+.add-form-outer .add-form-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-form-outer .add-form-inner {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.add-form-outer .close-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: white;
+  transform: scale(2);
+  cursor: pointer;
+}
+
+.add-form-outer .error-container {
+  height: 20px;
+  color: red;
+  font-size: 12px;
+}
+
+.add-form-outer .form-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.add-form-outer .input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.add-form-outer .input-container input {
+  width: 400px;
+  height: 36px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+
+.add-form-outer .input-container label {
+  font-size: 14px;
+  color: #7e869e;
+}
+
+.add-form-outer .input-container textarea {
+  width: 400px;
+  height: 300px;
+  font-size: 16px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: none;
+  font-family: "Inter", sans-serif;
+  padding: 10px;
+}
+
+.add-form-outer .submit-button {
+  width: 400px;
+  height: 36px;
+  border-radius: 5px;
+  background-color: rgb(58, 225, 80);
+  border: 0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}

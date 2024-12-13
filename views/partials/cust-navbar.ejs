@@ -1,25 +1,37 @@
 <nav>
   <div class="nav-outer">
-    <div class="burger-menu">
-      <span id="burger-menu" class="material-symbols-outlined"> menu </span>
+    <div class="nav-left">
+      <div class="burger-menu">
+        <span id="burger-menu" class="material-symbols-outlined"> menu </span>
+      </div>
+      <div class="logo"><a href="/">OtakuVerse</a></div>
     </div>
-    <div class="logo"><a href="/">OtakuVerse</a></div>
 
-    <%if(locals.customerData){%>
-    <div class="cart-icon">
-      <span class="material-symbols-outlined"> shopping_cart </span>
-    </div>
-    <div id="user-dp" class="user-dp">
-      <img src="/img/user-dp.png" alt="user-dp" />
+    <%if(!locals.isLoggedOut){%>
+    <div class="nav-right">
+      <div class="nav-icon">
+        <a href="/cart"><span class="material-symbols-outlined"> shopping_cart </span>Cart</a>
+      </div>
+      <div class="nav-icon">
+        <a href="/wishlist"><span class="material-symbols-outlined"> shopping_cart </span>Wishlist</a>
+      </div>
+      <div class="nav-icon">
+        <a href="/orders"><span class="material-symbols-outlined"> shopping_cart </span>Orders</a>
+      </div>
+      <div id="user-dp" class="user-dp">
+        <img src="/img/user-dp.png" alt="user-dp" />
+      </div>
     </div>
     <%} else{%>
-    <div class="navbar-button-group">
-      <a href="/login"
-        ><button class="navbar-button login-button">Login</button></a
-      >
-      <a href="/signup"
-        ><button class="navbar-button signup-button">Signup</button></a
-      >
+    <div class="nav-right">
+      <div class="navbar-button-group">
+        <a href="/login"
+          ><button class="navbar-button login-button">Login</button></a
+        >
+        <a href="/signup"
+          ><button class="navbar-button signup-button">Signup</button></a
+        >
+      </div>
     </div>
     <%}%>
   </div>
@@ -52,9 +64,7 @@
     </div>
   </div>
   <div class="user-menu" id="user-menu">
-    <div class="user-menu-item"><a href="">Profile</a></div>
-    <div class="user-menu-item"><a href="">Orders</a></div>
-    <div class="user-menu-item"><a href="">Wishlist</a></div>
+    <div class="user-menu-item"><a href="/profile">Profile</a></div>
     <div class="user-menu-item"><a href="/logout">Logout</a></div>
   </div>
 </nav>

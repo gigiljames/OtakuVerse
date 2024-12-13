@@ -16,7 +16,13 @@ addButton.addEventListener("click", (event) => {
 
 const nameError = document.getElementById("name-error");
 const descError = document.getElementById("desc-error");
+
 const errorContainers = document.getElementsByClassName("error-container");
+function clearErrors() {
+  for (let i = 0; i < errorContainers.length; i++) {
+    errorContainers[i].innerText = "";
+  }
+}
 
 addCategoryForm.addEventListener("submit", (event) => {
   clearErrors();
@@ -35,9 +41,3 @@ addCategoryForm.addEventListener("submit", (event) => {
     event.preventDefault();
   }
 });
-
-function clearErrors() {
-  for (let i = 0; i < errorContainers.length; i++) {
-    errorContainers[i].innerText = "";
-  }
-}

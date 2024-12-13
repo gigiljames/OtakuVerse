@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%-include("../../partials/cust-template.ejs")%>
     <title><%=product.product_name%></title>
-    <%- include('../../partials/font-links.ejs') %>
-    <link rel="stylesheet" href="/customer/cust-navbar.css" />
     <link rel="stylesheet" href="/customer/product/cust-product-details.css" />
-    <link rel="stylesheet" href="/customer/cust-footer.css" />
   </head>
   <body>
     <%- include('../../partials/cust-navbar.ejs') %>
@@ -48,32 +41,53 @@
         </div>
         <div class="line2">
           <div class="product-pricing">
-            <div class="ov-price">₹<%=product.price%></div>
+            <div class="ov-price">₹<%=Math.ceil(Number(product.price)*(1-((Number(product.discount))/100)))%></div>
             <div class="original-price">
-              ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
+              ₹<%=product.price%>
             </div>
             <div class="discount"><%=product.discount%>% discount!</div>
           </div>
+          <%if(product.variants.length>0){%>
           <div class="quantity">
             <div class="quantity-input-container">
               Quantity :
-              <input type="number" />
+              <input type="number" id="quantity" value="1" min="1" max="5" name="quantity"/>  
             </div>
           </div>
+          <%}%>
           <div class="variant-cards">
-            <% product.variants.forEach((variant)=>{%>
-            <div class="variant-card">
-              <div class="variant-card-box">
+            <% product.variants.forEach((variant,index)=>{%>
+            <%if(variant.stock_quantity==0){%>
+            <%if(index===0){%>
+              <div class="variant-card disabled-variant selected-variant" data-id="<%=variant._id%>">
+            <%}else{%>
+              <div class="variant-card disabled-variant" data-id="<%=variant._id%>">
+            <%}%>
+              <div class="variant-card-box ">
+                <div class="size">Size: <%=variant.size%></div>
+                <div class="colour">Colour: <%=variant.colour%></div>
+              </div>
+              <div class="stock-left">Sold Out!</div>
+            </div>
+            <%}else{%>
+            <%if(index===0){%>
+              <div class="variant-card enabled-variant selected-variant" data-id="<%=variant._id%>">
+            <%}else{%>
+              <div class="variant-card enabled-variant" data-id="<%=variant._id%>">
+            <%}%>
+              <div class="variant-card-box ">
                 <div class="size">Size: <%=variant.size%></div>
                 <div class="colour">Colour: <%=variant.colour%></div>
               </div>
               <div class="stock-left"><%=variant.stock_quantity%> Left!</div>
             </div>
+              <%}%>
             <%})%>
           </div>
         </div>
+        <%if(product.variants.length>0){%>
         <div class="line3">
-          <button class="add-to-cart-button">
+          <button class="add-to-cart-button" data-productid="<%=product._id%>">
             Add to cart<span class="material-symbols-outlined">
               shopping_cart
             </span>
@@ -83,6 +97,7 @@
             <span class="material-symbols-outlined"> favorite </span>
           </button>
         </div>
+        <%}%>
       </div>
     </section>
     <section class="details-section">
@@ -96,13 +111,57 @@
       </div>
     </section>
     <section class="reviews-section">
+      <div class="title-row">
+        <div class="category-title">
+          Customer reviews (<%=reviews.length%> reviews)
+        </div>
+      </div>
       <div class="review-cards">
-        <%reviews.forEach((review)=>{%> <%=review.rating%>
-        <%=review.customer_id.customer_name%> <%=review.review_body%> <%})%>
+        <%reviews.forEach((review)=>{%>
+        <div class="review-card">
+          <div class="reviewer-name"><%=review.customer_id.customer_name%></div>
+          <div class="review-rating">Rating: <%=review.rating%></div>
+          <div class="review-body"><%=review.review_body%></div>
+        </div>
+        <%})%>
       </div>
     </section>
 
-    <section class="review-section"></section>
+    <section class="recommended-section">
+      <%if(locals.recommendedData){%>
+      <div class="category-wise">
+        <div class="title-row">
+          <div class="category-title">Recommended products</div>
+          <!-- <div class="see-more"><a href="">see more >></a></div> -->
+        </div>
+        <div class="product-cards">
+          <%recommendedData.forEach((product, index)=>{%>
+          <a href="/product/<%=product._id%>">
+            <div class="product-card">
+              <div class="product-image">
+                <img
+                  src="<%=product.product_images[0]?.filepath%>"
+                  alt="product-image"
+                />
+              </div>
+              <div class="product-title"><%=product.product_name%></div>
+              <div class="product-rating">
+                <div class="star-rating">⭐⭐⭐⭐⭐</div>
+                <div class="review-count">(3 reviews)</div>
+              </div>
+              <div class="product-pricing">
+                <div class="ov-price">
+                  ₹<%=Math.ceil(Number(product.price)*(1-((Number(product.discount))/100)))%>
+                </div>
+                <div class="original-price">₹<%=product.price%></div>
+              </div>
+            </div>
+          </a>
+          <%})%>
+        </div>
+      </div>
+      <%}%>
+    </section>
     <%-include('../../partials/cust-footer.ejs') %>
     <script src="/js/cust-product-details.js"></script>
     <script src="/js/cust-navbar.js"></script>
