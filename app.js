@@ -7,6 +7,7 @@ const passport = require("./passport");
 const methodOverride = require("method-override");
 const adminRoute = require("./routes/adminRoute");
 const custRoute = require("./routes/custRoute");
+const morgan = require("morgan");
 require("dotenv").config();
 require("./models/insertSampleData");
 
@@ -24,6 +25,7 @@ app.use(
   })
 );
 app.use(passport.initialize());
+// app.use(morgan("short"));
 app.use(passport.session());
 app.use((req, res, next) => {
   res.set("Cache-control", "no-store");

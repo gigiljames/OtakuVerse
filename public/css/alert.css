@@ -1,0 +1,61 @@
+.alert {
+  width: 350px;
+  box-sizing: border-box;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  border-radius: 5px;
+  position: fixed;
+  top: 70px;
+  /* top: -100px; */
+  right: 10px;
+  z-index: 999;
+  transition: transform 0.4s ease;
+  transform: translateX(350px);
+}
+
+.alert-inner-box {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+  align-items: center;
+}
+
+.alert-message {
+  font-size: 14px;
+}
+
+.alert-success {
+  background-color: rgb(103, 237, 93);
+  color: green;
+}
+
+.alert-error {
+  background-color: rgb(248, 148, 148);
+  color: red;
+}
+
+.alert-icon {
+  font-size: 34px;
+}
+
+#alert-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#alert-close-button:hover {
+  background-color: rgba(0, 0, 0, 0.129);
+}
+
+/* Show the alert with a sliding-in effect */
+.alert.show-alert {
+  transform: translateX(0px); /* Slide into view */
+}
+
+/* Hide the alert with a sliding-out effect */
+.alert.hide-alert {
+  transform: translateX(400px); /* Slide out of view */
+}

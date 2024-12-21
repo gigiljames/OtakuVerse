@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%- include('../../partials/admin-template.ejs') %>
     <title>Category Management</title>
     <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/categoryManagement/category-list.css" />
-    <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
+    <%- include('../../partials/alert.ejs') %>
     <%- include('../../partials/admin-navbar.ejs') %>
     <div class="title-row">
       <div class="title">Category Management</div>
@@ -26,7 +22,7 @@
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
         <div class="form-title">Add Category</div>
-        <form id="add-form" method="POST" action="/admin/add-category">
+        <form id="add-form" method="POST">
           <div class="input-container">
             <label for="cat-name">Category Name</label>
             <input id="cat-name" type="text" name="name" />
@@ -41,7 +37,6 @@
         </form>
       </div>
     </div>
-    <script src="/js/cust-navbar.js"></script>
     <script src="/js/category-list.js"></script>
   </body>
 </html>

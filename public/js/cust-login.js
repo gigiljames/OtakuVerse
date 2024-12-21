@@ -4,20 +4,40 @@ const passwordError = document.getElementById("password-error");
 const errorContainers = document.getElementsByClassName("error-container");
 
 loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
   const email = document.getElementById("email-input").value.trim();
   const password = document.getElementById("password-input").value.trim();
   clearErrors();
   let flag = 0;
   if (!email) {
     flag = 1;
-    emailError.innerText = "*This field is required.";
+    emailError.innerText = "Enter your email.";
   }
   if (!password) {
     flag = 1;
-    passwordError.innerText = "*This field is required.";
+    passwordError.innerText = "Enter your password.";
   }
-  if (flag === 1) {
-    event.preventDefault();
+  if (flag === 0) {
+    $.ajax({
+      url: "/login",
+      type: "POST",
+      data: { email, password },
+      success: function (response) {
+        if (response.success) {
+          alert(
+            response.message,
+            "success",
+            () => {
+              window.location.href = "/";
+            },
+            1500
+          );
+        } else {
+          alert(response.message, "error");
+        }
+      },
+      error: function (error) {},
+    });
   }
 });
 
@@ -26,3 +46,27 @@ function clearErrors() {
     errorContainers[i].innerText = "";
   }
 }
+
+// const googleButton = document.querySelector(".google-button");
+// googleButton.addEventListener("click", (event) => {
+//   event.preventDefault();
+//   $.ajax({
+//     url: "/auth/google",
+//     type: "GET",
+//     success: function (response) {
+//       if (response.success) {
+//         alert(
+//           response.message,
+//           "success",
+//           () => {
+//             window.location.href = "/";
+//           },
+//           1500
+//         );
+//       } else {
+//         alert(response.message, "error");
+//       }
+//     },
+//     error: function (error) {},
+//   });
+// });

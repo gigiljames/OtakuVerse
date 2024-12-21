@@ -2,9 +2,10 @@
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/home/cust-profile.css" rel="stylesheet"/>
 <link href="/customer/cust-sidebar.css" rel="stylesheet"/>
-
+<title>Profile</title>
 </head>
 <body>
+  <%-include("../../partials/alert.ejs")%>
   <%-include("../../partials/cust-navbar.ejs")%>
   <div class="main">
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
@@ -181,7 +182,6 @@
   </div>
   <%-include("../../partials/cust-footer.ejs")%>
   <script src="/js/cust-profile.js"></script>
-  <script src="/js/cust-sidebar.js"></script>
   <script src="/js/cust-navbar.js"></script>
 </body>
 </html>

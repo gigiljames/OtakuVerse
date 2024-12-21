@@ -25,6 +25,7 @@ function clearErrors() {
 }
 
 addCategoryForm.addEventListener("submit", (event) => {
+  event.preventDefault();
   clearErrors();
   flag = 0;
   const name = document.getElementById("cat-name").value.trim();
@@ -37,7 +38,32 @@ addCategoryForm.addEventListener("submit", (event) => {
     flag = 1;
     descError.innerText = "*This field is required.";
   }
-  if (flag === 1) {
-    event.preventDefault();
+  if (flag === 0) {
+    $.ajax({
+      type: "POST",
+      url: "/admin/add-category",
+      data: { name, desc },
+      success: function (response) {
+        if (response.success) {
+          if (response.message) {
+            alert(response.message, "success");
+          }
+          addCategoryForm.style.display = "none";
+          updateCategoryList(name, response.id);
+        } else {
+          if (response.message) {
+            alert(response.message, "error");
+          }
+        }
+      },
+    });
   }
 });
+
+function updateCategoryList(name, id) {
+  const categoryList = document.querySelector(".category-list");
+  const newCategory = document.createElement("a");
+  newCategory.setAttribute("href", `/admin/category/${id}`);
+  newCategory.innerHTML = `<div class="category-button">${name}</div>`;
+  categoryList.append(newCategory);
+}

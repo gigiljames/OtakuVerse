@@ -128,10 +128,10 @@ const deleteProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    const imageDocs = req.files.map((file) => ({
-      filename: file.filename,
-      filepath: file.path.slice(6), // removes "public" from path
-    }));
+    // const imageDoc = {
+    //   filename: req.file.filename,
+    //   filepath: req.file.path.replace(/^public\//, ""), // Remove "public" from path
+    // };
     const { id } = req.params;
     const { name, price, desc, category, discount, visibility, specs } =
       req.body;
@@ -147,7 +147,7 @@ const editProduct = async (req, res) => {
           discount: discount,
           is_enabled: visibility,
         },
-        $push: { product_images: { $each: imageDocs } },
+        // $push: { product_images: imageDoc },
       }
     );
     console.log("Product edited successfully");
@@ -155,6 +155,27 @@ const editProduct = async (req, res) => {
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Product");
+  }
+};
+
+const addImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const imageDoc = {
+      filename: req.file.filename,
+      filepath: req.file.path.slice(6),
+    };
+    console.log(imageDoc);
+    const editConfirmation = await Product.updateOne(
+      { _id: id },
+      {
+        $push: { product_images: imageDoc },
+      }
+    );
+    return res.json({ success: true, message: "Image added successfully." });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Add Image");
   }
 };
 
@@ -228,6 +249,21 @@ const deleteVariant = async (req, res) => {
   }
 };
 
+const editStock = async (req, res) => {
+  try {
+    const { variantID } = req.params;
+    const { stock } = req.body;
+    await ProductVariant.updateOne(
+      { _id: variantID },
+      { $set: { stock_quantity: stock } }
+    );
+    res.json({ success: true, message: "Stock updated successfully." });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Edit Variant");
+  }
+};
+
 module.exports = {
   getPage,
   viewProduct,
@@ -236,7 +272,9 @@ module.exports = {
   disableProduct,
   deleteProduct,
   editProduct,
+  addImage,
   deleteImage,
   addVariant,
   deleteVariant,
+  editStock,
 };

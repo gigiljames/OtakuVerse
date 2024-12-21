@@ -29,32 +29,34 @@ addForm.addEventListener("submit", (event) => {
   const desc = document.getElementById("desc-input").value.trim();
   const specs = document.getElementById("specs-input").value.trim();
   const category = document.getElementById("category-input").value.trim();
-  const price = document.getElementById("price-input").value.trim();
-  const discount = document.getElementById("discount-input").value.trim();
+  const price = parseFloat(document.getElementById("price-input").value.trim());
+  const discount = parseFloat(
+    document.getElementById("discount-input").value.trim()
+  );
   let flag = 0;
   if (!name) {
     flag = 1;
-    nameError.innerText = "*This field is required.";
+    nameError.innerText = "Enter product name.";
   }
   if (!desc) {
     flag = 1;
-    descError.innerText = "*This field is required.";
+    descError.innerText = "Enter product description.";
   }
   if (!category) {
     flag = 1;
-    categoryError.innerText = "*This field is required.";
+    categoryError.innerText = "Select category.";
   }
-  if (!price) {
+  if (isNaN(price) || price < 0) {
+    priceError.innerText = "Price must be a non-negative number.";
     flag = 1;
-    priceError.innerText = "*This field is required.";
   }
-  if (!discount) {
+  if (isNaN(discount) || discount < 0 || discount > 100) {
+    discountError.innerText = "Discount must be a number between 0 and 100.";
     flag = 1;
-    discountError.innerText = "*This field is required.";
   }
   if (!specs) {
     flag = 1;
-    specsError.innerText = "*This field is required.";
+    specsError.innerText = "Enter product specifications.";
   }
   if (flag === 1) {
     event.preventDefault();

@@ -1,0 +1,95 @@
+<%- include("../../partials/cust-template.ejs")%>
+<link href="/css/add-form.css" rel="stylesheet"/>
+<link href="/customer/order/cust-orders.css" rel="stylesheet"/>
+<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+<title>Orders</title>
+</head>
+<body>
+  <%-include("../../partials/alert.ejs")%>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="main-title">Orders</div>
+        <div class="order-list">
+          <%orders.forEach((order)=>{%>
+              <%const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];%>
+              <%const paymentMethod = {"cod":"Cash on delivery", "upi":"UPI"}%>
+              <div class="order-card">
+                <div class="top-row">
+                  <div class="order-date">
+                    Ordered on:
+                    <%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%>
+                  </div>
+                  <div class="order-status">
+                    Order status:
+                    <%if(order.order_status==="cancelled"){%>
+                      <div class="status redText"><%=order.order_status%></div>
+                    <%} else if(order.order_status==="delivered"){%>
+                      <div class="status blackText"><%=order.order_status%></div>
+                    <%}else{%>
+                      <div class="status greenText"><%=order.order_status%></div>
+                    <%}%>
+                    
+                  </div>
+          
+                  <div class="payment-method">
+                    Payment method:
+                    <%=paymentMethod[order.payment_type]%>
+                  </div>
+                  <div class="total-amount">
+                    Total amount:
+                    <%=order.amount%>
+                  </div>
+                  <%if(order.order_status!=="cancelled"){%>
+                  <div class="delivery-date">
+                    Delivery on:
+                    <%=order.delivery_date.getDate()+" "+months[order.delivery_date.getMonth()]+" "+order.delivery_date.getFullYear()%>
+                  </div>
+                  <%}%>
+                </div>
+                <%let items = order.order_items%>
+                <%items.forEach((item)=>{%>
+                  <div class="item-card item-<%=item.variant_id%>">
+                    <img src="<%=item.product_images[0].filepath%>" class="product-image">
+                    <a href="/product/<%=item.product_id%>"><%=item.product_name%></a>
+                    Size: <%=item.size%>
+                    Colour: <%=item.colour%>
+                    Quantity: <%=item.quantity%>
+                    Price: <%=(item.price*(1-(item.discount/100))).toFixed(2)%>
+                    <%if(order.order_status!=="cancelled" && order.order_items.length>1){%>
+                    <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
+                    <%}%>
+                  </div>
+                <%})%>
+                <div class="bottom-row">
+                  <div class="shipping-address">
+                    Shipping address
+                    <%let address = order.address%>
+                    <%if(address){%>
+                    <div class="address-line1"><%=address.recipient_name%></div>
+                    <div class="address-line2"><%=address.apartment+", "+address.street+", "+address.city%></div>
+                    <div class="address-line3"><%=address.state+", "+address.pincode%></div>
+                    <div class="address-line4">Phone number: <%=address.phone_number%></div>
+                    <%}%>
+                  </div>
+                  <%if(order.order_status!=="cancelled"){%>
+                  <div class="order-functions">
+                    <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
+                    <button>Download invoice</button>
+                  </div>
+                  <%}%>
+                </div>
+              </div>
+          
+          <%})%>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-include("../../partials/cust-footer.ejs")%>
+  <script src="/js/cust-orders.js"></script>
+  <script src="/js/cust-navbar.js"></script>
+</body>
+</html>

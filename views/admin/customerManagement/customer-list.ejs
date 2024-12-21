@@ -1,67 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%- include('../../partials/admin-template.ejs') %>
     <title>Customer Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/customerManagement/customer-list.css" />
-    <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
+    <%- include('../../partials/alert.ejs') %>
     <%- include('../../partials/admin-navbar.ejs') %>
     <div class="title-row">
       <div class="title">Customer Management</div>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search"/>
+        <button class="search-button"><span class="material-symbols-outlined">
+          search
+          </span></button>
+      </div>
       <button class="add-button">Add Customer</button>
     </div>
     <div class="customer-list">
         <table>
-          <tr id="table-headers">
-            <th>Customer ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Account status</th>
-            <th></th>
-          </tr>
-          <% if(customerList.length===0){ %>
-            <tr><td colspan="5">Nothing to show here.</td></tr>
-          <%}else{%>
-            <% for(let i=0;i<customerList.length;i++){ %>
+          <thead>
+            <tr id="table-headers">
+              <th>Customer ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Account status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+            <tfoot>
               <tr>
-                <td><%= customerList[i]._id %></td>
-                <td><%= customerList[i].customer_name %></td>
-                <td><%= customerList[i].customer_email %></td>
-                <td><%= customerList[i].account_status %></td>
-                <%if(customerList[i].account_status==="active"){%>
-                  <td><a class="block-button" href="/admin/block-customer/<%= customerList[i]._id %>?offset=<%= offset %>">Block</a></td>
-                <%}else if(customerList[i].account_status==="banned"){%>
-                  <td><a class="unblock-button" href="/admin/unblock-customer/<%= customerList[i]._id %>?offset=<%= offset %>">Unblock</a></td>
-                <%}%>
-              </tr>
-            <%}%>
-            <tr>
-              <td colspan="5" class="pagination-links">
-                <%if(offset>1){%>
-                  <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons">&lt;Previous</a>
-                <%}%>
-                <%for(let i=1;i<=customerCount;i++){%>
-                  <%if(i==offset){%>
-                    <a class="selected-offset" href="/admin/customer-management?offset=<%= i %>"><%= i %></a>
+                <td colspan="5" class="pagination-links">
+                  <%if(offset>1){%>
+                    <!-- <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a> -->
+                    <a class="prev-next-buttons" href="" data-offset="<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
                   <%}else{%>
-                    <a  href="/admin/customer-management?offset=<%= i %>"><%= i %></a>
+                    <a href="" class="prev-next-buttons">&lt;Previous</a>
                   <%}%>
-                  
-                <%}%>
-                <%if(offset<customerCount){%>
-                  <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons ">Next&gt;</a>
-                <%}%>
-              </td>
-            </tr> 
-          <%}%>
+                  <%for(let i=1;i<=customerCount;i++){%>
+                    <%if(i==offset){%>
+                      <a  href="" data-offset="<%= i %>"><%= i %></a>
+                    <%}else{%>
+                      <a  href="" data-offset="<%= i %>"><%= i %></a>
+                    <%}%>
+              
+                  <%}%>
+                  <%if(offset<customerCount){%>
+                    <a class="prev-next-buttons" href="" data-offset="<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
+                  <%}else{%>
+                    <a href="" class="prev-next-buttons ">Next&gt;</a>
+                  <%}%>
+                </td>
+              </tr>
+            </tfoot>
+          
         </table>
       
       
@@ -70,7 +63,7 @@
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
         <div class="form-title">Add Customer</div>
-        <form id="add-form" method="POST" action="/admin/add-customer">
+        <form id="add-form" method="POST">
           <div class="input-container">
             <label for="fullname-input">Full name</label>
             <input id="fullname-input" class="login-input" type="text" name="name"/>
@@ -106,7 +99,6 @@
         </form>
       </div>
     </div>
-    <script src="/js/cust-navbar.js"></script>
     <script src="/js/customer-list.js"></script>
   </body>
 </html>

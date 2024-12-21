@@ -1,8 +1,62 @@
 <%-include("../../partials/cust-template.ejs")%>
 <link href="/customer/order/cust-wishlist.css"  rel="stylesheet"/>
-<title>OtakuVerse Cart</title>
+<title>OtakuVerse Wishlist</title>
 </head>
 <body>
+  <%-include("../../partials/alert.ejs")%>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="title-row">Wishlist</div>
+        <div class="cart-container">
+          <div class="items-list">
+            <table>
+              <tr>
+                <th>Product</th>
+                <th>Total price</th>
+              </tr>
+              
+              <%items.forEach((item)=>{%>
+                <tr class="item-card">
+                    <%let product = item.product_id%>
+                    <%let variant = item.variant_id%>
+                    <td>
+                      <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
+                      <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
+                      
+                      <div class="variant-colour">Colour: <%=variant.colour%></div>
+                      <div class="variant-size">Size: <%=variant.size%></div>
+                      <button class="remove-button" data-id="<%=item._id%>">
+                        Remove
+                        <span class="material-symbols-outlined">
+                          remove
+                        </span>
+                      </button>
+                      <button class="add-to-cart-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
+                        Move to cart
+                        <span class="material-symbols-outlined">
+                          shopping_cart
+                        </span>
+                      </button>
+                    </td>
+                    <td>
+                      <div class="product-og-price"><%=product.price%></div>
+                      <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))).toFixed(2)%></div>
+                    </td>
+                  
+                </tr>
+              <%})%>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-include("../../partials/cust-footer.ejs")%>
   <script src="/js/cust-wishlist.js"></script>
+</body>
+  
 </body>
 </html>

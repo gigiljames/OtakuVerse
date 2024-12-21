@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%-include("../../partials/admin-template.ejs")%>
     <title>Product Management</title>
     <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/home/admin-home.css" />
-    <link rel="stylesheet" href="/admin/productManagement/view-product.css" <%-
-    include('../../partials/font-links.ejs') %>
+    <link rel="stylesheet" href="/admin/productManagement/view-product.css" />
   </head>
   <body>
+    <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
     <!-- <%= productDetails %> -->
     <section class="product-details">
@@ -111,12 +107,9 @@
               <div id="specs-error" class="error-container"></div>
             </div>
           </div>
-          <div class="input-container product-images">
-            <label for="product-images">Add product images</label>
-            <input id="product-images" type="file" name="images" multiple />
-            <div id="image-preview" class="image-collection"></div>
-          </div>
+          
         </form>
+        
         <form
           id="delete-form"
           method="POST"
@@ -137,7 +130,21 @@
           />
         </div>
       </div>
-
+      <div class="input-container product-images">
+        <label for="product-images">Add product images</label>
+        <input id="product-images" type="file" name="images" accept="image/*" />
+        <div id="image-preview" class="image-collection"></div>
+        <div id="crop-modal" style="display: none;">
+          <div class="modal-content">
+            <img id="crop-image" alt="Crop Image" />
+            <div class="crop-buttons">
+              <button id="save-crop">Save Crop</button>
+              <button id="cancel-crop">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <button id="upload-images" data-id="<%=productDetails._id%>">Upload</button>
+      </div>
       <div class="delete-images">
         <div class="subtitle">Delete images</div>
         <div class="image-collection">
@@ -171,7 +178,17 @@
           <div class="variant-card">
             <div class="variant-colour">Colour: <%=variant.colour%></div>
             <div class="variant-size">Size: <%=variant.size%></div>
-            <div class="variant-stock">Stock: <%=variant.stock_quantity%></div>
+            <div class="variant-stock-container">
+              <div class="variant-stock">
+                Stock:
+                <div class="stock-data">
+                  <%=variant.stock_quantity%>
+                </div>
+                <input type="text" class="stock-update-input"/>
+              </div>
+              <div class="stock-update-error error-container"></div>
+            </div>
+            
             <form
               id="<%= productDetails._id %>"
               action="/admin/delete-variant/<%= productDetails._id %>/<%=variant._id%>?_method=DELETE"
@@ -184,6 +201,18 @@
                 Delete variant
               </button>
             </form>
+              <button
+                class="edit-stock-button"
+              >
+                Edit Stock
+              </button>
+              <button
+                class="save-stock-button"
+                data-id = "<%=variant._id%>"
+              >
+                Save
+              </button>
+            
           </div>
           <%})%>
         </div>
@@ -226,7 +255,6 @@
       </div>
     </div>
     <script src="/js/view-product.js"></script>
-    <script src="/js/cust-navbar.js"></script>
     <script>
       const productDetails = <%- JSON.stringify(productDetails) %>;
       if(productDetails.is_enabled){

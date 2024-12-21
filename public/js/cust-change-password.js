@@ -49,11 +49,12 @@ changePassForm.addEventListener("submit", (event) => {
       data: formData,
       success: function (response) {
         if (response.success) {
-          alert(response.message);
-          window.location.href = response.redirectUrl;
+          alert(response.message, "success", () => {
+            window.location.href = response.redirectUrl;
+          });
         } else {
-          alert(response.message);
-          window.location.reload();
+          alert(response.message, "error");
+          // window.location.reload();
         }
       },
     });

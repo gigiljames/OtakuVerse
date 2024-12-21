@@ -4,6 +4,7 @@ const passwordError = document.getElementById("password-error");
 const errorContainers = document.getElementsByClassName("error-container");
 
 loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
   const email = document.getElementById("email-input").value.trim();
   const password = document.getElementById("password-input").value.trim();
   clearErrors();
@@ -16,8 +17,22 @@ loginForm.addEventListener("submit", (event) => {
     flag = 1;
     passwordError.innerText = "*This field is required.";
   }
-  if (flag === 1) {
-    event.preventDefault();
+  if (flag === 0) {
+    $.ajax({
+      url: "/admin/login",
+      type: "POST",
+      data: { username: email, password },
+      success: function async(response) {
+        if (response.success) {
+          window.location.href = "/admin/home";
+        } else {
+          if (response.message) {
+            alert(response.message, "error");
+          }
+        }
+      },
+      error: function (error) {},
+    });
   }
 });
 

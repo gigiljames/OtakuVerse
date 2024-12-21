@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%-include("../../partials/admin-template.ejs")%>
     <title>Product Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/productManagement/product-list.css" />
-    <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
     <%- include('../../partials/admin-navbar.ejs') %>
+    <%-include("../../partials/alert.ejs")%>
     <div class="title-row">
       <div class="title">Product Management</div>
       <button class="add-button">Add Product</button>
@@ -139,7 +134,6 @@
         </form>
       </div>
     </div>
-    <script src="/js/cust-navbar.js"></script>
     <script src="/js/product-list.js"></script>
   </body>
 </html>

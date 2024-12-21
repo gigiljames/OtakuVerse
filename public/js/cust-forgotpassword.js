@@ -30,7 +30,7 @@ form.addEventListener("submit", (event) => {
       },
       success: function (response) {
         if (response.success) {
-          alert(response.message);
+          alert(response.message, "success");
         } else {
           emailError.innerText = response.message;
         }

@@ -1,0 +1,100 @@
+<%-include("../../partials/cust-template.ejs")%>
+<link href="/customer/product/cust-shop.css" rel="stylesheet"/>
+<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+<title>OtakuVerse Shop</title>
+</head>
+<body>
+  <%-include("../../partials/alert.ejs")%>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="right-top">
+          <div class="title-row">
+            Shop
+            <div class="search-bar">
+              <input type="text" id="search" placeholder="Search"/>
+              <button class="search-button"><span class="material-symbols-outlined">
+                search
+                </span></button>
+            </div>
+          </div>
+        </div>
+        <div class="right-bottom">
+          <div class="adv-search-section">
+            <div class="sort-section">
+              <label for="sort">Sort By:</label>
+              <select name="" id="sort">
+                <option value="popularity">Popularity </option>
+                <option value="ascprice">Price: low to high</option>
+                <option value="descprice">Price : high to low </option>
+                <option value="avgrating">Average ratings </option>
+                <option value="featured">Featured </option>
+                <option value="new">New arrivals </option>
+                <option value="ascname">aA - zZ </option>
+                <option value="descname">zZ - aA </option>
+              </select>
+              <button class="sort-button">Sort</button>
+            </div>
+            <div class="filter-section">
+              <!-- <ul>
+                <li>
+                  <label for=""></label>
+                  <input type="checkbox" id="price1">
+                </li>
+              </ul> -->
+            </div>
+          </div>
+          <div class="product-section">
+            <div class="product-cards"></div>
+            <%if(locals.productList){%> <%productList.forEach((product,index)=>{%>
+                <div class="product-cards">
+                    <%let totalStock = 0;%>
+                  <%if (product.variants.length > 0) {%>
+                    <%product.variants.forEach((variant) => {%>
+                      <%totalStock += variant.stock_quantity;%>
+                    <%});%>
+                  <%}%>
+                  <a href="/product/<%=product._id%>">
+                    <div class="product-card">
+                      <div class="product-image">
+                        <img
+                          src="<%=product.product_images[0]?.filepath%>"
+                          alt="product-image"
+                        />
+                      </div>
+                      <div class="product-title"><%=product.product_name%></div>
+                      <div class="product-rating">
+                        <div class="star-rating">⭐⭐⭐⭐⭐</div>
+                        <div class="review-count">(3 reviews)</div>
+                      </div>
+                      <div class="product-pricing">
+                        <div class="ov-price">
+                          ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
+                        </div>
+                        <div class="original-price">₹<%=product.price%></div>
+                        <!-- <%if(totalStock>0 && totalStock<10){%>
+                          <div class="total-stock">
+                            <%=totalStock%> Left!!
+                          </div>
+                        <%}else if(totalStock===0){%>
+                          <div class="total-stock">
+                            Out of stock!
+                          </div>
+                        <%}%> -->
+                      </div>
+                      <div class="total-stock"></div>
+                    </div>
+                  </a>
+                </div>
+              <%})%> <%}%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-include("../../partials/cust-footer.ejs")%>
+  <script src="/js/cust-shop.js"></script>
+</body>
+</html>

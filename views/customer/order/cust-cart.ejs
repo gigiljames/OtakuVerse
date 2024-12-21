@@ -4,6 +4,7 @@
 <title>OtakuVerse Cart</title>
 </head>
 <body>
+  <%-include("../../partials/alert.ejs")%>
   <%-include("../../partials/cust-navbar.ejs")%>
   <div class="main">
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
@@ -23,6 +24,7 @@
                     <%let product = item.product_id%>
                     <%let variant = item.variant_id%>
                     <td>
+                      <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
                       <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
                       <div class="product-og-price"><%=product.price%></div>
                       <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))).toFixed(2)%></div>
@@ -34,9 +36,18 @@
                           remove
                         </span>
                       </button>
+                      <%if(variant.stock_quantity===0){%>
+                        <div class="out-of-stock">Out of stock</div>
+                      <%}%>
                     </td>
                     <td>
-                      <div class="quantity"><%=item.quantity%></div>
+                      <div class="quantity-container">
+                        <button class="dec-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>" >-</button>
+                        <input class="quantity" value="<%=item.quantity%>" disabled/>
+                        <button class="inc-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">+</button>
+                        
+                        
+                      </div>
                     </td>
                     <td>
                       <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))*item.quantity).toFixed(2)%></div>
@@ -46,6 +57,7 @@
               <%})%>
             </table>
           </div>
+        
           <div class="bill">
             
             <div class="bill-title">Bill</div>

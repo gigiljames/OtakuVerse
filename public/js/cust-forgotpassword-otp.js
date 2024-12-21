@@ -33,10 +33,10 @@ form.addEventListener("submit", (event) => {
       success: function (response) {
         if (response.success) {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "success");
           }
         } else {
-          alert(response.message);
+          alert(response.message, "error");
           console.log(response.message);
         }
         if (response.redirectUrl) {

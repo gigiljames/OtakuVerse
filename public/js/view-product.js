@@ -108,28 +108,79 @@ function clearErrors() {
   }
 }
 
-// JavaScript for image preview and remove functionality
 const fileInput = document.getElementById("product-images");
 const previewContainer = document.getElementById("image-preview");
+const cropModal = document.getElementById("crop-modal");
+const cropImage = document.getElementById("crop-image");
+const saveCropButton = document.getElementById("save-crop");
+const cancelCropButton = document.getElementById("cancel-crop");
+const uploadButton = document.getElementById("upload-images");
+
+let cropper; // To hold the Cropper.js instance
+let croppedFile = null; // Store the cropped file
 
 // Event listener to handle image file selection
 fileInput.addEventListener("change", function (event) {
-  const files = event.target.files;
-  previewContainer.innerHTML = ""; // Clear previous previews
+  const allowedExtensions = ["jpg", "jpeg", "png", "webp"];
+  const file = event.target.files[0]; // Get the single selected file
+  if (file) {
+    const fileExtension = file.name.split(".").pop().toLowerCase();
 
-  // Loop through the selected files and create previews
-  Array.from(files).forEach((file, index) => {
-    const reader = new FileReader();
+    if (!allowedExtensions.includes(fileExtension)) {
+      alert(
+        "Invalid file type. Please upload a .jpg, .jpeg, or .png file.",
+        "error"
+      );
+      fileInput.value = ""; // Clear the input field
+      return;
+    }
 
-    reader.onload = function (e) {
+    // Proceed with cropping logic
+    previewContainer.innerHTML = ""; // Clear previous previews
+    croppedFile = null;
+    startCropping(file);
+  }
+});
+
+// Start cropping the given file
+function startCropping(file) {
+  if (!file.type.startsWith("image/")) {
+    alert("Please upload only image files.", "error");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    cropModal.style.display = "block"; // Show the cropping modal
+    cropImage.src = e.target.result; // Load the image into the modal
+
+    // Initialize Cropper.js with square cropping
+    cropper = new Cropper(cropImage, {
+      aspectRatio: 1, // Enforce square aspect ratio
+      viewMode: 2,
+    });
+  };
+
+  reader.readAsDataURL(file); // Read the file as a data URL
+}
+
+// Save the cropped image
+saveCropButton.addEventListener("click", function () {
+  if (cropper) {
+    cropper.getCroppedCanvas().toBlob((blob) => {
+      // Create a new file from the cropped blob
+      croppedFile = new File([blob], fileInput.files[0].name, {
+        type: fileInput.files[0].type,
+      });
+
+      // Create a preview card for the cropped image
       const imageCard = document.createElement("div");
       imageCard.classList.add("image-card");
 
       const image = document.createElement("img");
-      image.src = e.target.result;
-      image.alt = file.name;
+      image.src = URL.createObjectURL(croppedFile);
 
-      // Create a remove button for the image preview
       const removeButton = document.createElement("button");
       removeButton.type = "button";
       removeButton.classList.add("remove-button");
@@ -138,25 +189,110 @@ fileInput.addEventListener("change", function (event) {
       closeIcon.classList.add("material-symbols-outlined");
       removeButton.appendChild(closeIcon);
 
-      // Add event listener to remove the image when the button is clicked
       removeButton.addEventListener("click", function () {
-        imageCard.remove(); // Remove the image preview
-        // Also remove the file from the input by resetting the input value
-        const dataTransfer = new DataTransfer(); // Create a new DataTransfer object
-        Array.from(fileInput.files).forEach((item, i) => {
-          if (i !== index) {
-            dataTransfer.items.add(item); // Add all other files
-          }
-        });
-        fileInput.files = dataTransfer.files; // Update the file input
+        imageCard.remove();
+        croppedFile = null; // Clear the cropped file
+        fileInput.value = ""; // Clear the file input
       });
 
-      // Append the image and the remove button to the image card
       imageCard.appendChild(image);
       imageCard.appendChild(removeButton);
       previewContainer.appendChild(imageCard);
-    };
 
-    reader.readAsDataURL(file); // Read the file as a data URL
+      // Destroy the Cropper instance
+      cropper.destroy();
+      cropModal.style.display = "none"; // Hide the modal
+      alert("Image cropped and added successfully!", "success");
+    });
+  }
+});
+
+// Cancel cropping
+cancelCropButton.addEventListener("click", function () {
+  if (cropper) {
+    cropper.destroy();
+    cropModal.style.display = "none"; // Hide the modal
+    alert("Cropping canceled!", "info");
+  }
+  fileInput.value = ""; // Clear the file input
+});
+
+uploadButton.addEventListener("click", function () {
+  const id = uploadButton.dataset.id;
+  if (!croppedFile) {
+    alert("Please crop an image before uploading.", "error");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", croppedFile); // Append the single cropped file
+
+  // Send the cropped image to the backend via AJAX
+  $.ajax({
+    url: `/admin/add-product-image/${id}`,
+    type: "POST",
+    processData: false,
+    contentType: false,
+    data: formData,
+    success: function (response) {
+      if (response.success) {
+        alert(response.message, "success", () => {
+          window.location.reload();
+        });
+      } else {
+        alert(response.message, "error");
+      }
+    },
+  });
+});
+
+const variantCards = document.querySelectorAll(".variant-cards");
+
+variantCards.forEach((variantCard) => {
+  const stockUpdateError = variantCard.querySelector(".stock-update-error");
+
+  const editButton = variantCard.querySelector(".edit-stock-button");
+  const saveButton = variantCard.querySelector(".save-stock-button");
+  editButton.addEventListener("click", () => {
+    const stockInput = variantCard.querySelector(".stock-update-input");
+    const stockData = variantCard.querySelector(".stock-data");
+    stockInput.style.display = "block";
+    stockData.style.display = "none";
+    editButton.style.display = "none";
+    saveButton.style.display = "block";
+  });
+  saveButton.addEventListener("click", () => {
+    stockUpdateError.innerText = "";
+    const stockInput = variantCard.querySelector(".stock-update-input");
+    const stockData = variantCard.querySelector(".stock-data");
+
+    const stock = Number(stockInput.value.trim());
+    if (stock === "undefined" || stock < 0) {
+      stockUpdateError.innerText = "Enter a valid stock value.";
+    } else {
+      const variantID = saveButton.dataset.id;
+      $.ajax({
+        type: "PATCH",
+        url: `/admin/edit-stock/${variantID}`,
+        data: { stock },
+        success: function (response) {
+          if (response.success) {
+            if (response.message) {
+              alert(response.message, "success");
+            }
+            stockInput.style.display = "none";
+            stockData.style.display = "block";
+            editButton.style.display = "block";
+            saveButton.style.display = "none";
+            stockData.innerText = stock;
+          } else {
+            if (response.message) {
+              alert(response.message, "error");
+            }
+          }
+        },
+        error: function (error) {},
+      });
+    }
   });
 });

@@ -6,8 +6,11 @@ const errorContainers = document.getElementsByClassName("error-container");
 //EDIT FORM VALIDATION
 editForm.addEventListener("submit", (event) => {
   clearErrors();
+  event.preventDefault();
   const catName = document.getElementById("cat-name").value.trim();
   const catDesc = document.getElementById("cat-desc").value.trim();
+  const files = document.getElementById("banner-images").files;
+  const catID = editForm.dataset.id;
   let flag = 0;
   if (!catName) {
     flag = 1;
@@ -17,8 +20,34 @@ editForm.addEventListener("submit", (event) => {
     flag = 1;
     descError.innerText = "*This is a required field.";
   }
-  if (flag === 1) {
-    event.preventDefault();
+  if (flag === 0) {
+    const formData = new FormData();
+    formData.append("name", catName);
+    formData.append("desc", catDesc);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("files", files[i]);
+    }
+    $.ajax({
+      url: `/admin/edit-category/${catID}`,
+      type: "PATCH",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.success) {
+          alert(response.message, "success", () => {
+            window.location.reload();
+          });
+        } else {
+          if (response.message) {
+            alert(response.message, "error");
+          }
+        }
+      },
+      error: function (xhr, status, error) {
+        alert("An error occurred while while editing category.", "error");
+      },
+    });
   }
 });
 
@@ -102,5 +131,60 @@ fileInput.addEventListener("change", function (event) {
     };
 
     reader.readAsDataURL(file); // Read the file as a data URL
+  });
+});
+
+//DELETE BANNER IMAGES
+const deleteBannerButtons = document.querySelectorAll(".delete-banner-button");
+deleteBannerButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    const catId = button.dataset.catid;
+    const imgId = button.dataset.banid;
+    $.ajax({
+      url: `/admin/delete-catbanner/${catId}/${imgId}`,
+      type: "DELETE",
+      data: { catId, imgId },
+      success: function (response) {
+        if (response.success) {
+          alert(response.message, "success", () => {
+            window.location.reload();
+          });
+        } else {
+          if (response.message) {
+            alert(response.message, "error");
+          }
+        }
+      },
+      error: function (xhr, status, error) {
+        alert("An error occurred while while deleting banner image.", "error");
+      },
+    });
+  });
+});
+
+//DELETE CATEGORY
+const deleteCatButton = document.querySelector("#delete-button");
+
+deleteCatButton.addEventListener("click", (event) => {
+  event.preventDefault();
+  const catID = deleteCatButton.dataset.id;
+  $.ajax({
+    url: `/admin/delete-category/${catID}/`,
+    type: "DELETE",
+    success: function (response) {
+      if (response.success) {
+        alert(response.message, "success", () => {
+          window.location.href = response.redirectUrl;
+        });
+      } else {
+        if (response.message) {
+          alert(response.message, "error");
+        }
+      }
+    },
+    error: function (xhr, status, error) {
+      alert("An error occurred while while deleting the category.", "error");
+    },
   });
 });

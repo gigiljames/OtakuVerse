@@ -35,6 +35,7 @@ body {
 
 .big-image {
   overflow: hidden;
+  position: relative;
 }
 
 .breadcrumbs {
@@ -70,9 +71,9 @@ body {
   height: 590px;
 }
 
-#display-image:hover {
+/* #display-image:hover {
   transform: scale(1.5);
-}
+} */
 
 .discount {
   color: rgb(0, 197, 0);
@@ -335,4 +336,31 @@ body {
 
 .recommended-section.see-more a {
   color: #5a9af4;
+}
+
+/*IMAGE ZOOM*/
+.product-image-container {
+  position: relative;
+}
+
+.product-image-container img {
+  width: 100%;
+  height: 100%;
+}
+
+.zoom-result {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  width: 400px;
+  height: 400px;
+  top: 110px;
+  right: 240px;
+  overflow: hidden;
+  display: none;
+  z-index: 2;
+}
+
+.zoom-result img {
+  position: absolute;
+  transform: scale(2); /* Zoom factor */
 }

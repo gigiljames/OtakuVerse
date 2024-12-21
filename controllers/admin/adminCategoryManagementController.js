@@ -32,18 +32,25 @@ const viewCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    const { name, desc } = req.body;
+    let { name, desc } = req.body;
+    name = name.toLowerCase();
+    const categoryExists = await Category.findOne({
+      category_name: name,
+      is_deleted: false,
+    });
+    if (categoryExists) {
+      return res.json({ success: false, message: "Category already exists." });
+    }
     const category = new Category({
       category_name: name,
       category_desc: desc,
     });
     const saveConfirmation = await category.save();
-    if (saveConfirmation) {
-      console.log("Added category successfully");
-    } else {
-      console.log("Add Category : Something went wrong.");
-    }
-    return res.redirect("/admin/category-management");
+    return res.json({
+      success: true,
+      message: "Category added successfully.",
+      id: saveConfirmation._id,
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Add Category");
@@ -52,6 +59,7 @@ const addCategory = async (req, res) => {
 
 const editCategory = async (req, res) => {
   try {
+    console.log(req.body.images);
     const imageDocs = req.files.map((file) => ({
       filename: file.filename,
       filepath: file.path.slice(6), // removes "public" from path
@@ -65,12 +73,17 @@ const editCategory = async (req, res) => {
         $push: { banner_images: { $each: imageDocs } },
       }
     );
-
-    console.log("Category edited successfully.");
-    return res.redirect(`/admin/category/${id}`);
+    return res.json({
+      success: true,
+      message: "Category has been edited successfully.",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Category");
+    return res.json({
+      success: false,
+      message: "An error occured while editing category.",
+    });
   }
 };
 
@@ -81,15 +94,18 @@ const deleteCategory = async (req, res) => {
       { _id: id },
       { $set: { is_deleted: true } }
     );
-    if (deleteConfirmation) {
-      console.log("Category deleted successfully.");
-    } else {
-      console.log("Delete Category : Something went wrong");
-    }
-    return res.redirect("/admin/category-management");
+    return res.json({
+      success: true,
+      message: "Category deleted successfully.",
+      redirectUrl: "/admin/category-management",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Category");
+    return res.json({
+      success: false,
+      message: "An error occured while deleting the category.",
+    });
   }
 };
 
@@ -113,10 +129,17 @@ const deleteCatBanner = async (req, res) => {
       }
     });
     console.log("Banner image deleted successfully");
-    res.redirect(`/admin/category/${catId}`);
+    return res.json({
+      success: true,
+      message: "Banner image deleted successfully.",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Category Banner");
+    return res.json({
+      success: false,
+      message: "An error occured while deleting banner image.",
+    });
   }
 };
 

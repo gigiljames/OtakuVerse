@@ -98,7 +98,7 @@ function handleAddressFunctions() {
           success: function (response) {
             if (response.success) {
               if (response.message) {
-                alert(response.message);
+                alert(response.message, "success");
                 editButtonGroup.style.display = "initial";
                 noEditButtonGroup.style.display = "none";
                 const addressInputs =
@@ -118,7 +118,7 @@ function handleAddressFunctions() {
               }
             } else {
               if (response.message) {
-                alert(response.message);
+                alert(response.message, "error");
               }
             }
           },
@@ -128,19 +128,23 @@ function handleAddressFunctions() {
     });
     deleteButton.addEventListener("click", (event) => {
       const addressID = deleteButton.dataset.id;
+      console.log(addressID);
       $.ajax({
         url: `/delete-address/${addressID}`,
         type: "DELETE",
         success: function (response) {
-          alert(response.message);
+          if (response.success) {
+            if (response.message) {
+              alert(response.message, "success");
+            }
+          } else {
+            if (response.message) {
+              alert(response.message, "error");
+            }
+          }
           addressCard.remove();
         },
-        error: function (error) {
-          const errorMessage =
-            error.responseJSON?.message ||
-            "An error occured. Please try again.";
-          alert(errorMessage);
-        },
+        error: function (error) {},
       });
     });
   });
@@ -210,7 +214,7 @@ saveDetailsButton.addEventListener("click", () => {
       success: function (response) {
         if (response.success) {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "success");
             clearErrors();
             editDetailsGroup.style.display = "initial";
             noEditDetailsGroup.style.display = "none";
@@ -226,7 +230,7 @@ saveDetailsButton.addEventListener("click", () => {
           }
         } else {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "error");
           }
         }
       },
@@ -275,10 +279,16 @@ addForm.addEventListener("submit", (event) => {
   if (!name) {
     flag = 1;
     nameError.innerText = "Please enter the recipient's name.";
+  } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+    flag = 1;
+    nameError.innerText = "Name should contain only letters and spaces.";
   }
   if (!phno) {
     flag = 1;
     phnoError.innerText = "Please enter the phone number.";
+  } else if (!/^\d{10}$/.test(phno)) {
+    flag = 1;
+    phnoError.innerText = "Phone number should be a valid 10-digit number.";
   }
   if (!apt) {
     flag = 1;
@@ -291,14 +301,23 @@ addForm.addEventListener("submit", (event) => {
   if (!city) {
     flag = 1;
     cityError.innerText = "Please enter the city.";
+  } else if (!/^[a-zA-Z\s]+$/.test(city)) {
+    flag = 1;
+    cityError.innerText = "City should contain only letters and spaces.";
   }
   if (!state) {
     flag = 1;
     stateError.innerText = "Please enter the state.";
+  } else if (!/^[a-zA-Z\s]+$/.test(state)) {
+    flag = 1;
+    stateError.innerText = "State should contain only letters and spaces.";
   }
   if (!pin) {
     flag = 1;
     pinError.innerText = "Please enter the pincode.";
+  } else if (!/^\d{6}$/.test(pin)) {
+    flag = 1;
+    pinError.innerText = "Pincode should be a valid 6-digit number.";
   }
 
   if (flag === 0) {
@@ -311,13 +330,13 @@ addForm.addEventListener("submit", (event) => {
         if (response.success) {
           if (response.message) {
             addFormOuter.style.display = "none";
-            alert(response.message);
+            alert(response.message, "success");
             updateAddressList(address, response.addressID);
             handleAddressFunctions();
           }
         } else {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "error");
           }
         }
       },
@@ -376,7 +395,7 @@ function updateAddressList(address, addressID) {
                   <button class="edit-address-button" tooltip="Edit address"><span class="material-symbols-outlined">
                     edit_square
                     </span></button>
-                  <button class="delete-address-button" data-id="<${addressID}"><span class="material-symbols-outlined">
+                  <button class="delete-address-button" data-id="${addressID}"><span class="material-symbols-outlined">
                     delete
                     </span></button>
                 </div>

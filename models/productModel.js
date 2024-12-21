@@ -30,6 +30,7 @@ const productSchema = new Schema(
       required: true,
       min: 0,
     },
+    discounted_price: { type: Number },
     is_enabled: {
       type: Boolean,
       required: true,
@@ -65,8 +66,32 @@ const productSchema = new Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// Pre-save hook to calculate discounted_price
+productSchema.pre("save", function (next) {
+  if (this.price != null && this.discount != null) {
+    this.discounted_price = this.price * (1 - this.discount * 0.01);
+    console.log(`Discounted Price Calculated: ${this.discounted_price}`);
+  } else {
+    console.error(
+      "Price or discount is missing. Cannot calculate discounted price."
+    );
+    this.discounted_price = null;
+  }
+  next();
+});
+
+// Pre-update hook to handle discounted_price for updates
+productSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.price != null && update.discount != null) {
+    update.discounted_price = update.price * (1 - update.discount * 0.01);
+    console.log(`Discounted Price Updated: ${update.discounted_price}`);
+  }
+  next();
+});
 
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

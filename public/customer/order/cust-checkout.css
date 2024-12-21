@@ -21,6 +21,11 @@ body {
   width: 150px;
 }
 
+.add-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .address-card {
   background-color: white;
   padding: 25px 40px;
@@ -73,6 +78,7 @@ body {
   color: red;
   font-size: 14px;
   display: block;
+  word-wrap: break-word;
 }
 
 .address-data {
@@ -93,6 +99,13 @@ body {
   border: 0;
   box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.332);
   border-radius: 5px;
+}
+
+.details-section {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  margin-right: 25px;
 }
 
 .delete-address-button {
@@ -126,6 +139,12 @@ body {
   width: 80px;
   height: 36px;
 }
+
+.subtitle {
+  margin: 15px 20px;
+  font-weight: 600;
+}
+
 .main {
   display: flex;
 }
@@ -164,6 +183,20 @@ body {
   padding-left: 20px;
 }
 
+.method-list {
+  background-color: white;
+  border-radius: 20px;
+  padding: 25px 40px;
+  display: flex;
+  gap: 20px;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 .order-container {
   display: grid;
   grid-template-columns: 5fr 2fr;
@@ -176,4 +209,103 @@ body {
   justify-content: space-between;
   padding-left: 20px;
   align-items: center;
+}
+
+/*chatgpt css*/
+.bill {
+  background-color: #fef6e4; /* Light anime-inspired background */
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ebd8b7; /* Subtle border for structure */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.bill-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ff7eb9; /* Anime-theme vibrant accent color */
+  text-align: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ff7eb9;
+  padding-bottom: 10px;
+}
+
+.bill ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bill li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  padding: 10px 0;
+  border-bottom: 1px solid #ebd8b7;
+}
+
+.bill li span {
+  color: #333;
+}
+
+.bill li span#grand-total {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #ff7eb9; /* Highlighted total */
+}
+
+.bill li span#you-save {
+  color: #4caf50; /* Savings in green */
+  font-weight: bold;
+}
+
+.bill li span#you-save-percent {
+  color: #4caf50; /* Percentage in green */
+  font-style: italic;
+}
+
+.order-button {
+  display: block;
+  width: 100%;
+  background-color: #ff7eb9; /* Button color matching theme */
+  color: #fff;
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.order-button:hover {
+  background-color: #ff567a; /* Slightly darker hover effect */
+}
+
+.order-button:active {
+  background-color: #e64a68;
+}
+
+@media (max-width: 768px) {
+  .bill {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .bill-title {
+    font-size: 1.5rem;
+  }
+
+  .bill li {
+    font-size: 0.9rem;
+  }
+
+  .order-button {
+    font-size: 1rem;
+    padding: 10px;
+  }
 }

@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%-include("../../partials/admin-template.ejs")%>
     <title>Category Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/categoryManagement/view-category.css" />
     <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
+    <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
     <section class="cat-details">
       <div class="title">Category Management</div>
       <form
         id="edit-cat-form"
-        action="/admin/edit-category/<%= categoryDetails._id %>?_method=PATCH"
+        data-id = "<%= categoryDetails._id %>"
         method="POST"
         enctype="multipart/form-data"
       >
@@ -50,7 +46,7 @@
 
         <div class="input-container banner-images">
           <label for="banner-images">Add banner images</label>
-          <input id="banner-images" type="file" name="images" multiple />
+          <input id="banner-images" type="file" name="images" accept="image/*" multiple />
           <div id="image-preview" class="image-collection"></div>
           <form></form>
           <div class="button-group">
@@ -73,35 +69,20 @@
                   src="<%= banner.filepath %>"
                   alt="<%= banner.filename %>"
                 />
-                <form
-                  id="delete-catbanner-form<%= index %>"
-                  method="POST"
-                  action="/admin/delete-catbanner/<%= categoryDetails._id %>/<%= banner._id %>?_method=DELETE"
-                >
-                  <button form="delete-catbanner-form<%= index %>">
-                    <span class="material-symbols-outlined delete-icon"
-                      >delete</span
-                    >
-                  </button>
-                </form>
+                <button class="delete-banner-button" data-catid="<%= categoryDetails._id %>" data-banid="<%= banner._id %>">
+                  <span class="material-symbols-outlined delete-icon"
+                    >delete</span
+                  >
+                </button>
               </div>
               <% }); %> <% } %>
             </div>
           </div>
         </div>
       </form>
-      <div class="delete-button">
-        <form
-          method="POST"
-          action="/admin/delete-category/<%= categoryDetails._id%>?_method=DELETE"
-        >
-          <!-- <input type="hidden" name="_method" value="DELETE" /> -->
-          <input type="submit" id="delete-button" value="Delete category" />
-        </form>
-      </div>
+      <button id="delete-button" data-id="<%= categoryDetails._id%>">Delete category</button>
     </section>
 
-    <script src="/js/cust-navbar.js"></script>
     <script src="/js/view-category.js"></script>
   </body>
 </html>

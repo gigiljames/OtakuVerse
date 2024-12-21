@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%-include("../../partials/cust-template.ejs")%>
     <title>OtakuVerse Home</title>
-    <%- include('../../partials/font-links.ejs') %>
-    <link rel="stylesheet" href="customer/cust-navbar.css" />
     <link rel="stylesheet" href="customer/home/cust-home.css" />
-    <link rel="stylesheet" href="customer/cust-footer.css" />
   </head>
   <body>
     <%- include('../../partials/cust-navbar.ejs') %>
+    <%-include("../../partials/alert.ejs")%>
     <section class="banner-section">
       <div class="banner-outer">
         <div class="banner-images-outer">
@@ -38,6 +32,12 @@
         </div>
         <div class="product-cards">
           <%data.productList.forEach((product, index)=>{%>
+            <%let totalStock = 0;%>
+          <%if (product.variants.length > 0) {%>
+            <%product.variants.forEach((variant) => {%>
+              <%totalStock += variant.stock_quantity;%>
+            <%});%>
+          <%}%>
           <a href="/product/<%=product._id%>">
             <div class="product-card">
               <div class="product-image">
@@ -56,6 +56,15 @@
                   ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
                 </div>
                 <div class="original-price">₹<%=product.price%></div>
+                <%if(totalStock>0 && totalStock<10){%>
+                  <div class="total-stock">
+                    <%=totalStock%> Left!!
+                  </div>
+                <%}else if(totalStock===0){%>
+                  <div class="total-stock">
+                    Out of stock!
+                  </div>
+                <%}%>
               </div>
             </div>
           </a>

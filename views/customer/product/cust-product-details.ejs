@@ -1,8 +1,10 @@
 <%-include("../../partials/cust-template.ejs")%>
     <title><%=product.product_name%></title>
     <link rel="stylesheet" href="/customer/product/cust-product-details.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/css/magnify.min.css">
   </head>
   <body>
+    <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/cust-navbar.ejs') %>
     <div class="breadcrumbs">
       <ul>
@@ -17,16 +19,20 @@
       <div class="image-collection">
         <div class="image-list">
           <%product.product_images.forEach((image)=>{%>
-          <img
-            class="image-tile"
-            src="<%=image.filepath%>"
-            alt="Product image here"
-          />
+            <img
+              class="image-tile"
+              src="<%=image.filepath%>"
+              alt="Product image here"
+            />
           <%})%>
         </div>
         <div class="big-image">
-          <img id="display-image"" src="" alt="Product image here" />
+          <div class="product-image-container">
+            <img id="display-image" src="" alt="Product Image" id="product-image" />
+          </div>
+          
         </div>
+        <div class="zoom-result" id="zoom-result"></div>
       </div>
       <div class="basic-details">
         <div class="line1">
@@ -85,16 +91,25 @@
             <%})%>
           </div>
         </div>
+
+        <%let totalStock = 0;%>
+        <%if (product.variants.length > 0) {%>
+          <%product.variants.forEach((variant) => {%>
+            <%totalStock += variant.stock_quantity;%>
+          <%});%>
+        <%}%>
         <%if(product.variants.length>0){%>
         <div class="line3">
+          <%if(totalStock>0){%>
           <button class="add-to-cart-button" data-productid="<%=product._id%>">
             Add to cart<span class="material-symbols-outlined">
               shopping_cart
             </span>
           </button>
-          <button class="add-to-wishlist-button">
+          <%}%>
+          <button class="add-to-wishlist-button" data-productid="<%=product._id%>">
             Add to wishlist
-            <span class="material-symbols-outlined"> favorite </span>
+            <span class="material-symbols-outlined" > favorite </span>
           </button>
         </div>
         <%}%>
@@ -139,7 +154,7 @@
           <a href="/product/<%=product._id%>">
             <div class="product-card">
               <div class="product-image">
-                <img
+                <img  
                   src="<%=product.product_images[0]?.filepath%>"
                   alt="product-image"
                 />
@@ -165,5 +180,9 @@
     <%-include('../../partials/cust-footer.ejs') %>
     <script src="/js/cust-product-details.js"></script>
     <script src="/js/cust-navbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/js/jquery.magnify.min.js"></script>
+
+
+
   </body>
 </html>

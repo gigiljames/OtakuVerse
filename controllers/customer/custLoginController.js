@@ -7,6 +7,12 @@ const getPage = async (req, res) => {
     if (req.session.user) {
       return res.redirect("/");
     } else {
+      const { status } = req.query;
+      if (status === "banned") {
+        return res.render("customer/login/cust-login", {
+          message: "User banned by admin.",
+        });
+      }
       return res.render("customer/login/cust-login");
     }
   } catch (error) {
@@ -222,17 +228,20 @@ const verify = async (req, res) => {
       account_status: { $ne: "deleted" },
     });
     if (!customerExists) {
-      return res.render("customer/login/cust-login", {
+      return res.json({
+        success: false,
         message: "Incorrect email or password",
       });
     }
     if (customerExists.account_status === "banned") {
-      return res.render("customer/login/cust-login", {
+      return res.json({
+        success: false,
         message: "User is banned by admin",
       });
     }
     if (!customerExists.customer_password) {
-      return res.render("customer/login/cust-login", {
+      return res.json({
+        success: false,
         message:
           "It looks like you signed up using Google. Please use the 'Sign in with Google' option to log in.",
       });
@@ -242,13 +251,14 @@ const verify = async (req, res) => {
       customerExists.customer_password
     );
     if (!passwordMatch) {
-      return res.render("customer/login/cust-login", {
+      return res.json({
+        success: false,
         message: "Incorrect email or password",
       });
     }
 
     req.session.user = customerExists._id;
-    return res.redirect("/");
+    return res.json({ success: true, message: "Logged in successfully." });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Customer Login Verify");

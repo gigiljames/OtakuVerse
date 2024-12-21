@@ -17,10 +17,13 @@ const getPage = async (req, res) => {
         category: categoryList[i]._id,
         is_deleted: false,
         is_enabled: true,
-      }).limit(4);
+      })
+        .limit(4)
+        .populate("variants", "stock_quantity");
+
       if (productList.length > 0) {
-        temp.categoryInfo = categoryList[i];
         temp.productList = productList;
+        temp.categoryInfo = categoryList[i];
         displayData.push(temp);
       }
     }

@@ -140,10 +140,24 @@ const resendOtp = async (req, res) => {
   }
 };
 
+const verifyGoogleUser = async (req, res) => {
+  const customer = await Customer.findOne(
+    { google_id: req.user.google_id },
+    { account_status: 1 }
+  );
+  if (customer && customer.account_status === "banned") {
+    return res.redirect("/login?status=banned");
+  } else {
+    req.session.user = req.user._id;
+    return res.redirect("/");
+  }
+};
+
 module.exports = {
   getPage,
   enterOTP,
   verify,
   verifyOtp,
   resendOtp,
+  verifyGoogleUser,
 };

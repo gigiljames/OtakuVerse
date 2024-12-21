@@ -25,6 +25,11 @@ const cartSchema = new Schema({
         min: 1,
         default: 1,
       },
+      inStock: {
+        type: Boolean,
+        required: true,
+        default: true,
+      },
     },
   ],
 });

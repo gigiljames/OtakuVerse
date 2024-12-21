@@ -62,20 +62,30 @@ router.get(
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/signup" }),
-  (req, res) => {
-    req.session.user = req.user._id;
-    res.redirect("/");
-  }
+  signup.verifyGoogleUser
 );
 
 //Products
+router.get("/shop", products.getShopPage);
+router.get("/get-products", products.getProducts);
 router.get("/product/:id", products.viewProduct);
 
 //Order
 router.get("/cart", authMiddleware, order.cartPage);
 router.post("/cart/:productID", authMiddleware, order.addToCart);
 router.delete("/cart/:itemID", authMiddleware, order.removeFromCart);
+router.delete("/cart/one/:productID", authMiddleware, order.removeOneFromCart);
 router.get("/checkout", authMiddleware, order.checkout);
-router.post("/order", authMiddleware, order.placeOrder);
+router.post("/place-order", authMiddleware, order.placeOrder);
+router.get("/orders", authMiddleware, order.ordersPage);
+router.delete(
+  "/cancel-item/:orderID/:variantID",
+  authMiddleware,
+  order.cancelItem
+);
+router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
+// router.get("/wishlist", authMiddleware, order.wishlistPage);
+// router.post("/wishlist/:productID", authMiddleware, order.addToWishlist);
+// router.delete("/wishlist/:itemID", authMiddleware, order.removeFromWishlist);
 
 module.exports = router;

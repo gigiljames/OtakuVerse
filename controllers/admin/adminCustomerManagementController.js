@@ -5,20 +5,41 @@ const getPage = async (req, res) => {
     const { offset } = req.query;
     const limit = 10;
     const customerCount = await Customer.find().countDocuments();
-    const customerList = await Customer.find(
-      { account_status: { $ne: "deleted" } },
-      { customer_name: 1, customer_email: 1, account_status: 1 }
-    )
-      .skip(limit * (offset - 1))
-      .limit(limit);
     res.render("admin/customerManagement/customer-list", {
-      customerList,
       customerCount: Math.ceil(customerCount / limit),
       offset,
     });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Customer List");
+  }
+};
+
+const getCustomers = async (req, res) => {
+  try {
+    const { search, sort } = req.query;
+    const offset = req.query.offset || 1;
+    const limit = 10;
+    const customerList = await Customer.find(
+      {
+        account_status: { $ne: "deleted" },
+        $or: [
+          { customer_name: { $regex: search, $options: "i" } },
+          { customer_email: { $regex: search, $options: "i" } },
+        ],
+      },
+      { customer_name: 1, customer_email: 1, account_status: 1 }
+    )
+      .skip(limit * (offset - 1))
+      .limit(limit);
+    res.json({
+      success: true,
+      customerList,
+      offset,
+    });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Get Customers");
   }
 };
 
@@ -31,8 +52,10 @@ const addCustomer = async (req, res) => {
     const { name, email, password, status } = req.body;
     const temp = await Customer.find({ customer_email: email });
     if (temp.length > 0) {
-      console.log("User already exists.");
-      return res.redirect("/admin/customer-management");
+      return res.json({
+        success: false,
+        message: "User already exists.",
+      });
     }
     const customer = new Customer({
       customer_name: name,
@@ -41,15 +64,18 @@ const addCustomer = async (req, res) => {
       account_status: status,
     });
     const saveConfirmation = await customer.save();
-    if (saveConfirmation) {
-      console.log("Customer added successfully.");
-    } else {
-      console.log("Add Customer : Something went wrong");
-    }
-    return res.redirect("/admin/customer-management");
+    return res.json({
+      success: true,
+      message: "Customer added successfully.",
+      data: saveConfirmation,
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Add Customer");
+    return res.json({
+      success: false,
+      message: "An error occured while adding customer.",
+    });
   }
 };
 
@@ -95,6 +121,7 @@ const unblockCustomer = async (req, res) => {
 
 module.exports = {
   getPage,
+  getCustomers,
   viewCustomer,
   addCustomer,
   blockCustomer,

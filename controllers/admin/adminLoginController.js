@@ -19,14 +19,21 @@ const verify = async (req, res) => {
     const { username, password } = req.body;
     const admin = await Admin.findOne({ username: username });
     if (admin) {
-      const passwordMatch = bcrypt.compare(password, admin.password);
+      const passwordMatch = await bcrypt.compare(password, admin.password);
+      console.log(passwordMatch);
       if (passwordMatch) {
         req.session.admin = true;
-        return res.redirect("/admin/home");
+        return res.json({ success: true, message: "Logged in successfully." });
+      } else {
+        return res.json({
+          success: false,
+          message: "Incorrect username or password.",
+        });
       }
     } else {
-      return res.render("admin/login/admin-login", {
-        message: "Incorrect username or password",
+      return res.json({
+        success: false,
+        message: "Incorrect username or password.",
       });
     }
   } catch (error) {

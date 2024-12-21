@@ -38,11 +38,11 @@ form.addEventListener("submit", (event) => {
       success: function (response) {
         if (response.success) {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "success");
           }
         } else {
           if (response.message) {
-            alert(response.message);
+            alert(response.message, "error");
           }
         }
         if (response.redirectUrl) {
