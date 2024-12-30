@@ -1,0 +1,48 @@
+<%- include("../../partials/cust-template.ejs")%>
+<link href="/customer/home/cust-wallet.css" rel="stylesheet"/>
+<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+<title>OtakuVerse Wallet</title>
+</head>
+<body>
+  <%-include("../../partials/alert.ejs")%>
+  <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="main">
+    <div class="main-left">
+      <%-include("../../partials/cust-sidebar.ejs")%>
+    </div>
+    <div class="main-right">
+      <div class="main-right-inner">
+        <div class="main-title-row">
+          <div class="main-title">Wallet</div>
+        </div>
+        Wallet balance: <%=wallet.balance%>
+        <h2>Transaction History</h2>
+        <div class="transaction-list">
+          <table>
+            <thead>
+              <th>Amount</th>
+              <th>Transaction type</th>
+              <th>Date</th>
+              <th>Time</th>
+            </thead>
+            <tbody>
+              <%wallet.transaction_history.forEach((transaction)=>{%>
+                <%const options = { timeZone: "Asia/Kolkata", day: "2-digit", month: "2-digit", year: "numeric" };%>
+                <%const indianDate = new Intl.DateTimeFormat("en-IN", options).format(transaction.time);%>
+                <%const timeOptions = { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };%>
+                <%const indianTime = new Intl.DateTimeFormat("en-IN", timeOptions).format(transaction.time);%>
+                <tr>
+                  <td><%=transaction.amount%></td>
+                  <td><%=transaction.transactionType%></td>
+                  <td><%=indianDate%></td>
+                  <td><%=indianTime%></td>
+                </tr>
+              <%})%>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

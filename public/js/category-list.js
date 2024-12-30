@@ -16,6 +16,7 @@ addButton.addEventListener("click", (event) => {
 
 const nameError = document.getElementById("name-error");
 const descError = document.getElementById("desc-error");
+const offerError = document.getElementById("offer-error");
 
 const errorContainers = document.getElementsByClassName("error-container");
 function clearErrors() {
@@ -30,19 +31,30 @@ addCategoryForm.addEventListener("submit", (event) => {
   flag = 0;
   const name = document.getElementById("cat-name").value.trim();
   const desc = document.getElementById("cat-desc").value.trim();
+  const offer = document.getElementById("cat-offer").value.trim();
   if (!name) {
     flag = 1;
-    nameError.innerText = "*This field is required.";
+    nameError.innerText = "Enter category name.";
   }
   if (!desc) {
     flag = 1;
-    descError.innerText = "*This field is required.";
+    descError.innerText = "Enter category description.";
+  }
+  if (!offer) {
+    flag = 1;
+    offerError.innerText = "Enter category offer.";
+  } else if (isNaN(offer)) {
+    flag = 1;
+    offerError.innerText = "Category offer should be a valid number.";
+  } else if (Number(offer) < 0 || Number(offer) > 100) {
+    flag = 1;
+    offerError.innerText = "Category offer should be in the range (0-100).";
   }
   if (flag === 0) {
     $.ajax({
       type: "POST",
       url: "/admin/add-category",
-      data: { name, desc },
+      data: { name, desc, offer },
       success: function (response) {
         if (response.success) {
           if (response.message) {
@@ -53,6 +65,9 @@ addCategoryForm.addEventListener("submit", (event) => {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },

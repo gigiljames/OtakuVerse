@@ -5,18 +5,48 @@
   <body>
     <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
-    <!-- <div class="overall-sales-container">
-      Overall Sales: 
-      <div class="overall-sales"></div>
+    <select id="report-period">
+      <option value="daily">Daily</option>
+      <option value="weekly">Weekly</option>
+      <option value="monthly">Monthly</option>
+      <option value="yearly">Yearly</option>
+      <option value="range">Custom range</option>
+    </select>
+    <div class="custom-range-inputs">
+      <input id="start" type="date"/>
+      <input id="end" type="date"/>
     </div>
-    <div class="overall-amount-container">
-      Overall Amount:
-      <div class="overall-amount"></div>
+    <button id="go-button">Go</button>
+    <div class="sales-container">
+      Overall Sales 
+      <div class="sales"></div>
     </div>
-    <div class="overall-discount-container">
-      Overall Discount: 
-      <div class="overall-discount"></div>
-    </div> -->
+    <div class="amount-container">
+      Overall Amount
+      <div class="amount"></div>
+    </div>
+    <div class="discount-container">
+      Overall Discount
+      <div class="discount"></div>
+    </div>
+    <div class="new-users-container">
+      Overall Users
+      <div class="new-users"></div>
+    </div>
+    <button id="downloadPDF">PDF Download</button>
+    <button id="downloadExcel">Excel Download</button>
+    <table id="salesReport">
+      <thead>
+        <th>Date</th>
+        <th>Total Sales</th>
+        <th>Total Amount</th>
+        <th>Total Discount</th>
+        <th>Total New Users</th>
+      </thead>
+      <tbody>
+        
+      </tbody>
+    </table>
     <script src="/js/admin-home.js"></script>
   </body>
 </html>

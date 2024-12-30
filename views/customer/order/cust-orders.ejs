@@ -1,7 +1,7 @@
 <%- include("../../partials/cust-template.ejs")%>
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/order/cust-orders.css" rel="stylesheet"/>
-<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+
 <title>Orders</title>
 </head>
 <body>
@@ -38,6 +38,19 @@
                     Payment method:
                     <%=paymentMethod[order.payment_type]%>
                   </div>
+                  <div class="payment-status">
+                    Payment status:
+                    <%if(order.payment_status==="failed"){%>
+                      <div class="status redText">Failed</div>
+                    <%} else if(order.payment_status==="completed"){%>
+                      <div class="status greenText">Completed</div>
+                    <%} else if(order.payment_status==="pending"){%>
+                      <div class="status orangeText">Pending</div>
+                    <%}else{%>
+                      <div class="status blackText"><%=order.payment_status%></div>
+                    <%}%>
+                    
+                  </div>
                   <div class="total-amount">
                     Total amount:
                     <%=order.amount%>
@@ -57,7 +70,7 @@
                     Size: <%=item.size%>
                     Colour: <%=item.colour%>
                     Quantity: <%=item.quantity%>
-                    Price: <%=(item.price*(1-(item.discount/100))).toFixed(2)%>
+                    Price: <%=item.price%>
                     <%if(order.order_status!=="cancelled" && order.order_items.length>1){%>
                     <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
                     <%}%>

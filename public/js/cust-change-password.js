@@ -53,7 +53,12 @@ changePassForm.addEventListener("submit", (event) => {
             window.location.href = response.redirectUrl;
           });
         } else {
-          alert(response.message, "error");
+          if (response.message) {
+            alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
           // window.location.reload();
         }
       },

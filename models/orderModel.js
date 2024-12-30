@@ -22,13 +22,19 @@ const orderSchema = new Schema(
     },
     payment_type: {
       type: String,
-      enum: ["upi", "cod"],
+      enum: ["razorpay", "cod"],
       required: true,
     },
-    payment_id: {
-      type: Schema.Types.ObjectId,
-      ref: "Payment",
+    payment_status: {
+      type: String,
+      enum: ["pending", "failed", "completed"],
+      required: true,
+      default: "pending",
     },
+    // payment_id: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Payment",
+    // },
     amount: {
       type: Number,
       required: true,

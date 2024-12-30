@@ -23,6 +23,9 @@ cancelButtons.forEach((button) => {
           if (response.message) {
             alert(response.message, "error");
           }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
       error: function (error) {},
@@ -59,9 +62,17 @@ editStatusButtons.forEach((button) => {
             statusInput.style.display = "none";
             statusData.style.display = "block";
             statusData.innerText = status;
+            if (status === "delivered" || status === "cancelled") {
+              //remove cancel button
+            } else {
+              //add cancel button
+            }
           } else {
             if (response.message) {
               alert(response.message, "error");
+            }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
             }
           }
         },

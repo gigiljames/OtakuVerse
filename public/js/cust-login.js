@@ -33,7 +33,12 @@ loginForm.addEventListener("submit", (event) => {
             1500
           );
         } else {
-          alert(response.message, "error");
+          if (response.message) {
+            alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
       error: function (error) {},

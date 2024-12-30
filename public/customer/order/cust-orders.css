@@ -65,7 +65,8 @@ body {
 
 .order-card .top-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  margin-bottom: 20px;
 }
 
 .order-card .bottom-row {
@@ -105,7 +106,6 @@ body {
   border: 1px solid #ebd8b7; /* Subtle border for structure */
 }
 
-.top-row,
 .bottom-row {
   display: flex;
   flex-wrap: wrap;
@@ -240,4 +240,8 @@ body {
 
 .greenText {
   color: #4caf50;
+}
+
+.orangeText {
+  color: rgb(255, 191, 0);
 }

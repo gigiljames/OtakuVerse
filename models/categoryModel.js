@@ -11,6 +11,13 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
+    offer: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
     products: [
       {
         type: Schema.Types.ObjectId,

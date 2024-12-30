@@ -1,10 +1,13 @@
 const Customer = require("../../models/customerModel");
+const Wallet = require("../../models/walletModel");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const getPage = async (req, res) => {
   try {
+    const { code } = req.query || "";
+    req.session.code = code;
     return res.render("customer/signup/cust-signup");
   } catch (error) {
     console.log(error);
@@ -42,6 +45,17 @@ async function sendVerificationEmail(email, otp) {
     console.log(error);
     console.log("ERROR : sendVerificationEmail function");
   }
+}
+
+function generateReferralCode(length = 16) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let referralCode = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    referralCode += characters[randomIndex];
+  }
+  return referralCode;
 }
 
 const verify = async (req, res) => {
@@ -96,8 +110,43 @@ const verifyOtp = async (req, res) => {
         customer_name: user.name,
         customer_email: user.email,
         customer_password: passwordHash,
+        referral_code: generateReferralCode(),
       });
       const saveConfirmation = await customer.save();
+      //Reward
+      if (req.session.code) {
+        const referrer = await Customer.findOne({
+          referral_code: req.session.code,
+        });
+        if (referrer) {
+          const transaction1 = {
+            amount: 100,
+            transactionType: "credit",
+          };
+          const transaction2 = {
+            amount: 25,
+            transactionType: "credit",
+          };
+          await Wallet.updateOne(
+            { customer_id: referrer._id },
+            {
+              $inc: { balance: 100 },
+              $push: { transaction_history: transaction1 },
+            },
+            { upsert: true }
+          );
+          await Wallet.updateOne(
+            { customer_id: customer._id },
+            {
+              $inc: { balance: 25 },
+              $push: { transaction_history: transaction2 },
+            },
+            { upsert: true }
+          );
+        }
+        delete req.session.code;
+      }
+
       console.log("Customer signed in successfully.");
       req.session.user = customer._id;
       res.json({ success: true, redirectUrl: "/login" });

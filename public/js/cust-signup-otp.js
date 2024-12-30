@@ -63,6 +63,9 @@ resendBtn.addEventListener("click", (event) => {
           title: "Error",
           text: "An error occured while resending OTP. Please try again",
         });
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
   });
@@ -94,6 +97,9 @@ otpForm.addEventListener("submit", (event) => {
           title: "Error",
           text: response.message,
         });
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
     error: function () {

@@ -120,32 +120,46 @@ function handleAddressFunctions() {
               if (response.message) {
                 alert(response.message, "error");
               }
+              if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+              }
             }
           },
           error: function (error) {},
         });
       }
     });
-    deleteButton.addEventListener("click", (event) => {
-      const addressID = deleteButton.dataset.id;
-      console.log(addressID);
-      $.ajax({
-        url: `/delete-address/${addressID}`,
-        type: "DELETE",
-        success: function (response) {
-          if (response.success) {
-            if (response.message) {
-              alert(response.message, "success");
+    deleteButton.addEventListener("click", async (event) => {
+      if (
+        await yes({
+          message: "Are you sure you want to delete this address?",
+          yesButtonColour: "red",
+        })
+      ) {
+        const addressID = deleteButton.dataset.id;
+        $.ajax({
+          url: `/delete-address/${addressID}`,
+          type: "DELETE",
+          success: function (response) {
+            if (response.success) {
+              if (response.message) {
+                alert(response.message, "success");
+              }
+            } else {
+              if (response.message) {
+                alert(response.message, "error");
+              }
+              if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+              }
             }
-          } else {
-            if (response.message) {
-              alert(response.message, "error");
-            }
-          }
-          addressCard.remove();
-        },
-        error: function (error) {},
-      });
+            let temp = deleteButton.closest(".address-card");
+            temp.remove();
+            // addressCard.remove();
+          },
+          error: function (error) {},
+        });
+      }
     });
   });
 }
@@ -231,6 +245,9 @@ saveDetailsButton.addEventListener("click", () => {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },
@@ -338,6 +355,9 @@ addForm.addEventListener("submit", (event) => {
           if (response.message) {
             alert(response.message, "error");
           }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
       error: function (error) {},
@@ -408,3 +428,19 @@ function updateAddressList(address, addressID) {
                 </div>`;
   addressList.append(addressCard);
 }
+
+const listItems = document.querySelectorAll(".referral-link-container li");
+listItems.forEach((item) => {
+  const copyButton = item.querySelector(".copy-button");
+  copyButton.addEventListener("click", (event) => {
+    const input = item.querySelector("input");
+    navigator.clipboard
+      .writeText(input.value)
+      .then(() => {
+        alert("Link copied to clipboard successfully!");
+      })
+      .catch((err) => {
+        alert("Failed to copy text: ", "error");
+      });
+  });
+});

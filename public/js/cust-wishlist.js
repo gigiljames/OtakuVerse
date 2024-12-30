@@ -25,6 +25,9 @@ itemCards.forEach((itemCard) => {
                   if (response.message) {
                     alert(response.message, "error");
                   }
+                  if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                  }
                 }
               },
               error: function (error) {},
@@ -32,6 +35,9 @@ itemCards.forEach((itemCard) => {
           } else {
             if (response.message) {
               alert(response.message, "error");
+            }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
             }
           }
         },
@@ -54,6 +60,9 @@ itemCards.forEach((itemCard) => {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },

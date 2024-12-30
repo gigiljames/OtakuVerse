@@ -126,20 +126,88 @@ nav hr {
 nav .user-menu {
   position: fixed;
   right: 30px;
-  width: 150px;
+  min-width: 150px;
   border-radius: 5px;
   top: 53px;
   display: none;
   flex-direction: column;
   justify-content: center;
-  gap: 15px;
-  background-color: white;
-  padding: 20px 10px;
+  /* gap: 15px; */
+  background-color: rgb(249, 249, 249);
+  padding: 10px 10px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* nav .user-menu hr {
+  border: 0;
+  height: 1px;
+  background: #c7c7c7;
+  background-image: linear-gradient(to right, #ccc, #b6b6b6, #ccc);
+} */
+
+nav.user-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 nav .user-menu-item a {
-  display: block;
+  display: flex;
   text-decoration: none;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   color: black;
+  min-height: 50px;
+  border-radius: 3px;
+}
+
+nav .user-menu-item a:hover {
+  background-color: rgb(228, 228, 228);
+}
+
+nav .user-menu-item a:active {
+  background-color: rgb(208, 208, 208);
+}
+
+nav #referral-redirect {
+  background-color: orange;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  width: 200px;
+  text-align: center;
+  font-size: 14px;
+}
+
+nav #referral-redirect:hover {
+  background-color: rgb(240, 156, 0);
+}
+
+nav #referral-redirect:active {
+  background-color: rgb(225, 146, 0);
+}
+
+nav .pulseBtn {
+  /* border: 1px solid #bb750b; */
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  box-shadow: 0 0 0 0 rgba(252, 160, 54, 0.605);
+  -moz-animation: pulse 2s infinite;
+  -webkit-animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(252, 160, 54, 0.726);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(206, 116, 6, 0.16);
+  }
+  100% {
+    box-shadow: 0 0 0 15px rgba(88, 120, 243, 0);
+  }
 }

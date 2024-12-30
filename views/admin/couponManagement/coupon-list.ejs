@@ -1,0 +1,136 @@
+<%- include('../../partials/admin-template.ejs') %>
+    <title>Coupon Management</title>
+    <link rel="stylesheet" href="/admin/couponManagement/coupon-list.css" />
+  </head>
+  <body>
+    <%- include('../../partials/alert.ejs') %>
+    <%- include('../../partials/admin-navbar.ejs') %>
+    <div class="title-row">
+      <div class="title">Coupon Management</div>
+      <div class="search-bar">
+        <input type="text" id="search" placeholder="Search"/>
+        <button class="search-button"><span class="material-symbols-outlined">
+          search
+          </span></button>
+      </div>
+      <button class="add-button">Add Coupon</button>
+    </div>
+    <div class="customer-list">
+        <table>
+          <thead>
+            <tr id="table-headers">
+              <th>Coupon Title</th>
+              <th>Code</th>
+              <th>Value</th>
+              <th>Type</th>
+              <!-- <th>Availability</th>
+              <th></th> -->
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+          </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8" class="pagination-links">
+                  <%if(offset>1){%>
+                    <!-- <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a> -->
+                    <a class="prev-next-buttons" href="" data-offset="<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
+                  <%}else{%>
+                    <a href="" class="prev-next-buttons">&lt;Previous</a>
+                  <%}%>
+                  <%for(let i=1;i<=pageCount;i++){%>
+                    <%if(i==offset){%>
+                      <a  href="" data-offset="<%= i %>"><%= i %></a>
+                    <%}else{%>
+                      <a  href="" data-offset="<%= i %>"><%= i %></a>
+                    <%}%>
+              
+                  <%}%>
+                  <%if(offset<pageCount){%>
+                    <a class="prev-next-buttons" href="" data-offset="<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
+                  <%}else{%>
+                    <a href="" class="prev-next-buttons ">Next&gt;</a>
+                  <%}%>
+                </td>
+              </tr>
+            </tfoot>
+          
+        </table>
+      
+      
+    </div>
+    <div class="add-form-outer">
+      <span class="material-symbols-outlined close-button"> close </span>
+      <div class="add-form-inner">
+        <div class="form-title">Add Coupon</div>
+        <form id="add-form" method="POST">
+          <div class="form-container">
+            <div class="add-form-left">
+              <div class="input-container">
+                <label for="title-input">Title</label>
+                <input id="title-input" class="login-input" type="text" name="title"/>
+                <div id="title-error" class="error-container"></div>
+              </div>
+              <div class="input-container">
+                <label for="desc-input">Description</label>
+                <input id="desc-input" class="login-input" type="text" name="desc"/>
+                <div id="desc-error" class="error-container"></div>
+              </div>
+              <div class="multiple-input-container">
+                <div class="input-container">
+                  <label for="code-input">Code</label>
+                  <input id="code-input" class="login-input" type="text" name="code"/>
+                  <div id="code-error" class="error-container"></div>
+                </div>
+                <div class="input-container">
+                  <label for="value-input">Value</label>
+                  <input id="value-input" class="login-input" type="text" name="value"/>
+                  <div id="value-error" class="error-container"></div>
+                </div>
+              </div>
+              
+              
+              <div class="multiple-input-container">
+                <div class="input-container">
+                  <label for="type-input">Type</label>
+                   <select name="type" id="type-input">
+                    <option value="true">Percentage</option>
+                    <option value="false">Flat</option>
+                   </select>
+                  <div id="type-error" class="error-container"></div>
+                </div>
+                <div class="input-container">
+                  <label for="fullname-input">Availability</label>
+                  <select name="availability" id="availability-input">
+                    <option value="true">Enabled</option>
+                    <option value="false">Disabled</option>
+                   </select>
+                  <div id="availability-error" class="error-container"></div>
+                </div>
+              </div>
+              <div class="multiple-input-container">
+                <div class="input-container">
+                  <label for="minspent-input">Minimum spent</label>
+                  <input id="minspent-input" class="login-input" type="text" name="minspent"/>
+                  <div id="minspent-error" class="error-container"></div>
+                </div>
+                <div class="input-container">
+                  <label for="uses-input">Uses per person</label>
+                  <input id="uses-input" class="login-input" type="text" name="name"/>
+                  <div id="uses-error" class="error-container"></div>
+                </div>
+              </div>
+              
+            </div>
+              
+          </div>
+          <input class="submit-button" type="submit" value="SUBMIT" />
+        </form>
+      </div>
+    </div>
+    <script src="/js/coupon-list.js"></script>
+  </body>
+</html>

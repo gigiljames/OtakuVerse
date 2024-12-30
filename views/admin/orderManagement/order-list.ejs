@@ -7,7 +7,9 @@
   <body>
     <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
-    Orders
+    <div class="title-row">
+      <div class="title">Orders</div>
+    </div>
     <table border="1" cellspacing="0" cellpadding="10">
       <thead>
         <tr>
@@ -17,6 +19,7 @@
           <th>Products</th>
           <th>Order Status</th>
           <th>Amount</th>
+          <th>Payment Status</th>
           <th></th>
         </tr>
       </thead>
@@ -40,17 +43,24 @@
             <!-- Product Names -->
             <td>
               <% order.order_items.forEach(item => { %>
-                <p><%= item.product_name %></p>
-                <% if (item.product_images && item.product_images.length > 0) { %>
-                  <div>
-                    <% item.product_images.forEach(image => { %>
-                      <img src="<%= image.filepath %>" alt="Product Image" style="width: 100px; height: 100px;">
-                    <% }) %>
+                <div class="item-card">
+                  <% if (item.product_images && item.product_images.length > 0) { %>
+                    <div class="product-image">
+                      <% item.product_images.forEach(image => { %>
+                        <img src="<%= image.filepath %>" alt="Product Image">
+                      <% }) %>
+                    </div>
+                  <% } else { %>
+                    <p>No Images Available</p>
+                  <% } %>
+                  <div class="product-info">
+                    <p class="product-name"><%= item.product_name %></p>
+                    <div class="variant-info">
+                      <p><%= item.size %></p> <p><%= item.colour %></p>
+                    </div>
+                    <p>Quantity: <%= item.quantity %></p>
                   </div>
-                <% } else { %>
-                  <p>No Images Available</p>
-                <% } %>
-                <p>Quantity: <%= item.quantity %></p>
+                </div>
               <% }) %>
             </td>
   
@@ -76,7 +86,10 @@
             <!-- Amount -->
             <td><%= order.amount.toFixed(2) %></td>
             <td>
-              <%if(order.order_status!=="cancelled"){ %>
+              <%= order.payment_status %>
+            </td>
+            <td>
+              <%if(order.order_status!=="cancelled" && order.order_status!=="delivered"){ %>
               <button class="cancel-order-button" data-id="<%=order._id%>">Cancel Order</button>
               <%}%>
             </td>

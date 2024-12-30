@@ -91,55 +91,46 @@
                 </div>
               </div>
             </div>
+            <div class="coupon-section">
+              Coupons
+              <div class="coupon-cards">
+                <%coupons.forEach((coupon)=>{%>
+                  <div class="coupon-card">
+                    <div class="coupon-title"><%=coupon.title%></div>
+                    <div class="coupon-desc"><%=coupon.desc%></div>
+                    <div class="coupon-code"><%=coupon.code%></div>
+                    <button class="apply-coupon-button" data-id="<%=coupon._id%>">APPLY</button>
+                    
+                  </div>
+                <%})%>
+                
+              </div>
+            </div>
             <div class="payment-section">
               <div class="subtitle">Select payment method</div>
               <div class="method-list">
                 <div class="payment-method">
-                  <input id="upi" type="radio" name="paymentMethod" value="upi" disabled/>
-                  <label for="upi">UPI</label>
+                  <input id="razorpay" type="radio" name="paymentMethod" value="razorpay" checked/>
+                  <label for="razorpay">Razorpay</label>
                 </div>
                 
                 <div class="payment-method">
-                  <input id="cod" type="radio" name="paymentMethod" value="cod" checked/>
+                  <input id="cod" type="radio" name="paymentMethod" value="cod"/>
                   <label for="cod">Cash on delivery</label>
                 </div>
               </div>
             </div>
           </div>
+          
           <div class="bill-section">
             <div class="bill">
-              <div class="bill-title">Bill</div>
-              <%if(bill.total_quantity>0){%>
-              <ul>
-                <li>
-                  <span>Subtotal</span>
-                  <span id="subtotal"><%=bill.subtotal%></span>
-                </li>
-                <li>
-                  <span>Delivery Charges</span>
-                  <span id="delivery-charges"><%=bill.delivery_charges%></span>
-                </li>
-                <li>
-                  <span>Total</span>
-                  <span id="total"><%=bill.total%></span>
-                </li>
-                <li><span>Discount</span>
-                  <span id="discount"><%=bill.discount%></span>
-                </li>
-                <li><span>Free Delivery</span>
-                  <span id="free-delivery"><%=bill.free_delivery%></span>
-                </li>
-                <li><span>Grand Total</span>
-                  <span id="grand-total"><%=bill.grand_total%></span>
-                </li>
-                <li><span>You save</span> <span id="you-save"><%=bill.you_save%></span><span id="you-save-percent"> (<%=bill.you_save_percent%>%)</span>
-                  <span></span>
-                </li>
-              </ul>
-              <button class="order-button" data-amount="<%=bill.grand_total%>">Place your order</button>
-              <%}%>
+              
+                
+                
+              
             
             </div>
+            
           </div>
         </div>
       </div>

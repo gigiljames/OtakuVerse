@@ -66,6 +66,37 @@ body {
   visibility: visible;
 }
 
+.coupon-cards {
+  display: flex;
+  overflow-x: scroll;
+  gap: 15px;
+  max-width: 800px;
+}
+
+.coupon-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: white;
+  padding: 15px 20px;
+  min-width: 200px;
+  border-radius: 10px;
+}
+
+.coupon-title {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.coupon-desc {
+  font-size: 13px;
+  color: grey;
+}
+
+#coupon-row {
+  display: none;
+}
+
 .error-container {
   height: 20px;
   color: red;
@@ -116,6 +147,10 @@ body {
   border: 0;
   box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.332);
   border-radius: 5px;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .save-address-group,

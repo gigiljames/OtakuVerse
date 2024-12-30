@@ -27,7 +27,7 @@
                       <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
                       <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
                       <div class="product-og-price"><%=product.price%></div>
-                      <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))).toFixed(2)%></div>
+                      <div class="product-ov-price"><%=product.offer_price%></div>
                       <div class="variant-colour">Colour: <%=variant.colour%></div>
                       <div class="variant-size">Size: <%=variant.size%></div>
                       <button class="remove-button" data-id="<%=item._id%>">
@@ -50,7 +50,7 @@
                       </div>
                     </td>
                     <td>
-                      <div class="product-ov-price"><%=(product.price*(1-(product.discount/100))*item.quantity).toFixed(2)%></div>
+                      <div class="product-ov-price"><%=product.offer_price%></div>
                     </td>
                   
                 </tr>

@@ -24,7 +24,7 @@
         <div class="right-bottom">
           <div class="adv-search-section">
             <div class="sort-section">
-              <label for="sort">Sort By:</label>
+              <div class="sort-title">Sort</div>
               <select name="" id="sort">
                 <option value="popularity">Popularity </option>
                 <option value="ascprice">Price: low to high</option>
@@ -37,13 +37,22 @@
               </select>
               <button class="sort-button">Sort</button>
             </div>
+            <hr>
             <div class="filter-section">
-              <!-- <ul>
-                <li>
-                  <label for=""></label>
-                  <input type="checkbox" id="price1">
-                </li>
-              </ul> -->
+              <div class="filter-title">Filter</div>
+              <div class="filter-category">
+                <div class="filter-subtitle">Categories</div>
+                <ul>
+                  <%categoryList.forEach((category)=>{%>
+                    <li>
+                
+                      <input type="checkbox" name="category" value="<%=category._id%>" id="<%=category.category_name%>"/>
+                      <label for="<%=category.category_name%>"><%=category.category_name%></label>
+                    </li>
+                  <%})%>
+                </ul>
+              </div>
+              <button class="filter-button">Filter</button>
             </div>
           </div>
           <div class="product-section">
@@ -72,6 +81,7 @@
                       <div class="product-pricing">
                         <div class="ov-price">
                           ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
+                          
                         </div>
                         <div class="original-price">₹<%=product.price%></div>
                         <!-- <%if(totalStock>0 && totalStock<10){%>

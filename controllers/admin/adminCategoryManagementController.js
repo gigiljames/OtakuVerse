@@ -32,7 +32,7 @@ const viewCategory = async (req, res) => {
 
 const addCategory = async (req, res) => {
   try {
-    let { name, desc } = req.body;
+    let { name, desc, offer } = req.body;
     name = name.toLowerCase();
     const categoryExists = await Category.findOne({
       category_name: name,
@@ -44,6 +44,7 @@ const addCategory = async (req, res) => {
     const category = new Category({
       category_name: name,
       category_desc: desc,
+      offer: offer,
     });
     const saveConfirmation = await category.save();
     return res.json({
@@ -65,11 +66,11 @@ const editCategory = async (req, res) => {
       filepath: file.path.slice(6), // removes "public" from path
     }));
     const id = req.params.id;
-    const { name, desc } = req.body;
+    const { name, desc, offer } = req.body;
     const editConfirmation = await Category.updateOne(
       { _id: id },
       {
-        $set: { category_name: name, category_desc: desc },
+        $set: { category_name: name, category_desc: desc, offer: offer },
         $push: { banner_images: { $each: imageDocs } },
       }
     );

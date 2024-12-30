@@ -1,3 +1,8 @@
+document.addEventListener("DOMContentLoaded", () => {
+  refreshBill();
+  handleAddressFunctions();
+});
+
 function handleAddressFunctions() {
   let addressCards = document.querySelectorAll(".address-card");
   addressCards.forEach((addressCard, index) => {
@@ -135,6 +140,9 @@ function handleAddressFunctions() {
               if (response.message) {
                 alert(response.message, "error");
               }
+              if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+              }
             }
           },
           error: function (error) {},
@@ -143,8 +151,6 @@ function handleAddressFunctions() {
     });
   });
 }
-
-handleAddressFunctions();
 
 const addForm = document.getElementById("add-form");
 const addFormOuter = document.getElementsByClassName("add-form-outer")[0];
@@ -229,6 +235,9 @@ addForm.addEventListener("submit", (event) => {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },
@@ -315,30 +324,189 @@ orderButtons.forEach((orderButton) => {
     ).value;
     const amount = orderButton.dataset.amount;
     if (flag === 0) {
-      $.ajax({
-        type: "POST",
-        url: "/place-order",
-        data: { addressID, paymentMethod, amount },
-        success: function (response) {
-          if (response.success) {
-            if (response.message) {
-              alert(
-                response.message,
-                "success",
-                () => {
-                  window.location.href = response.redirectUrl;
-                },
-                1500
-              );
+      if (paymentMethod === "cod") {
+        $.ajax({
+          type: "POST",
+          url: "/place-order",
+          data: { addressID, amount },
+          success: function (response) {
+            if (response.success) {
+              if (response.message) {
+                alert(
+                  response.message,
+                  "success",
+                  () => {
+                    window.location.href = response.redirectUrl;
+                  },
+                  1500
+                );
+              }
+            } else {
+              if (response.message) {
+                alert(response.message, "error");
+              }
+              if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+              }
             }
-          } else {
-            if (response.message) {
+          },
+          error: function (error) {},
+        });
+      } else if (paymentMethod === "razorpay") {
+        $.ajax({
+          url: "/create-order",
+          type: "POST",
+          data: { addressID, amount },
+          success: function (response) {
+            if (response.success) {
+              // const options = {
+              //   callback_url: "http://localhost:3000/payment-success", // Your success URL
+              //   prefill: {
+              //     name: "Gaurav Kumar",
+              //     email: "gaurav.kumar@example.com",
+              //     contact: "9999999999",
+              //   },
+              // };
+              const { DBOrderID } = response;
+              var options = {
+                key: "" + response.key_id + "",
+                amount: "" + response.amount + "",
+                currency: "INR",
+                name: "OtakuVerse",
+                description: "Order payment",
+                order_id: "" + response.order_id + "",
+                handler: function (response) {
+                  alert(`Payment completed successfully.`, "success", () => {
+                    $.ajax({
+                      url: `/edit-payment-status/${DBOrderID}?status=completed`,
+                      type: "PATCH",
+                      success: function (response) {
+                        if (response.success && response.redirectUrl) {
+                          window.location.href = "/orders";
+                        }
+                      },
+                    });
+                  });
+                },
+                theme: {
+                  color: "#7BC9E8",
+                },
+              };
+              var razorpayObject = new Razorpay(options);
+              razorpayObject.on("payment.failed", function (response) {
+                alert("Payment failed.", "error", () => {
+                  $.ajax({
+                    url: `/edit-payment-status/${DBOrderID}?status=failed`,
+                    type: "PATCH",
+                    success: function (response) {
+                      if (response.success && response.redirectUrl) {
+                        window.location.href = "/orders";
+                      }
+                    },
+                  });
+                });
+              });
+              razorpayObject.open();
+            } else {
               alert(response.message, "error");
             }
-          }
-        },
-        error: function (error) {},
-      });
+          },
+        });
+      }
     }
   });
 });
+
+const couponCards = document.querySelectorAll(".coupon-card");
+
+couponCards.forEach((card) => {
+  const applyButton = card.querySelector(".apply-coupon-button");
+  applyButton.addEventListener("click", () => {
+    const applyButtons = document.querySelectorAll(".apply-coupon-button");
+    applyButtons.forEach((button) => {
+      button.style.display = "block";
+    });
+    const couponID = applyButton.dataset.id;
+    $.ajax({
+      url: `/apply-coupon/${couponID}`,
+      type: "PATCH",
+      success: async function (response) {
+        if (response.success) {
+          await refreshBill();
+          const couponRow = document.querySelector("#coupon-row");
+          const removeButton = couponRow.querySelector("#remove-coupon-button");
+          console.log(couponRow);
+          console.log(applyButton);
+          couponRow.style.display = "flex";
+          applyButton.style.display = "none";
+          console.log(couponRow);
+          console.log(applyButton);
+          removeButton.addEventListener("click", () => {
+            $.ajax({
+              url: `/remove-coupon`,
+              type: "PATCH",
+              success: function (response) {
+                if (response.success) {
+                  refreshBill();
+                  applyButton.style.display = "block";
+                  couponRow.style.display = "none";
+                }
+              },
+            });
+          });
+        }
+      },
+    });
+  });
+});
+
+async function refreshBill() {
+  await $.ajax({
+    type: "GET",
+    url: "/refresh-bill",
+    success: function (response) {
+      if (response.success) {
+        updateBill(response.bill);
+      }
+    },
+  });
+}
+
+function updateBill(bill) {
+  const billSection = document.querySelector(".bill-section");
+  billSection.innerHTML = "";
+  const billDiv = document.createElement("div");
+  billDiv.classList.add("bill");
+  billDiv.innerHTML = `<div class="bill-title">Bill</div>
+              <ul><li>
+                  <span>Subtotal</span>
+                  <span id="subtotal">${bill.subtotal}</span>
+                </li>
+                <li>
+                  <span>Delivery Charges</span>
+                  <span id="delivery-charges">${bill.delivery_charges}</span>
+                </li>
+                <li>
+                  <span>Total</span>
+                  <span id="total">${bill.total}</span>
+                </li>
+                <li><span>Discount</span>
+                  <span id="discount">${bill.discount}</span>
+                </li>
+                <li><span>Free Delivery</span>
+                  <span id="free-delivery">${bill.free_delivery}</span>
+                </li>
+                <li id="coupon-row">
+                  <span>Coupon applied</span>
+                  <button id="remove-coupon-button">REMOVE</button>
+                  <span>${bill.coupon_discount}</span>
+                </li>
+                <li><span>Grand Total</span>
+                  <span id="grand-total">${bill.grand_total}</span>
+                </li>
+                <li><span>You save</span> <span id="you-save">${bill.you_save}</span><span id="you-save-percent"> (${bill.you_save_percent}%)</span>
+                  <span></span>
+                </li></ul>
+              <button class="order-button" data-amount="${bill.grand_total}">Place your order</button>`;
+  billSection.appendChild(billDiv);
+}

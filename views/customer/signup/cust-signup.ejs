@@ -77,6 +77,11 @@
               <div id="repassword-error" class="error-container">
                 <%if(locals.message){%> <%=message%> <%}%>
               </div>
+              <%if(locals.code){%>
+              <input type="text" name="code" style="display: none;" value="<%=code%>">
+              <%}else{%>
+                <input type="text" name="code" style="display: none;" value="">
+                <%}%>
               <input class="login-button" type="submit" value="Sign Up" />
             </form>
 

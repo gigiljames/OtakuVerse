@@ -90,6 +90,10 @@ body {
   /* box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.351); */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .main-right .info-title {
   font-size: 12px;
   color: grey;
@@ -137,6 +141,106 @@ body {
   font-size: 38px;
   font-weight: 600;
   padding-left: 20px;
+}
+
+.main-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#referral-redirect {
+  background-color: orange;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  width: 300px;
+  text-align: center;
+}
+
+#referral-redirect:hover {
+  background-color: rgb(240, 156, 0);
+}
+
+#referral-redirect:active {
+  background-color: rgb(225, 146, 0);
+}
+
+.referral-link-container {
+  display: flex;
+}
+
+.referral-link-container ul {
+  background-color: white;
+  padding: 25px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+}
+
+.referral-link-container li {
+  padding: 20px;
+  background-color: #e0e0e0;
+  border-radius: 7px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.referral-link-container input {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  border: 0;
+  font-size: 16px;
+  min-width: 420px;
+}
+
+.referral-link-container li button {
+  border-radius: 5px;
+  border: 0;
+  padding: 5px 9px;
+  background-color: rgb(115, 199, 239);
+}
+
+.referral-link-container li button:hover {
+  background-color: rgb(108, 190, 228);
+}
+
+.referral-link-container li button:active {
+  background-color: rgb(98, 170, 203);
+}
+
+.referral-instructions {
+  padding-left: 20px;
+  color: #626262;
+}
+
+.pulseBtn {
+  /* border: 1px solid #bb750b; */
+  padding: 1rem 2rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  box-shadow: 0 0 0 0 rgba(252, 160, 54, 0.605);
+  -moz-animation: pulse 2s infinite;
+  -webkit-animation: pulse 2s infinite;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(252, 160, 54, 0.726);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(206, 116, 6, 0.16);
+  }
+  100% {
+    box-shadow: 0 0 0 25px rgba(88, 120, 243, 0);
+  }
 }
 
 .edit-details-group,

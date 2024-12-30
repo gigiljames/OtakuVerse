@@ -1,5 +1,6 @@
 const editForm = document.getElementById("edit-cat-form");
 const nameError = document.getElementById("cat-name-error");
+const offerError = document.getElementById("cat-offer-error");
 const descError = document.getElementById("cat-desc-error");
 const errorContainers = document.getElementsByClassName("error-container");
 
@@ -9,6 +10,7 @@ editForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const catName = document.getElementById("cat-name").value.trim();
   const catDesc = document.getElementById("cat-desc").value.trim();
+  const catOffer = document.getElementById("cat-offer").value.trim();
   const files = document.getElementById("banner-images").files;
   const catID = editForm.dataset.id;
   let flag = 0;
@@ -20,10 +22,21 @@ editForm.addEventListener("submit", (event) => {
     flag = 1;
     descError.innerText = "*This is a required field.";
   }
+  if (!catOffer) {
+    flag = 1;
+    offerError.innerText = "Enter category offer.";
+  } else if (isNaN(catOffer)) {
+    flag = 1;
+    offerError.innerText = "Category offer should be a valid number.";
+  } else if (Number(catOffer) < 0 || Number(catOffer) > 100) {
+    flag = 1;
+    offerError.innerText = "Category offer should be in the range (0-100).";
+  }
   if (flag === 0) {
     const formData = new FormData();
     formData.append("name", catName);
     formData.append("desc", catDesc);
+    formData.append("offer", catOffer);
     for (let i = 0; i < files.length; i++) {
       formData.append("files", files[i]);
     }
@@ -41,6 +54,9 @@ editForm.addEventListener("submit", (event) => {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },
@@ -61,17 +77,21 @@ function clearErrors() {
 const confirmButton = document.getElementById("confirm-button");
 const catNameInput = document.getElementById("cat-name");
 const existingCatName = document.getElementById("cat-name").value.trim();
+const catOfferInput = document.getElementById("cat-offer");
+const existingCatOffer = document.getElementById("cat-offer").value.trim();
 const catDescInput = document.getElementById("cat-desc");
 const existingCatDesc = document.getElementById("cat-desc").value.trim();
 const bannerImgInput = document.getElementById("banner-images");
 catNameInput.addEventListener("input", checkChanges);
 catDescInput.addEventListener("input", checkChanges);
+catOfferInput.addEventListener("input", checkChanges);
 bannerImgInput.addEventListener("input", (event) => {
   confirmButton.disabled = false;
 });
 
 function checkChanges(event) {
   if (
+    catOfferInput.value.trim() === existingCatOffer &&
     catNameInput.value.trim() === existingCatName &&
     catDescInput.value.trim() === existingCatDesc
   ) {
@@ -154,6 +174,9 @@ deleteBannerButtons.forEach((button) => {
           if (response.message) {
             alert(response.message, "error");
           }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
       error: function (xhr, status, error) {
@@ -180,6 +203,9 @@ deleteCatButton.addEventListener("click", (event) => {
       } else {
         if (response.message) {
           alert(response.message, "error");
+        }
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
         }
       }
     },

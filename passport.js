@@ -3,6 +3,17 @@ const GoogleStartegy = require("passport-google-oauth20").Strategy;
 const Customer = require("./models/customerModel");
 require("dotenv").config();
 
+function generateReferralCode(length = 16) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let referralCode = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    referralCode += characters[randomIndex];
+  }
+  return referralCode;
+}
+
 passport.use(
   new GoogleStartegy(
     {
@@ -20,6 +31,7 @@ passport.use(
             customer_name: profile.displayName,
             customer_email: profile.emails[0].value,
             google_id: profile.id,
+            referral_code: generateReferralCode(),
           });
           await customer.save();
           return done(null, customer);

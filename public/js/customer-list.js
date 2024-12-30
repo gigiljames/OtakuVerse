@@ -95,7 +95,12 @@ document.addEventListener("DOMContentLoaded", () => {
               window.location.reload();
             });
           } else {
-            alert(response.message, "error");
+            if (response.message) {
+              alert(response.message, "error");
+            }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
+            }
           }
         },
         error: function (error) {},
@@ -113,6 +118,13 @@ function queryCustomers(offset = 1) {
     success: function (response) {
       if (response.success) {
         updateCustomerList(response.customerList);
+      } else {
+        if (response.message) {
+          alert(response.message, "error");
+        }
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
     error: function (error) {},

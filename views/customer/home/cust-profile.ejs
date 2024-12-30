@@ -1,7 +1,7 @@
 <%- include("../../partials/cust-template.ejs")%>
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/home/cust-profile.css" rel="stylesheet"/>
-<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
+
 <title>Profile</title>
 </head>
 <body>
@@ -11,7 +11,11 @@
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
       <div class="main-right-inner">
-        <div class="main-title">Profile</div>
+        <div class="main-title-row">
+          <div class="main-title">Profile</div>
+          <a href="#referral" class="pulseBtn" id="referral-redirect">Refer a friend to get free ₹100 in your OtakuVerse Wallet</a>
+        </div>
+        
         <div class="general-section">
           <div class="title-row">General Information</div>
           <div class="general-info-card">
@@ -103,6 +107,28 @@
                 </div>
               </div>
             <%})%>
+          </div>
+        </div>
+        <div class="referral-section" id="referral">
+          <div class="title-row">
+            <div class="title">
+              Refer a friend
+            </div>
+          </div>
+          <p class="referral-instructions">
+            To refer a friend, ask him/her to signup using the link given below. Reward will be credited as soon as signup is complete. (Not applicable for sign up using Google.)
+          </p>
+          <div class="referral-link-container">
+            <ul>
+              <li><input type="text" value="http://localhost:3000/signup?code=<%=customerData.referral_code%>" disabled>  <button class="copy-button"><span class="material-symbols-outlined">
+                content_copy
+                </span></button></li>
+              <!-- <li><input type="text" value="<%=customerData.referral_code%>" disabled> <button class="copy-button"><span class="material-symbols-outlined">
+                content_copy
+                </span></button></li> -->
+            </ul>
+            
+            
           </div>
         </div>
         <%if(!isGoogle){%>

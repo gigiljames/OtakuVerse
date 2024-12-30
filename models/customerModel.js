@@ -26,6 +26,11 @@ const customerSchema = new Schema(
       required: true,
       default: "active",
     },
+    referral_code: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     customer_addresses: [
       {
         type: Schema.Types.ObjectId,

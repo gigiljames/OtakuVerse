@@ -44,6 +44,9 @@ itemCards.forEach((itemCard) => {
           if (response.message) {
             alert(response.message, "error");
           }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
       error: function (error) {},
@@ -62,7 +65,12 @@ itemCards.forEach((itemCard) => {
           const quantity = itemCard.querySelector(".quantity");
           quantity.value = parseInt(quantity.value) + 1;
         } else {
-          alert(response.message, "error");
+          if (response.message) {
+            alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
     });
@@ -78,7 +86,12 @@ itemCards.forEach((itemCard) => {
           const quantity = itemCard.querySelector(".quantity");
           quantity.value = parseInt(quantity.value) - 1;
         } else {
-          alert(response.message, "error");
+          if (response.message) {
+            alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
       },
     });

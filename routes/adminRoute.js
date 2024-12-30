@@ -5,12 +5,14 @@ const customerManagement = require("../controllers/admin/adminCustomerManagement
 const categoryManagement = require("../controllers/admin/adminCategoryManagementController");
 const productManagement = require("../controllers/admin/adminProductManagementController");
 const orderManagement = require("../controllers/admin/adminOrderManagement");
+const couponManagement = require("../controllers/admin/adminCouponManagement");
+const walletManagement = require("../controllers/admin/adminWalletManagement");
 const upload = require("../upload");
 
 const router = express.Router();
 router.use(express.static("public"));
 
-// CONSTANT LOGIN (For Development)
+// // CONSTANT LOGIN (For Development)
 const constantLogin = async (req, res, next) => {
   const Admin = require("../models/adminModel");
   const admin = await Admin.findOne({});
@@ -41,9 +43,9 @@ router.get("/logout", login.logout);
 
 //Home
 router.get("/home", authMiddleware, home.getPage);
-router.get("/get-overall-sales", authMiddleware, home.getOverallSales);
-router.get("/get-overall-amount", authMiddleware, home.getOverallAmount);
-router.get("/get-overall-discount", authMiddleware, home.getOverallDiscount);
+router.get("/get-sales-data", authMiddleware, home.getSalesData);
+router.get("/get-custom-range-data", authMiddleware, home.getCustomRangeData);
+router.get("/download-sales-report", authMiddleware, home.downloadReport);
 
 //Category management
 router.get("/category-management", authMiddleware, categoryManagement.getPage);
@@ -146,5 +148,25 @@ router.patch(
   authMiddleware,
   orderManagement.editStatus
 );
+
+// COUPON MANAGEMENT
+router.get("/coupon-management", authMiddleware, couponManagement.getPage);
+router.get("/get-coupons", authMiddleware, couponManagement.getCoupons);
+router.post("/add-coupon", authMiddleware, couponManagement.addCoupon);
+router.patch("/edit-coupon/:id", authMiddleware, couponManagement.editCoupon);
+router.get("/enable-coupon/:id", authMiddleware, couponManagement.enableCoupon);
+router.get(
+  "/disable-coupon/:id",
+  authMiddleware,
+  couponManagement.disableCoupon
+);
+router.delete(
+  "/delete-coupon/:id",
+  authMiddleware,
+  couponManagement.deleteCoupon
+);
+
+// WALLET MANAGEMENT
+router.get("/wallet-management", authMiddleware, walletManagement.getPage);
 
 module.exports = router;

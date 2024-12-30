@@ -14,7 +14,7 @@ const viewProduct = async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id)
-      .populate("category", "category_name")
+      .populate("category", "category_name offer")
       .populate("variants");
 
     const reviews = await ProductReview.find({ product_id: id }).populate(
@@ -26,6 +26,17 @@ const viewProduct = async (req, res) => {
       category: product.category,
       is_deleted: false,
       is_enabled: true,
+    }).populate("category");
+    const plainRecommendedList = recommendedData.map((product) =>
+      product.toObject()
+    );
+    plainRecommendedList.forEach((product) => {
+      let highestOffer =
+        product.discount > product.category.offer
+          ? product.discount
+          : product.category.offer;
+      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+      product.offer_price = offerPrice;
     });
     const ratingSum = reviews.reduce((accumulator, value) => {
       accumulator = accumulator + Number(value.rating);
@@ -36,19 +47,29 @@ const viewProduct = async (req, res) => {
       ratingAvg = "Unrated";
     }
     if (product) {
+      const plainProduct = product.toObject();
+      let highestOffer =
+        plainProduct.discount > plainProduct.category.offer
+          ? plainProduct.discount
+          : plainProduct.category.offer;
+      let offerPrice = (plainProduct.price * (1 - highestOffer / 100)).toFixed(
+        2
+      );
+      plainProduct.offer_price = offerPrice;
+      plainProduct.applied_discount = highestOffer;
       if (req.session.user) {
         return res.render("customer/product/cust-product-details", {
-          product,
+          product: plainProduct,
           ratingAvg,
           reviews,
-          recommendedData,
+          recommendedData: plainRecommendedList,
         });
       } else {
         return res.render("customer/product/cust-product-details", {
-          product,
+          product: plainProduct,
           ratingAvg,
           reviews,
-          recommendedData,
+          recommendedData: plainRecommendedList,
           isLoggedOut: true,
         });
       }
@@ -73,6 +94,7 @@ const getShopPage = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const { search, sort } = req.query;
+    let { category } = req.query;
     let sortOptions = {};
     switch (sort) {
       case "popularity":
@@ -100,7 +122,7 @@ const getProducts = async (req, res) => {
         sortOptions.product_name = -1;
         break;
     }
-    const productList = await Product.find({
+    let query = {
       $or: [
         { product_name: { $regex: search, $options: "i" } },
         { product_desc: { $regex: search, $options: "i" } },
@@ -108,11 +130,27 @@ const getProducts = async (req, res) => {
       ],
       is_enabled: true,
       is_deleted: false,
-    })
+    };
+    if (category) {
+      category = category.split(" ");
+      query.category = category;
+    }
+    const productList = await Product.find(query)
       .sort(sortOptions)
-      .collation({ locale: "en", strength: 2 });
-    console.log(productList);
-    res.json({ success: true, productList });
+      .collation({ locale: "en", strength: 2 })
+      .populate("category");
+    const plainProductList = productList.map((product) => product.toObject());
+    plainProductList.forEach((product) => {
+      let highestOffer =
+        product.discount > product.category.offer
+          ? product.discount
+          : product.category.offer;
+      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+      product.offer_price = offerPrice;
+    });
+    // console.log(plainProductList);
+
+    res.json({ success: true, productList: plainProductList });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Products");

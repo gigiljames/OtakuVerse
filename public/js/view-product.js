@@ -240,7 +240,12 @@ uploadButton.addEventListener("click", function () {
           window.location.reload();
         });
       } else {
-        alert(response.message, "error");
+        if (response.message) {
+          alert(response.message, "error");
+        }
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
   });
@@ -288,6 +293,9 @@ variantCards.forEach((variantCard) => {
           } else {
             if (response.message) {
               alert(response.message, "error");
+            }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
             }
           }
         },

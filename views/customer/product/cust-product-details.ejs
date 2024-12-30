@@ -47,11 +47,11 @@
         </div>
         <div class="line2">
           <div class="product-pricing">
-            <div class="ov-price">₹<%=Math.ceil(Number(product.price)*(1-((Number(product.discount))/100)))%></div>
+            <div class="ov-price">₹<%=product.offer_price%></div>
             <div class="original-price">
               ₹<%=product.price%>
             </div>
-            <div class="discount"><%=product.discount%>% discount!</div>
+            <div class="discount"><%=product.applied_discount%>% discount!</div>
           </div>
           <%if(product.variants.length>0){%>
           <div class="quantity">
@@ -166,7 +166,7 @@
               </div>
               <div class="product-pricing">
                 <div class="ov-price">
-                  ₹<%=Math.ceil(Number(product.price)*(1-((Number(product.discount))/100)))%>
+                  ₹<%=product.offer_price%>
                 </div>
                 <div class="original-price">₹<%=product.price%></div>
               </div>

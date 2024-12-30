@@ -59,6 +59,9 @@ if (cartButton) {
             if (response.message) {
               alert(response.message, "error");
             }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
+            }
           }
         },
         error: function (error) {},
@@ -84,6 +87,9 @@ if (wishlistButton) {
         } else {
           if (response.message) {
             alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
           }
         }
       },

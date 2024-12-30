@@ -10,17 +10,36 @@ document.addEventListener("DOMContentLoaded", () => {
   sortButton.addEventListener("click", () => {
     queryProducts();
   });
+  const filterButton = document.querySelector(".filter-button");
+  filterButton.addEventListener("click", () => {
+    queryProducts();
+  });
 });
 
 function queryProducts() {
   const searchQuery = document.querySelector("#search").value.trim() || "";
   const sortOption = document.querySelector("#sort").value.trim() || "";
+  const checkedCategories = document.querySelectorAll(
+    "input[name='category']:checked"
+  );
+  let categoryOptions = [];
+  checkedCategories.forEach((checked) => {
+    categoryOptions.push(checked.value);
+  });
+  categoryOptions = categoryOptions.join("+");
   $.ajax({
-    url: `/get-products?search=${searchQuery}&sort=${sortOption}`,
+    url: `/get-products?search=${searchQuery}&sort=${sortOption}&category=${categoryOptions}`,
     type: "GET",
     success: function (response) {
       if (response.success) {
         updateProductList(response.productList);
+      } else {
+        if (response.message) {
+          alert(response.message, "error");
+        }
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
     error: function (error) {},
@@ -65,7 +84,7 @@ function updateProductList(products) {
                       </div>
                       <div class="product-pricing">
                         <div class="ov-price">
-                          ₹${product.discounted_price.toFixed(2)}
+                          ₹${product.offer_price}
                         </div>
                         <div class="original-price">₹${product.price}</div>
                           

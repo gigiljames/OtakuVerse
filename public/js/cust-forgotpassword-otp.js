@@ -114,6 +114,9 @@ resendBtn.addEventListener("click", (event) => {
           title: "Error",
           text: "An error occured while resending OTP. Please try again",
         });
+        if (response.redirectUrl) {
+          window.location.href = response.redirectUrl;
+        }
       }
     },
   });
