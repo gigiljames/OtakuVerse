@@ -134,6 +134,16 @@ body {
   resize: none;
 }
 
+.main {
+  display: flex;
+}
+
+.main-right {
+  background-color: white;
+  height: 100vh;
+  width: 100vw;
+}
+
 .pagination-links {
   text-align: center;
 }
@@ -208,4 +218,44 @@ th {
 .title {
   font-size: 28px;
   font-weight: 700;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+input#search {
+  flex: 1;
+  padding: 5px 40px 5px 10px;
+  border: none;
+  outline: none;
+}
+
+.search-bar .search-button,
+.search-bar .clear-button {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.search-bar .search-button {
+  right: 5px;
+}
+
+.search-bar .clear-button {
+  right: 35px;
+  display: none;
+}
+
+.search-bar .clear-button span,
+.search-bar .search-button span {
+  font-size: 20px;
+  color: #555;
 }

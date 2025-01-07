@@ -131,12 +131,42 @@ const getCustomRangeData = async (req, res) => {
         },
       },
     ]);
+    const couponQuery = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+        },
+      },
+      {
+        $addFields: {
+          couponValue: {
+            $cond: {
+              if: { $not: ["$coupon_applied.is_percentage"] },
+              then: "$coupon_applied.value",
+              else: {
+                $divide: [
+                  { $multiply: ["$amount", "$coupon_applied.value"] },
+                  100,
+                ], // Calculate percentage of amount
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: groupOptions,
+          total_coupon_discount: { $sum: "$couponValue" },
+        },
+      },
+    ]);
 
     const combinedData = [
       ...amountQuery,
       ...discountQuery,
       ...salesQuery,
       ...newUsers,
+      ...couponQuery,
     ];
     let processedData = {};
     combinedData.forEach((value) => {
@@ -151,6 +181,7 @@ const getCustomRangeData = async (req, res) => {
           total_amount: 0,
           total_discount: 0,
           total_new_users: 0,
+          total_coupon_discount: 0,
         };
       }
       if (value.total_amount) {
@@ -165,6 +196,9 @@ const getCustomRangeData = async (req, res) => {
       if (value.total_new_users) {
         processedData[key].total_new_users = value.total_new_users;
       }
+      if (value.total_coupon_discount) {
+        processedData[key].total_coupon_discount = value.total_coupon_discount;
+      }
     });
     // console.log(processedData);
     const result = Object.entries(processedData).map(([date, stats]) => ({
@@ -177,7 +211,6 @@ const getCustomRangeData = async (req, res) => {
       return dateA - dateB;
     });
 
-    console.log(result);
     return res.json({ success: true, salesData: result });
   } catch (error) {
     console.log(error);
@@ -189,6 +222,31 @@ const getSalesData = async (req, res) => {
   try {
     const { period } = req.query;
     const { groupOptions, sortOptions } = getOptions(period);
+    const couponQuery = await Order.aggregate([
+      {
+        $addFields: {
+          couponValue: {
+            $cond: {
+              if: { $not: ["$coupon_applied.is_percentage"] },
+              then: "$coupon_applied.value", // Add percentage value directly
+              else: {
+                $divide: [
+                  { $multiply: ["$amount", "$coupon_applied.value"] },
+                  100,
+                ], // Calculate percentage of amount
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: groupOptions,
+          total_coupon_discount: { $sum: "$couponValue" },
+        },
+      },
+      { $sort: sortOptions },
+    ]);
     const amountQuery = await Order.aggregate([
       { $match: { order_status: { $ne: "cancelled" } } },
       {
@@ -244,6 +302,7 @@ const getSalesData = async (req, res) => {
       ...discountQuery,
       ...salesQuery,
       ...newUsers,
+      ...couponQuery,
     ];
     let processedData = {};
     combinedData.forEach((value) => {
@@ -258,6 +317,7 @@ const getSalesData = async (req, res) => {
           total_amount: 0,
           total_discount: 0,
           total_new_users: 0,
+          total_coupon_discount: 0,
         };
       }
       if (value.total_amount) {
@@ -271,6 +331,9 @@ const getSalesData = async (req, res) => {
       }
       if (value.total_new_users) {
         processedData[key].total_new_users = value.total_new_users;
+      }
+      if (value.total_coupon_discount) {
+        processedData[key].total_coupon_discount = value.total_coupon_discount;
       }
     });
     // console.log(processedData);
@@ -292,7 +355,6 @@ const getSalesData = async (req, res) => {
       });
     }
 
-    console.log(result);
     return res.json({ success: true, salesData: result });
   } catch (error) {
     console.log(error);
@@ -300,59 +362,75 @@ const getSalesData = async (req, res) => {
   }
 };
 
-const downloadReport = async (req, res) => {
-  const salesReport = [
-    // Replace with your actual sales report data
-    {
-      date: "2024-12-01",
-      total_sales: 50,
-      total_amount: 5000,
-      total_discount: 500,
-      total_new_users: 10,
-    },
-    {
-      date: "2024-12-02",
-      total_sales: 60,
-      total_amount: 6000,
-      total_discount: 600,
-      total_new_users: 15,
-    },
-    // Add more entries
-  ];
+const getTopProducts = async (req, res) => {
+  try {
+    const count = 10;
+    const list = await Order.aggregate([
+      { $unwind: "$order_items" },
+      {
+        $group: {
+          _id: "$order_items.product_id",
+          count: { $sum: 1 },
+          product_name: { $first: "$order_items.product_name" },
+        },
+      },
+      { $sort: { count: -1 } },
+      { $limit: count },
+    ]);
+    // console.log(list);
+    res.json({ success: true, list });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Get Top 10 Products");
+  }
+};
 
-  const doc = new PDFDocument();
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", "attachment; filename=sales-report.pdf");
-
-  doc.pipe(res);
-
-  doc.fontSize(18).text("Sales Report", { align: "center" }).moveDown(1);
-  doc
-    .fontSize(12)
-    .text("Generated on: " + new Date().toLocaleDateString(), {
-      align: "right",
-    })
-    .moveDown(2);
-  doc
-    .fontSize(14)
-    .text("Date", 50, doc.y)
-    .text("Sales", 150)
-    .text("Amount", 250)
-    .text("Discount", 350)
-    .text("New Users", 450);
-  doc.moveDown();
-  salesReport.forEach(
-    ({ date, total_sales, total_amount, total_discount, total_new_users }) => {
-      doc
-        .text(date, 50, doc.y)
-        .text(total_sales, 150)
-        .text(total_amount, 250)
-        .text(total_discount, 350)
-        .text(total_new_users, 450);
-      doc.moveDown();
-    }
-  );
-  doc.end();
+const getTopCategories = async (req, res) => {
+  try {
+    const count = 10;
+    const list = await Order.aggregate([
+      { $unwind: "$order_items" }, // Deconstructs the order_items array
+      {
+        $lookup: {
+          from: "products",
+          localField: "order_items.product_id",
+          foreignField: "_id",
+          as: "productDetails",
+        },
+      },
+      { $unwind: "$productDetails" }, // Unwind the productDetails array
+      {
+        $group: {
+          _id: "$productDetails.category", // Group by the category ID
+          count: { $sum: 1 }, // Count occurrences
+        },
+      },
+      { $sort: { count: -1 } }, // Sort by count in descending order
+      { $limit: count }, // Limit the results to the top `count` categories
+      {
+        $lookup: {
+          from: "categories", // Replace "categories" with your actual collection name
+          localField: "_id", // The category ID from the group stage
+          foreignField: "_id", // The category ID in the Category collection
+          as: "categoryDetails",
+        },
+      },
+      { $unwind: "$categoryDetails" }, // Unwind the categoryDetails array
+      {
+        $project: {
+          _id: 0, // Exclude the original _id field
+          category_id: "$_id", // Include the category ID
+          category_name: "$categoryDetails.category_name", // Include the category name
+          count: 1, // Include the count
+        },
+      },
+    ]);
+    // console.log(list);
+    res.json({ success: true, list });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Get Top 10 Categories");
+  }
 };
 
 function getKey(obj) {
@@ -390,5 +468,6 @@ module.exports = {
   getPage,
   getSalesData,
   getCustomRangeData,
-  downloadReport,
+  getTopProducts,
+  getTopCategories,
 };

@@ -82,6 +82,16 @@ body {
   background-color: rgb(232, 61, 61);
 }
 
+.main {
+  display: flex;
+}
+
+.main-right {
+  background-color: white;
+  /* height: 100vh;
+  width: 100vw; */
+}
+
 #product-images {
   border: none;
   height: fit-content;

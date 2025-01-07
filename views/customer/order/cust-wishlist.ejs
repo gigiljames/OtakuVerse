@@ -23,27 +23,31 @@
                     <%let product = item.product_id%>
                     <%let variant = item.variant_id%>
                     <td>
-                      <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
-                      <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
-                      
-                      <div class="variant-colour">Colour: <%=variant.colour%></div>
-                      <div class="variant-size">Size: <%=variant.size%></div>
-                      <button class="remove-button" data-id="<%=item._id%>">
-                        Remove
-                        <span class="material-symbols-outlined">
-                          remove
-                        </span>
-                      </button>
-                      <button class="add-to-cart-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
-                        Move to cart
-                        <span class="material-symbols-outlined">
-                          shopping_cart
-                        </span>
-                      </button>
+                      <div class="card-product">
+                        <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
+                        <div class="product-info">
+                          <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
+                          
+                          <div class="variant-colour">Colour: <%=variant.colour%></div>
+                          <div class="variant-size">Size: <%=variant.size%></div>
+                          <button class="remove-button" data-id="<%=item._id%>">
+                            Remove
+                            <span class="material-symbols-outlined">
+                              remove
+                            </span>
+                          </button>
+                          <button class="add-to-cart-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
+                            Move to cart
+                            <span class="material-symbols-outlined">
+                              shopping_cart
+                            </span>
+                          </button>
+                        </div>
+                      </div>
                     </td>
                     <td>
-                      <div class="product-og-price"><%=product.price%></div>
-                      <div class="product-ov-price"><%=product.offer_price%></div>
+                      <div class="product-og-price">₹ <%=product.price%></div>
+                      <div class="product-ov-price">₹ <%=product.offer_price%></div>
                     </td>
                   
                 </tr>

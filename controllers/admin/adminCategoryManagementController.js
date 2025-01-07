@@ -67,6 +67,13 @@ const editCategory = async (req, res) => {
     }));
     const id = req.params.id;
     const { name, desc, offer } = req.body;
+    const categoryExists = await Category.findOne({
+      category_name: name,
+      is_deleted: false,
+    });
+    if (categoryExists) {
+      return res.json({ success: false, message: "Category already exists." });
+    }
     const editConfirmation = await Category.updateOne(
       { _id: id },
       {

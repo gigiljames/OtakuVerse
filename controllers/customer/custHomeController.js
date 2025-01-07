@@ -4,13 +4,18 @@ const Category = require("../../models/categoryModel");
 const Address = require("../../models/addressModel");
 const bcrypt = require("bcrypt");
 
+async function getCategoryList() {
+  const categoryList = await Category.find(
+    { is_deleted: false, is_enabled: true },
+    { category_name: 1 }
+  );
+  return categoryList;
+}
+
 const getPage = async (req, res) => {
   try {
     let displayData = [];
-    const categoryList = await Category.find(
-      { is_deleted: false, is_enabled: true },
-      { category_name: 1 }
-    );
+    const categoryList = await getCategoryList();
     for (let i = 0; i < categoryList.length; i++) {
       let temp = {};
       let productList = await Product.find({
@@ -33,11 +38,13 @@ const getPage = async (req, res) => {
       return res.render("customer/home/cust-home", {
         customerData: customer,
         displayData: displayData,
+        categoryList,
       });
     }
     return res.render("customer/home/cust-home", {
       displayData,
       isLoggedOut: true,
+      categoryList,
     });
   } catch (error) {
     console.log(error);

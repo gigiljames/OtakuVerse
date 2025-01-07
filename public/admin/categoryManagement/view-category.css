@@ -124,6 +124,14 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.main {
+  display: flex;
+}
+
+.main-right {
+  background-color: white;
+}
+
 .remove-banner-images-section {
   padding: 20px 0;
 }

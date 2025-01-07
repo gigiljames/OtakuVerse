@@ -2,6 +2,8 @@ const Customer = require("../../models/customerModel");
 const Wallet = require("../../models/walletModel");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const Cart = require("../../models/cartModel");
+const Wishlist = require("../../models/wishlistModel");
 require("dotenv").config();
 
 const getPage = async (req, res) => {
@@ -113,6 +115,10 @@ const verifyOtp = async (req, res) => {
         referral_code: generateReferralCode(),
       });
       const saveConfirmation = await customer.save();
+      //creating wallet,cart,wishlist
+      await Wallet.insertMany([{ customer_id: customer._id }]);
+      await Cart.insertMany([{ customer_id: customer._id }]);
+      await Wishlist.insertMany([{ customer_id: customer._id }]);
       //Reward
       if (req.session.code) {
         const referrer = await Customer.findOne({

@@ -31,12 +31,13 @@ const getBill = function (cart) {
     total_quantity: 0,
   };
   cart.cart_items.forEach((item) => {
+    console.log(item);
     if (item.variant_id.stock_quantity !== 0) {
       const product = item.product_id;
       bill.subtotal += product.price * item.quantity;
       bill.grand_total += product.offer_price * item.quantity;
       bill.discount -=
-        product.offer_price * item.quantity * (product.applied_discount / 100);
+        product.price * item.quantity * (product.applied_discount / 100);
       bill.total_quantity += item.quantity;
     }
   });
@@ -57,13 +58,41 @@ const cartPage = async (req, res) => {
   try {
     const custID = req.session.user;
     const categoryList = await getCategoryList();
-    const cart = await Cart.findOne({ customer_id: custID })
+    let cart = await Cart.findOne({ customer_id: custID })
+      .populate(
+        "cart_items.product_id",
+        "product_name price discount product_images category"
+      )
+      .populate("cart_items.variant_id");
+
+    //Finding deleted products or variants from items included in cart and removing them
+    const deletedItems = [];
+    if (cart.cart_items.length > 0) {
+      cart.cart_items.forEach((item) => {
+        if (item.variant_id === null || item.product_id === null) {
+          deletedItems.push(item._id);
+        }
+      });
+      await Cart.updateOne(
+        { customer_id: custID },
+        {
+          $pull: {
+            cart_items: {
+              _id: { $in: deletedItems },
+            },
+          },
+        }
+      );
+    }
+
+    cart = await Cart.findOne({ customer_id: custID })
       .populate(
         "cart_items.product_id",
         "product_name price discount product_images category"
       )
       .populate("cart_items.variant_id");
     await cart.populate("cart_items.product_id.category", "offer");
+
     const plainCart = cart.toObject();
     plainCart.cart_items.forEach((product) => {
       product = product.product_id;
@@ -102,11 +131,51 @@ const cartPage = async (req, res) => {
   }
 };
 
+const refreshBill = async (req, res) => {
+  try {
+    const custID = req.session.user;
+    const cart = await Cart.findOne({ customer_id: custID })
+      .populate(
+        "cart_items.product_id",
+        "product_name price discount product_images category"
+      )
+      .populate("cart_items.variant_id");
+    await cart.populate("cart_items.product_id.category", "offer");
+    const plainCart = cart.toObject();
+    plainCart.cart_items.forEach((product) => {
+      product = product.product_id;
+      let highestOffer =
+        product.discount > product.category.offer
+          ? product.discount
+          : product.category.offer;
+      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+      product.offer_price = offerPrice;
+      product.applied_discount = highestOffer;
+    });
+    const bill = getBill(plainCart);
+    return res.json({ success: true, bill });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Refresh Cart Bill");
+  }
+};
+
 const addToCart = async (req, res) => {
   try {
     const custID = req.session.user;
     const { productID } = req.params;
     const { variantID } = req.body;
+
+    //Checking if item exists
+    const productExists = await Product.findById(productID);
+    const variantExists = await ProductVariant.findById(variantID);
+    if (!productExists || !variantExists) {
+      return res.json({
+        success: false,
+        message: "Product has been disabled or deleted.",
+      });
+    }
+
     let { qty } = req.body;
     qty = Number(qty);
     const cart = await Cart.findOne({ customer_id: custID });
@@ -252,9 +321,35 @@ const wishlistPage = async (req, res) => {
   try {
     const custID = req.session.user;
     const categoryList = await getCategoryList();
-    const wishlist = await Wishlist.findOne({ customer_id: custID })
+    let wishlist = await Wishlist.findOne({ customer_id: custID })
       .populate("wishlist_items.product_id")
       .populate("wishlist_items.variant_id");
+    if (!wishlist) {
+      await Wishlist.insertMany([{ customer_id: custID }]);
+    }
+    //Finding deleted products or variants from items included in cart and removing them
+    const deletedItems = [];
+    if (wishlist.wishlist_items.length > 0) {
+      wishlist.wishlist_items.forEach((item) => {
+        if (item.variant_id === null || item.product_id === null) {
+          deletedItems.push(item._id);
+        }
+      });
+      await Wishlist.updateOne(
+        { customer_id: custID },
+        {
+          $pull: {
+            wishlist_items: {
+              _id: { $in: deletedItems },
+            },
+          },
+        }
+      );
+    }
+    wishlist = await Wishlist.findOne({ customer_id: custID })
+      .populate("wishlist_items.product_id")
+      .populate("wishlist_items.variant_id");
+
     await wishlist.populate("wishlist_items.product_id.category", "offer");
     const plainWishlist = wishlist.toObject();
     plainWishlist.wishlist_items.forEach((product) => {
@@ -289,6 +384,17 @@ const addToWishlist = async (req, res) => {
     const custID = req.session.user;
     const id = req.params.productID;
     const { variantID } = req.body;
+
+    //Checking if item exists
+    const productExists = await Product.findById(id);
+    const variantExists = await ProductVariant.findById(variantID);
+    if (!productExists || !variantExists) {
+      return res.json({
+        success: false,
+        message: "Product has been disabled or deleted.",
+      });
+    }
+
     const itemExists = await Wishlist.findOne({
       "wishlist_items.product_id": id,
       "wishlist_items.variant_id": variantID,
@@ -338,6 +444,7 @@ const removeFromWishlist = async (req, res) => {
 
 module.exports = {
   cartPage,
+  refreshBill,
   addToCart,
   removeOneFromCart,
   removeFromCart,

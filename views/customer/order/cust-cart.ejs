@@ -57,40 +57,9 @@
               <%})%>
             </table>
           </div>
-        
-          <div class="bill">
-            
-            <div class="bill-title">Bill</div>
-            <%if(bill.total_quantity>0){%>
-            <ul>
-              <li>
-                <span>Subtotal</span>
-                <span id="subtotal"><%=bill.subtotal%></span>
-              </li>
-              <li>
-                <span>Delivery Charges</span>
-                <span id="delivery-charges"><%=bill.delivery_charges%></span>
-              </li>
-              <li>
-                <span>Total</span>
-                <span id="total"><%=bill.total%></span>
-              </li>
-              <li><span>Discount</span>
-                <span id="discount"><%=bill.discount%></span>
-              </li>
-              <li><span>Free Delivery</span>
-                <span id="free-delivery"><%=bill.free_delivery%></span>
-              </li>
-              <li><span>Grand Total</span>
-                <span id="grand-total"><%=bill.grand_total%></span>
-              </li>
-              <li><span>You save</span> <span id="you-save"><%=bill.you_save%></span><span id="you-save-percent"> (<%=bill.you_save_percent%>%)</span>
-                <span></span>
-              </li>
-            </ul>
-            <a href="/checkout"><button class="checkout-button">Proceed to checkout</button></a>
-            <%}%>
-            
+          <div class="bill-section">
+            <div class="bill">
+            </div>
           </div>
         </div>
       </div>

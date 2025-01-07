@@ -4,6 +4,10 @@ nav .burger-menu {
   display: flex;
   align-items: center;
 }
+/* 
+nav .nav-icon {
+  height: 100%;
+} */
 
 nav .nav-icon a {
   transform: scale(1.25);

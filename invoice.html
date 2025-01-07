@@ -1,0 +1,140 @@
+<div class="invoice-container">
+  <div class="logo">OtakuVerse</div>
+  <div class="general-info">
+    <div class="address-info">
+      <div class="subtitle bold">SHIPPING ADDRESS</div>
+      <div class="line1">${order.address.recipient_name}</div>
+      <div class="line2">${order.address.apartment}</div>
+      <div class="line3">${order.address.street}</div>
+      <div class="line4">${order.address.city}, ${order.address.state}</div>
+      <div class="line5">${order.address.pincode}</div>
+      <div class="line6">${order.address.phone_number}</div>
+    </div>
+    <div class="order-info">
+      <div class="order-id flex-item">
+        Order ID: <span>${order.order_id}</span>
+      </div>
+      <div class="billing-date flex-item">
+        Billing date: <span>${order.billing_date}</span>
+      </div>
+      <div class="payment-method flex-item">
+        Payment method: <span>${order.payment_type}</span>
+      </div>
+      <div class="payment-status flex-item">
+        Payment status: <span>${order.payment_status}</span>
+      </div>
+      <div class="delivery-date flex-item">
+        Delivery date: <span>${order.delivery_date}</span>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="products-info">
+    <table>
+      <thead>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Total Price</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td>${order.product_name} ${order.size} ${order.colour}</td>
+          <td>${order.quantity}</td>
+          <td>${order.price}</td>
+          <td>${order.discount}</td>
+          <td>${order.total_price}</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <div class="final-calculations-container">
+      <div class="final-calculations">
+        <div class="subtotal bold flex-item">
+          SUBTOTAL: <span>₹${order.subtotal_amount}</span>
+        </div>
+        <div class="delivery-charges flex-item">
+          Delivery charges: <span>₹80</span>
+        </div>
+        <div class="discount flex-item">
+          Total Discount: <span>₹${order.total_discount}</span>
+        </div>
+        <div class="free-delivery flex-item">
+          Free Delivery: <span>₹-80</span>
+        </div>
+        <div class="total bold flex-item">
+          TOTAL: <span>₹${order.total_amount}</span>
+        </div>
+        <div class="coupon flex-item">
+          Coupon discount: <span>₹${order.coupon_discount}</span>
+        </div>
+        <div class="grand-total bold flex-item">
+          GRAND TOTAL: <span>₹${order.amount}</span>
+        </div>
+      </div>
+    </div>
+    <hr />
+  </div>
+  <div class="promotion">
+    You saved ₹${order.saved_amount} (${order.saved_percentage}%) on this
+    purachase
+    <div class="logo">Otakuverse</div>
+  </div>
+</div>
+<style>
+  .invoice-container .general-info {
+    display: flex;
+    justify-content: space-between;
+  }
+  .invoice-container .bold {
+    font-weight: 700;
+    font-size: 17px;
+  }
+  .invoice-container .final-calculations-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .invoice-container .final-calculations {
+    display: flex;
+    flex-direction: column;
+    /* align-items: flex-start; */
+    gap: 5px;
+  }
+  .invoice-container .flex-item {
+    display: flex;
+    justify-content: space-between;
+  }
+  .invoice-container hr {
+    margin: 15px 0px;
+  }
+  .invoice-container {
+    padding: 60px;
+  }
+  .invoice-container .logo {
+    font-family: "Micro 5", sans-serif;
+    font-size: 30px;
+    background-image: linear-gradient(black, black);
+    color: white;
+    -webkit-text-stroke-width: 5px;
+    -webkit-text-stroke-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    margin-bottom: 20px;
+    /* padding-left: 5px; */
+  }
+  .invoice-container table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  .invoice-container td,
+  .invoice-container th {
+    border: 1px solid black;
+  }
+  .invoice-container th {
+    background-color: black;
+    color: white;
+    padding: 7px;
+  }
+</style>

@@ -57,6 +57,13 @@ editStatusButtons.forEach((button) => {
             if (response.message) {
               alert(response.message, "success");
             }
+            const tableRow = saveButton.closest("tr");
+            const cancelButton = tableRow.querySelector(".cancel-order-button");
+            if (status === "delivered") {
+              cancelButton.style.display = "none";
+            } else {
+              cancelButton.style.display = "block";
+            }
             button.style.display = "block";
             saveButton.style.display = "none";
             statusInput.style.display = "none";

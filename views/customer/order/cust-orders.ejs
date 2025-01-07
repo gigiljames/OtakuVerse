@@ -7,6 +7,7 @@
 <body>
   <%-include("../../partials/alert.ejs")%>
   <%-include("../../partials/cust-navbar.ejs")%>
+  <div class="hidden-invoice" style="display: none;"></div>
   <div class="main">
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
@@ -71,7 +72,7 @@
                     Colour: <%=item.colour%>
                     Quantity: <%=item.quantity%>
                     Price: <%=item.price%>
-                    <%if(order.order_status!=="cancelled" && order.order_items.length>1){%>
+                    <%if(order.order_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
                     <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
                     <%}%>
                   </div>
@@ -89,8 +90,13 @@
                   </div>
                   <%if(order.order_status!=="cancelled"){%>
                   <div class="order-functions">
+                    
+                    <%if(order.payment_status==="completed"){%>
+                      <button class="invoice-button" data-id="<%=order._id%>">Download invoice</button>
+                    <%}else if(order.payment_type==="razorpay" && order.payment_status==="failed"){%>
+                      <button class="retry-payment-button" data-id="<%=order._id%>">Retry payment</button>
+                    <%}%>
                     <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
-                    <button>Download invoice</button>
                   </div>
                   <%}%>
                 </div>

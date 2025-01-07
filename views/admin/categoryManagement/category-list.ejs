@@ -6,40 +6,50 @@
   <body>
     <%- include('../../partials/alert.ejs') %>
     <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="title-row">
-      <div class="title">Category Management</div>
-      <button class="add-button">Add Category</button>
-    </div>
-    <div class="category-list">
-      <% if(categoryList.length===0){ %>
-        <div>Nothing to show here.</div>
-      <%}%>
-      <% for(let i=0;i<categoryList.length;i++){ %>
-        <a href="/admin/category/<%= categoryList[i]._id %>"><div class="category-button"><%= categoryList[i].category_name %></div></a>
-      <% } %>
+    <div class="main">
+      <div class="main-left">
+        <%- include('../../partials/admin-sidebar.ejs') %>
+      </div>
+      <div class="main-right">
+        <div class="main-right-inner">
+          <div class="title-row">
+                <div class="title">Category Management</div>
+                <button class="add-button">Add Category</button>
+              </div>
+              <div class="category-list">
+                <% if(categoryList.length===0){ %>
+          <div>Nothing to show here.</div>
+                <%}%>
+                <% for(let i=0;i<categoryList.length;i++){ %>
+          <a href="/admin/category/<%= categoryList[i]._id %>"><div class="category-button"><%= categoryList[i].category_name %></div></a>
+                <% } %>
+              </div>
+              
+        </div>
+      </div>
     </div>
     <div class="add-form-outer">
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
-        <div class="form-title">Add Category</div>
-        <form id="add-form" method="POST">
-          <div class="input-container">
-            <label for="cat-name">Category Name</label>
-            <input id="cat-name" type="text" name="name" />
-          </div>
-          <div id="name-error" class="error-container"></div>
-          <div class="input-container">
-            <label for="cat-offer">Category Offer (%)</label>
-            <input id="cat-offer" type="text" name="offer" value="0"/>
-          </div>
-          <div id="offer-error" class="error-container"></div>
-          <div class="input-container">
-            <label for="cat-desc">Category Description</label>
-            <textarea id="cat-desc" name="desc"></textarea>
-          </div>
-          <div id="desc-error" class="error-container"></div>
-          <input class="submit-button" type="submit" value="SUBMIT" />
-        </form>
+      <div class="form-title">Add Category</div>
+      <form id="add-form" method="POST">
+        <div class="input-container">
+          <label for="cat-name">Category Name</label>
+          <input id="cat-name" type="text" name="name" />
+        </div>
+        <div id="name-error" class="error-container"></div>
+        <div class="input-container">
+          <label for="cat-offer">Category Offer (%)</label>
+          <input id="cat-offer" type="text" name="offer" value="0"/>
+        </div>
+        <div id="offer-error" class="error-container"></div>
+        <div class="input-container">
+          <label for="cat-desc">Category Description</label>
+          <textarea id="cat-desc" name="desc"></textarea>
+        </div>
+        <div id="desc-error" class="error-container"></div>
+        <input class="submit-button" type="submit" value="SUBMIT" />
+      </form>
       </div>
     </div>
     <script src="/js/category-list.js"></script>

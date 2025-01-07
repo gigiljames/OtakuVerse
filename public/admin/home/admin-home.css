@@ -3,10 +3,306 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-.custom-range-inputs {
-  display: none;
+.chart-section {
+  /* display: flex; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
+  row-gap: 20px;
+  column-gap: 40px;
 }
 
 td {
   text-align: center;
+}
+
+.main {
+  display: flex;
+}
+
+.main-right {
+  /* background-color: #222629; */
+  background-color: rgb(131, 177, 165);
+  /* background-color: white; */
+  width: 100%;
+  padding: 2% 1% 2% 2%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.main-right-body {
+  display: flex;
+}
+
+canvas {
+  max-height: 300px;
+  max-width: 420px;
+  background-color: rgb(244, 239, 239);
+}
+
+.overall-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.overall-row div {
+  background-color: rgb(1, 37, 36);
+}
+
+.ranking-section {
+  min-width: 300px;
+  padding: 10px 0px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ranking-section h3 {
+  text-transform: uppercase;
+}
+
+.ranking-container {
+  padding: 15px;
+  background-color: rgb(2, 27, 26);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.ranking-container h3 {
+  /* color: rgb(2, 135, 100); */
+  color: rgb(20, 217, 130);
+  text-align: center;
+}
+
+.ranking-container ol {
+  color: rgb(170, 205, 195);
+}
+
+.ranking-container li {
+  margin-bottom: 5px;
+}
+
+.ranking-container a {
+  color: rgb(2, 135, 100);
+  /* color: rgb(20, 217, 130); */
+  text-decoration: none;
+  text-transform: capitalize;
+}
+.ranking-container a:hover {
+  color: rgb(17, 177, 108);
+}
+
+.report-section {
+  width: 100%;
+}
+
+.sales-container,
+.amount-container,
+.discount-container,
+.new-users-container,
+.coupon-discount-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  min-width: 180px;
+}
+
+.sales-container {
+  color: rgb(56, 207, 56);
+  border: 4px solid rgb(56, 207, 56);
+}
+
+.amount-container {
+  color: rgb(61, 129, 217);
+  border: 4px solid rgb(61, 129, 217);
+}
+
+.discount-container {
+  color: rgb(255, 200, 0);
+  border: 4px solid rgb(255, 200, 0);
+}
+
+.coupon-discount-container {
+  color: rgb(255, 119, 0);
+  border: 4px solid rgb(255, 119, 0);
+}
+
+.new-users-container {
+  color: rgb(239, 103, 187);
+  border: 4px solid rgb(239, 103, 187);
+}
+
+.sales-title,
+.amount-title,
+.discount-title,
+.coupon-discount-title,
+.new-users-title {
+  color: rgb(195, 195, 195);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.sales,
+.amount,
+.discount,
+.coupon-discount,
+.new-users {
+  text-transform: uppercase;
+  font-weight: 900;
+  font-size: 28px;
+}
+
+.subtitle {
+  font-weight: 700;
+  color: rgb(241, 247, 246);
+  margin-bottom: 15px;
+}
+
+.custom-range-inputs {
+  display: none;
+  gap: 5px;
+}
+
+.custom-range-inputs input {
+  border-radius: 5px;
+  border: 1px solid rgb(118, 118, 118);
+  padding: 0 10px;
+}
+
+.operations-row {
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  background-color: rgb(112, 125, 125);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.operations-row-inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.operations-1 {
+  display: flex;
+  gap: 5px;
+}
+
+.operations-2 {
+  display: flex;
+  gap: 10px;
+}
+
+#report-period {
+  width: 200px;
+  height: 35px;
+  border-radius: 5px;
+  padding-left: 5px;
+  background-color: rgb(217, 216, 216);
+}
+
+#go-button {
+  height: 35px;
+  min-width: 40px;
+  border-radius: 10px;
+  border: 0;
+  background-color: rgb(20, 217, 130);
+  color: white;
+  font-weight: 600;
+}
+
+#go-button:hover {
+  background-color: rgb(17, 197, 119);
+}
+
+#go-button:active {
+  background-color: rgb(13, 153, 93);
+}
+
+#downloadPDF,
+#downloadExcel {
+  min-height: 35px;
+  min-width: 150px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#downloadPDF {
+  /* color: rgb(225, 63, 63);
+  border: 2px solid rgb(225, 63, 63); */
+  color: white;
+  background-color: rgb(225, 63, 63);
+  border: 0;
+  font-weight: 600;
+}
+
+#downloadPDF:hover {
+  background-color: rgb(204, 57, 57);
+}
+
+#downloadPDF:active {
+  background-color: rgb(170, 46, 46);
+}
+
+#downloadExcel {
+  /* color: rgb(68, 179, 83);
+  border: 2px solid rgb(68, 179, 83); */
+  color: white;
+  background-color: rgb(68, 179, 83);
+  border: 0;
+  font-weight: 600;
+}
+
+#downloadExcel:hover {
+  background-color: rgb(62, 164, 76);
+}
+
+#downloadExcel:active {
+  background-color: rgb(48, 126, 58);
+}
+
+#salesReport {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 25px 15px;
+  border-radius: 5px;
+  background-color: rgb(244, 239, 239);
+}
+
+.report-title {
+  min-height: 40px;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+thead {
+  background-color: rgb(48, 48, 48);
+  color: white;
+  height: 40px;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  text-align: center;
+  border: 1px solid black;
+  height: 30px;
 }

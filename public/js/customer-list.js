@@ -11,6 +11,20 @@ document.addEventListener("DOMContentLoaded", () => {
   searchButton.addEventListener("click", () => {
     queryCustomers();
   });
+  const searchInput = document.getElementById("search");
+  const clearButton = document.querySelector(".clear-button");
+  searchInput.addEventListener("input", () => {
+    if (searchInput.value.trim() !== "") {
+      clearButton.style.display = "block";
+    } else {
+      clearButton.style.display = "none";
+    }
+  });
+  clearButton.addEventListener("click", () => {
+    searchInput.value = "";
+    clearButton.style.display = "none";
+    searchInput.focus();
+  });
   // const sortButton = document.querySelector(".sort-button");
   // sortButton.addEventListener("click", () => {
   //   queryCustomers();

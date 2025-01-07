@@ -76,9 +76,9 @@ function handleAddressFunctions() {
       if (!phno) {
         flag = 1;
         phnoError.innerText = "Please enter the phone number.";
-      } else if (!/^\d{10}$/.test(phno)) {
+      } else if (!/^[6-9][0-9]{9}$/.test(phno)) {
         flag = 1;
-        phnoError.innerText = "Phone number should be a valid 10-digit number.";
+        phnoError.innerText = "Please enter a valid Indian phone number.";
       }
       if (!apt) {
         flag = 1;
@@ -105,9 +105,9 @@ function handleAddressFunctions() {
       if (!pin) {
         flag = 1;
         pinError.innerText = "Please enter the pincode.";
-      } else if (!/^\d{6}$/.test(pin)) {
+      } else if (!/^[1-9][0-9]{5}$/.test(pin)) {
         flag = 1;
-        pinError.innerText = "Pincode should be a valid 6-digit number.";
+        pinError.innerText = "Please enter a valid Indian PIN number.";
       }
       if (flag === 0) {
         const addressID = saveButton.dataset.id;
@@ -307,78 +307,97 @@ function updateAddressList(address, addressID) {
   addressList.append(addressCard);
 }
 
-const orderButtons = document.querySelectorAll(".order-button");
+function orderButtonHandler() {
+  const orderButtons = document.querySelectorAll(".order-button");
 
-orderButtons.forEach((orderButton) => {
-  orderButton.addEventListener("click", () => {
-    let flag = 0;
-    let addressID = document.querySelector("input[name='address']:checked");
-    if (!addressID) {
-      flag = 1;
-      alert("Please add an address.", "error");
-    }
-    addressID = addressID.value;
+  orderButtons.forEach((orderButton) => {
+    orderButton.addEventListener("click", () => {
+      let flag = 0;
+      let addressID = document.querySelector("input[name='address']:checked");
+      if (!addressID) {
+        flag = 1;
+        alert("Please add an address.", "error");
+      }
+      addressID = addressID.value;
 
-    const paymentMethod = document.querySelector(
-      "input[name='paymentMethod']:checked"
-    ).value;
-    const amount = orderButton.dataset.amount;
-    if (flag === 0) {
-      if (paymentMethod === "cod") {
-        $.ajax({
-          type: "POST",
-          url: "/place-order",
-          data: { addressID, amount },
-          success: function (response) {
-            if (response.success) {
-              if (response.message) {
-                alert(
-                  response.message,
-                  "success",
-                  () => {
-                    window.location.href = response.redirectUrl;
+      const paymentMethod = document.querySelector(
+        "input[name='paymentMethod']:checked"
+      ).value;
+      const amount = orderButton.dataset.amount;
+      if (flag === 0) {
+        if (paymentMethod !== "razorpay") {
+          $.ajax({
+            type: "POST",
+            url: `/place-order/?method=${paymentMethod}`,
+            data: { addressID, amount },
+            success: function (response) {
+              if (response.success) {
+                if (response.message) {
+                  alert(
+                    response.message,
+                    "success",
+                    () => {
+                      window.location.href = response.redirectUrl;
+                    },
+                    1500
+                  );
+                }
+              } else {
+                if (response.message) {
+                  alert(response.message, "error");
+                }
+                if (response.redirectUrl) {
+                  window.location.href = response.redirectUrl;
+                }
+              }
+            },
+            error: function (error) {},
+          });
+        } else if (paymentMethod === "razorpay") {
+          $.ajax({
+            url: "/create-order",
+            type: "POST",
+            data: { addressID, amount },
+            success: function (response) {
+              if (response.success) {
+                // const options = {
+                //   callback_url: "http://localhost:3000/payment-success", // Your success URL
+                //   prefill: {
+                //     name: "Gaurav Kumar",
+                //     email: "gaurav.kumar@example.com",
+                //     contact: "9999999999",
+                //   },
+                // };
+                const { DBOrderID } = response;
+                var options = {
+                  key: "" + response.key_id + "",
+                  amount: "" + response.amount + "",
+                  currency: "INR",
+                  name: "OtakuVerse",
+                  description: "Order payment",
+                  order_id: "" + response.order_id + "",
+                  handler: function (response) {
+                    alert(`Payment completed successfully.`, "success", () => {
+                      $.ajax({
+                        url: `/edit-payment-status/${DBOrderID}?status=completed`,
+                        type: "PATCH",
+                        success: function (response) {
+                          if (response.success && response.redirectUrl) {
+                            window.location.href = "/orders";
+                          }
+                        },
+                      });
+                    });
                   },
-                  1500
-                );
-              }
-            } else {
-              if (response.message) {
-                alert(response.message, "error");
-              }
-              if (response.redirectUrl) {
-                window.location.href = response.redirectUrl;
-              }
-            }
-          },
-          error: function (error) {},
-        });
-      } else if (paymentMethod === "razorpay") {
-        $.ajax({
-          url: "/create-order",
-          type: "POST",
-          data: { addressID, amount },
-          success: function (response) {
-            if (response.success) {
-              // const options = {
-              //   callback_url: "http://localhost:3000/payment-success", // Your success URL
-              //   prefill: {
-              //     name: "Gaurav Kumar",
-              //     email: "gaurav.kumar@example.com",
-              //     contact: "9999999999",
-              //   },
-              // };
-              const { DBOrderID } = response;
-              var options = {
-                key: "" + response.key_id + "",
-                amount: "" + response.amount + "",
-                currency: "INR",
-                name: "OtakuVerse",
-                description: "Order payment",
-                order_id: "" + response.order_id + "",
-                handler: function (response) {
-                  alert(`Payment completed successfully.`, "success", () => {
+                  theme: {
+                    color: "#7BC9E8",
+                  },
+                };
+                var razorpayObject = new Razorpay(options);
+                razorpayObject.on("payment.failed", function (response) {
+                  alert("Payment failed.", "error", () => {
                     $.ajax({
-                      url: `/edit-payment-status/${DBOrderID}?status=completed`,
+                      url: `/edit-payment-status/${DBOrderID}?status=failed`,
                       type: "PATCH",
                       success: function (response) {
                         if (response.success && response.redirectUrl) {
@@ -387,35 +406,21 @@ orderButtons.forEach((orderButton) => {
                       },
                     });
                   });
-                },
-                theme: {
-                  color: "#7BC9E8",
-                },
-              };
-              var razorpayObject = new Razorpay(options);
-              razorpayObject.on("payment.failed", function (response) {
-                alert("Payment failed.", "error", () => {
-                  $.ajax({
-                    url: `/edit-payment-status/${DBOrderID}?status=failed`,
-                    type: "PATCH",
-                    success: function (response) {
-                      if (response.success && response.redirectUrl) {
-                        window.location.href = "/orders";
-                      }
-                    },
-                  });
                 });
-              });
-              razorpayObject.open();
-            } else {
-              alert(response.message, "error");
-            }
-          },
-        });
+                razorpayObject.open();
+              } else {
+                alert(response.message, "error");
+                if (response.redirectUrl) {
+                  window.location.href = response.redirectUrl;
+                }
+              }
+            },
+          });
+        }
       }
-    }
+    });
   });
-});
+}
 
 const couponCards = document.querySelectorAll(".coupon-card");
 
@@ -435,12 +440,9 @@ couponCards.forEach((card) => {
           await refreshBill();
           const couponRow = document.querySelector("#coupon-row");
           const removeButton = couponRow.querySelector("#remove-coupon-button");
-          console.log(couponRow);
-          console.log(applyButton);
           couponRow.style.display = "flex";
           applyButton.style.display = "none";
-          console.log(couponRow);
-          console.log(applyButton);
+
           removeButton.addEventListener("click", () => {
             $.ajax({
               url: `/remove-coupon`,
@@ -454,6 +456,8 @@ couponCards.forEach((card) => {
               },
             });
           });
+        } else {
+          alert(response.message, "error");
         }
       },
     });
@@ -467,6 +471,8 @@ async function refreshBill() {
     success: function (response) {
       if (response.success) {
         updateBill(response.bill);
+        paymentMethodHandler(response.bill.grand_total);
+        orderButtonHandler();
       }
     },
   });
@@ -509,4 +515,13 @@ function updateBill(bill) {
                 </li></ul>
               <button class="order-button" data-amount="${bill.grand_total}">Place your order</button>`;
   billSection.appendChild(billDiv);
+}
+
+function paymentMethodHandler(amount) {
+  const codCard = document.querySelector(".cod-card");
+  if (amount < 1000) {
+    codCard.style.display = "flex";
+  } else {
+    codCard.style.display = "none";
+  }
 }

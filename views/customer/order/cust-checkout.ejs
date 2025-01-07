@@ -107,16 +107,19 @@
               </div>
             </div>
             <div class="payment-section">
-              <div class="subtitle">Select payment method</div>
+              <div class="subtitle">Select payment method <span class="info-line">(Cash on delivery is available only for payments below 1000.)</span></div>
               <div class="method-list">
                 <div class="payment-method">
                   <input id="razorpay" type="radio" name="paymentMethod" value="razorpay" checked/>
                   <label for="razorpay">Razorpay</label>
                 </div>
-                
-                <div class="payment-method">
+                <div class="payment-method cod-card">
                   <input id="cod" type="radio" name="paymentMethod" value="cod"/>
                   <label for="cod">Cash on delivery</label>
+                </div>
+                <div class="payment-method">
+                  <input id="wallet" type="radio" name="paymentMethod" value="wallet"/>
+                  <label for="wallet">Otakuverse Wallet</label>
                 </div>
               </div>
             </div>
@@ -124,13 +127,7 @@
           
           <div class="bill-section">
             <div class="bill">
-              
-                
-                
-              
-            
             </div>
-            
           </div>
         </div>
       </div>

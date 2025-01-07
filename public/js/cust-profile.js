@@ -64,10 +64,16 @@ function handleAddressFunctions() {
       if (!name) {
         flag = 1;
         nameError.innerText = "Please enter the recipient's name.";
+      } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+        flag = 1;
+        nameError.innerText = "Name should contain only letters and spaces.";
       }
       if (!phno) {
         flag = 1;
         phnoError.innerText = "Please enter the phone number.";
+      } else if (!/^[6-9][0-9]{9}$/.test(phno)) {
+        flag = 1;
+        phnoError.innerText = "Phone number should be a valid 10-digit number.";
       }
       if (!apt) {
         flag = 1;
@@ -80,15 +86,25 @@ function handleAddressFunctions() {
       if (!city) {
         flag = 1;
         cityError.innerText = "Please enter the city.";
+      } else if (!/^[a-zA-Z\s]+$/.test(city)) {
+        flag = 1;
+        cityError.innerText = "City should contain only letters and spaces.";
       }
       if (!state) {
         flag = 1;
         stateError.innerText = "Please enter the state.";
+      } else if (!/^[a-zA-Z\s]+$/.test(state)) {
+        flag = 1;
+        stateError.innerText = "State should contain only letters and spaces.";
       }
       if (!pin) {
         flag = 1;
         pinError.innerText = "Please enter the pincode.";
+      } else if (!/^[1-9][0-9]{5}$/.test(pin)) {
+        flag = 1;
+        pinError.innerText = "Pincode should be a valid 6-digit number.";
       }
+
       if (flag === 0) {
         const addressID = saveButton.dataset.id;
         $.ajax({
@@ -303,9 +319,9 @@ addForm.addEventListener("submit", (event) => {
   if (!phno) {
     flag = 1;
     phnoError.innerText = "Please enter the phone number.";
-  } else if (!/^\d{10}$/.test(phno)) {
+  } else if (!/^[6-9][0-9]{9}$/.test(phno)) {
     flag = 1;
-    phnoError.innerText = "Phone number should be a valid 10-digit number.";
+    phnoError.innerText = "Please enter a valid Indian phone number.";
   }
   if (!apt) {
     flag = 1;
@@ -332,9 +348,9 @@ addForm.addEventListener("submit", (event) => {
   if (!pin) {
     flag = 1;
     pinError.innerText = "Please enter the pincode.";
-  } else if (!/^\d{6}$/.test(pin)) {
+  } else if (!/^[1-9][0-9]{5}$/.test(pin)) {
     flag = 1;
-    pinError.innerText = "Pincode should be a valid 6-digit number.";
+    pinError.innerText = "Please enter a valid Indian PIN number.";
   }
 
   if (flag === 0) {

@@ -13,17 +13,17 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Customer = require("../models/customerModel");
-  const customer = await Customer.findOne({
-    customer_email: "hrx@fakemail.com",
-  });
-  req.session.user = customer._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
-});
+// const constantLogin = async (req, res, next) => {
+//   const Customer = require("../models/customerModel");
+//   const customer = await Customer.findOne({
+//     customer_email: "hrx@fakemail.com",
+//   });
+//   req.session.user = customer._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
 
 // AUTHENTICATION MIDDLEWARE
 const authMiddleware = async (req, res, next) => {
@@ -97,6 +97,7 @@ router.get("/product/:id", products.viewProduct);
 
 //Cart
 router.get("/cart", authMiddleware, cart.cartPage);
+router.get("/cart/refresh-bill", authMiddleware, cart.refreshBill);
 router.post("/cart/:productID", authMiddleware, cart.addToCart);
 router.delete("/cart/:itemID", authMiddleware, cart.removeFromCart);
 router.delete("/cart/one/:productID", authMiddleware, cart.removeOneFromCart);
@@ -106,6 +107,7 @@ router.patch("/apply-coupon/:couponID", authMiddleware, order.applyCoupon);
 router.patch("/remove-coupon", authMiddleware, order.removeCoupon);
 router.get("/refresh-bill", authMiddleware, order.refreshBill);
 router.post("/create-order", authMiddleware, order.createOrder);
+router.post("/retry-payment/:orderID", authMiddleware, order.retryPayment);
 router.patch(
   "/edit-payment-status/:orderID",
   authMiddleware,
@@ -119,6 +121,7 @@ router.delete(
   order.cancelItem
 );
 router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
+router.get("/get-invoice/:orderID", authMiddleware, order.getInvoice);
 //Wishlist
 router.get("/wishlist", authMiddleware, cart.wishlistPage);
 router.post("/wishlist/:productID", authMiddleware, cart.addToWishlist);

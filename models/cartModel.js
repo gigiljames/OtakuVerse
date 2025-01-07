@@ -35,7 +35,7 @@ const cartSchema = new Schema({
   coupon_id: {
     type: Schema.Types.ObjectId,
     ref: "Coupon",
-    required: true,
+    // required: true,
     default: null,
   },
 });

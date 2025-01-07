@@ -13,15 +13,15 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Admin = require("../models/adminModel");
-  const admin = await Admin.findOne({});
-  req.session.admin = admin._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
-});
+// const constantLogin = async (req, res, next) => {
+//   const Admin = require("../models/adminModel");
+//   const admin = await Admin.findOne({});
+//   req.session.admin = admin._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
 
 // router.use((req, res, next) => {
 //   if (!req.session.admin && req.path !== "/") {
@@ -45,7 +45,8 @@ router.get("/logout", login.logout);
 router.get("/home", authMiddleware, home.getPage);
 router.get("/get-sales-data", authMiddleware, home.getSalesData);
 router.get("/get-custom-range-data", authMiddleware, home.getCustomRangeData);
-router.get("/download-sales-report", authMiddleware, home.downloadReport);
+router.get("/top-products", authMiddleware, home.getTopProducts);
+router.get("/top-categories", authMiddleware, home.getTopCategories);
 
 //Category management
 router.get("/category-management", authMiddleware, categoryManagement.getPage);

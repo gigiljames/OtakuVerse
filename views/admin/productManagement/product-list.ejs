@@ -5,68 +5,78 @@
   <body>
     <%- include('../../partials/admin-navbar.ejs') %>
     <%-include("../../partials/alert.ejs")%>
-    <div class="title-row">
-      <div class="title">Product Management</div>
-      <button class="add-button">Add Product</button>
-    </div>
-    <div class="customer-list">
-        <table>
-          <tr id="table-headers">
-            <th></th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Visibility</th>
-            <th></th>
-          </tr>
-          <% if(productList.length===0){ %>
-            <tr><td colspan="6">Nothing to show here.</td></tr>
-          <%}else{%>
-            <% for(let i=0;i<productList.length;i++){ %>
-              <tr>
-                <td><a href="/admin/view-product/<%= productList[i]._id %>">
-                  <span class="material-symbols-outlined">
-                    open_in_new
-                    </span>
-                </a></td>
-                <td><%= productList[i]._id %></td>
-                <td><%= productList[i].product_name %></td>
-                <td><%= productList[i].category.category_name %></td>
-                <td><%= productList[i].is_enabled %></td>
-                <%if(productList[i].is_enabled){%>
-                  <td><a class="block-button" href="/admin/disable-product/<%= productList[i]._id %>?offset=<%= offset %>">Disable</a></td>
+    <div class="main">
+      <div class="main-left">
+        <%- include('../../partials/admin-sidebar.ejs') %>
+      </div>
+      <div class="main-right">
+        <div class="main-right-inner">
+          <div class="title-row">
+            <div class="title">Product Management</div>
+            <button class="add-button">Add Product</button>
+          </div>
+          <div class="customer-list">
+              <table>
+                <tr id="table-headers">
+                  <th></th>
+                  <th>Product ID</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Visibility</th>
+                  <th></th>
+                </tr>
+                <% if(productList.length===0){ %>
+                  <tr><td colspan="6">Nothing to show here.</td></tr>
                 <%}else{%>
-                  <td><a class="unblock-button" href="/admin/enable-product/<%= productList[i]._id %>?offset=<%= offset %>">Enable</a></td>
-                <%}%>
-              </tr>
-            <%}%>
-            <tr>
-              <td colspan="6" class="pagination-links">
-                <%if(offset>1){%>
-                  <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons">&lt;Previous</a>
-                <%}%>
-                <%for(let i=1;i<=pageCount;i++){%>
-                  <%if(i==offset){%>
-                    <a class="selected-offset" href="/admin/product-management?offset=<%= i %>"><%= i %></a>
-                  <%}else{%>
-                    <a  href="/admin/product-management?offset=<%= i %>"><%= i %></a>
+                  <% for(let i=0;i<productList.length;i++){ %>
+                    <tr>
+                      <td><a href="/admin/view-product/<%= productList[i]._id %>">
+                        <span class="material-symbols-outlined">
+                          open_in_new
+                          </span>
+                      </a></td>
+                      <td><%= productList[i]._id %></td>
+                      <td><%= productList[i].product_name %></td>
+                      <td><%= productList[i].category.category_name %></td>
+                      <td><%= productList[i].is_enabled %></td>
+                      <%if(productList[i].is_enabled){%>
+                        <td><a class="block-button" href="/admin/disable-product/<%= productList[i]._id %>?offset=<%= offset %>">Disable</a></td>
+                      <%}else{%>
+                        <td><a class="unblock-button" href="/admin/enable-product/<%= productList[i]._id %>?offset=<%= offset %>">Enable</a></td>
+                      <%}%>
+                    </tr>
                   <%}%>
-                  
+                  <tr>
+                    <td colspan="6" class="pagination-links">
+                      <%if(offset>1){%>
+                        <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
+                      <%}else{%>
+                        <a href="" class="prev-next-buttons">&lt;Previous</a>
+                      <%}%>
+                      <%for(let i=1;i<=pageCount;i++){%>
+                        <%if(i==offset){%>
+                          <a class="selected-offset" href="/admin/product-management?offset=<%= i %>"><%= i %></a>
+                        <%}else{%>
+                          <a  href="/admin/product-management?offset=<%= i %>"><%= i %></a>
+                        <%}%>
+                        
+                      <%}%>
+                      <%if(offset<pageCount){%>
+                        <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
+                      <%}else{%>
+                        <a href="" class="prev-next-buttons ">Next&gt;</a>
+                      <%}%>
+                    </td>
+                  </tr> 
                 <%}%>
-                <%if(offset<pageCount){%>
-                  <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons ">Next&gt;</a>
-                <%}%>
-              </td>
-            </tr> 
-          <%}%>
-        </table>
-      
-      
+              </table>
+            
+            
+          </div>
+        </div>
+      </div>
     </div>
+    
     <div class="add-form-outer">
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">

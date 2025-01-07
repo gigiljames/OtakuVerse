@@ -5,7 +5,7 @@ body {
 }
 
 img {
-  height: 30px;
+  height: 90px;
 }
 
 .main-right .info-title {
@@ -40,4 +40,30 @@ img {
   font-size: 38px;
   font-weight: 600;
   padding-left: 20px;
+}
+
+.title-row {
+  font-size: 24px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 20px;
+  align-items: center;
+}
+
+.card-product {
+  display: flex;
+}
+
+td {
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.product-og-price {
+  text-decoration: line-through;
+}
+
+.product-ov-price {
+  font-size: 18px;
 }

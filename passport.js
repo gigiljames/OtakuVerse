@@ -1,6 +1,9 @@
 const passport = require("passport");
 const GoogleStartegy = require("passport-google-oauth20").Strategy;
+const Cart = require("./models/cartModel");
 const Customer = require("./models/customerModel");
+const Wallet = require("./models/walletModel");
+const Wishlist = require("./models/wishlistModel");
 require("dotenv").config();
 
 function generateReferralCode(length = 16) {
@@ -34,6 +37,10 @@ passport.use(
             referral_code: generateReferralCode(),
           });
           await customer.save();
+          //creating wallet,cart,wishlist
+          await Wallet.insertMany([{ customer_id: customer._id }]);
+          await Cart.insertMany([{ customer_id: customer._id }]);
+          await Wishlist.insertMany([{ customer_id: customer._id }]);
           return done(null, customer);
         }
       } catch (error) {

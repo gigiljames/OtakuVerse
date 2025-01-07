@@ -1,13 +1,19 @@
 <%-include("../../partials/admin-template.ejs")%>
     <title>Product Management</title>
     <link rel="stylesheet" href="/admin/admin-navbar.css" />
-    <link rel="stylesheet" href="/admin/home/admin-home.css" />
+    <!-- <link rel="stylesheet" href="/admin/home/admin-home.css" /> -->
     <link rel="stylesheet" href="/admin/productManagement/view-product.css" />
   </head>
   <body>
     <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
-    <!-- <%= productDetails %> -->
+    <div class="main">
+      <div class="main-left">
+        <%- include('../../partials/admin-sidebar.ejs') %>
+      </div>
+      <div class="main-right">
+        <div class="main-right-inner">
+          <!-- <%= productDetails %> -->
     <section class="product-details">
       <div class="title-row">
         <div class="title">Product - <%= productDetails.product_name %></div>
@@ -219,6 +225,10 @@
         <%}%>
       </div>
     </section>
+        </div>
+      </div>
+    </div>
+    
     <div class="add-form-outer">
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">

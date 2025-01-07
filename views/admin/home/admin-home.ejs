@@ -5,48 +5,97 @@
   <body>
     <%-include("../../partials/alert.ejs")%>
     <%- include('../../partials/admin-navbar.ejs') %>
-    <select id="report-period">
-      <option value="daily">Daily</option>
-      <option value="weekly">Weekly</option>
-      <option value="monthly">Monthly</option>
-      <option value="yearly">Yearly</option>
-      <option value="range">Custom range</option>
-    </select>
-    <div class="custom-range-inputs">
-      <input id="start" type="date"/>
-      <input id="end" type="date"/>
+    <div class="main">
+      <div class="main-left">
+        <%- include('../../partials/admin-sidebar.ejs') %>
+      </div>
+      <div class="main-right">
+        <div class="overall-row">
+      
+          <div class="sales-container">
+            <div class="sales-title">Overall Sales</div>
+            <div class="sales"></div>
+          </div>
+          <div class="amount-container">
+            <div class="amount-title">Overall Amount</div>
+            <div class="amount"></div>
+          </div>
+          <div class="discount-container">
+            <div class="discount-title">Overall Discount</div>
+            <div class="discount"></div>
+          </div>
+          <div class="coupon-discount-container">
+            <div class="coupon-discount-title">Overall Coupon Discount</div>
+            <div class="coupon-discount"></div>
+          </div>
+          <div class="new-users-container">
+            <div class="new-users-title">Overall Users</div>
+            <div class="new-users"></div>
+          </div>
+        </div>
+        <div class="main-right-body">
+          <div class="report-section">
+            <div class="subtitle">GENERATE SALES REPORT</div>
+            <div class="operations-row">
+              <div class="operations-row-inner">
+                <div class="operations-1">
+                  <select id="report-period">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                    <option value="range">Custom range</option>
+                  </select>
+                  <div class="custom-range-inputs">
+                    <input id="start" type="date"/>
+                    <input id="end" type="date"/>
+                  </div>
+                  <button id="go-button">Go</button>
+                </div>
+                <div class="operations-2">
+                  <button id="downloadPDF">PDF Download</button>
+                  <button id="downloadExcel">Excel Download</button>
+                </div>
+              </div>
+            </div>
+            <div class="div" id="salesReport">
+              <div class="report-title">SALES REPORT</div>
+              <div class="report-subtitle"></div>
+              <div class="chart-section">
+                <canvas id="salesChart"></canvas>
+                <canvas id="amountChart"></canvas>
+                <canvas id="discountChart"></canvas>
+                <canvas id="couponChart"></canvas>
+              </div>
+              <table >
+                <thead>
+                  <th>Date</th>
+                  <th>Total Sales</th>
+                  <th>Total Amount</th>
+                  <th>Total Discount</th>
+                  <th>Total Coupon Discount</th>
+                  <th>Total New Users</th>
+                </thead>
+                <tbody>
+      
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ranking-section">
+            <div class="top-products-container ranking-container">
+              <h3>Top 10 Products</h3>
+              <ol class="top-products-list"></ol>
+            </div>
+            <div class="top-categories-container ranking-container">
+              <h3>Top 10 Categories</h3>
+              <ol class="top-categories-list"></ol>
+            </div>
+          </div>
+        </div>
+      
+        </div>
     </div>
-    <button id="go-button">Go</button>
-    <div class="sales-container">
-      Overall Sales 
-      <div class="sales"></div>
-    </div>
-    <div class="amount-container">
-      Overall Amount
-      <div class="amount"></div>
-    </div>
-    <div class="discount-container">
-      Overall Discount
-      <div class="discount"></div>
-    </div>
-    <div class="new-users-container">
-      Overall Users
-      <div class="new-users"></div>
-    </div>
-    <button id="downloadPDF">PDF Download</button>
-    <button id="downloadExcel">Excel Download</button>
-    <table id="salesReport">
-      <thead>
-        <th>Date</th>
-        <th>Total Sales</th>
-        <th>Total Amount</th>
-        <th>Total Discount</th>
-        <th>Total New Users</th>
-      </thead>
-      <tbody>
-        
-      </tbody>
-    </table>
     <script src="/js/admin-home.js"></script>
   </body>
 </html>

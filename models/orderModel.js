@@ -22,8 +22,11 @@ const orderSchema = new Schema(
     },
     payment_type: {
       type: String,
-      enum: ["razorpay", "cod"],
+      enum: ["razorpay", "cod", "wallet"],
       required: true,
+    },
+    razorpay_order_id: {
+      type: String,
     },
     payment_status: {
       type: String,
@@ -36,6 +39,12 @@ const orderSchema = new Schema(
     //   ref: "Payment",
     // },
     amount: {
+      type: Number,
+      required: true,
+      min: 0,
+      default: 0,
+    },
+    refunded_amount: {
       type: Number,
       required: true,
       min: 0,
@@ -121,8 +130,30 @@ const orderSchema = new Schema(
           required: true,
           min: 1,
         },
+        product_status: {
+          type: String,
+          enum: ["pending", "returned", "cancelled"],
+          required: true,
+          default: "pending",
+        },
       },
     ],
+    coupon_applied: {
+      code: {
+        type: String,
+      },
+      value: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0,
+      },
+      is_percentage: {
+        type: Boolean,
+        required: true,
+        default: false,
+      },
+    },
   },
   { timestamps: true }
 );

@@ -3,6 +3,23 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+.main {
+  display: flex;
+}
+
+.main-right {
+  background-color: white;
+  width: 100%;
+}
+
+.main-right-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  /* padding: 40px 100px 40px 60px; */
+  box-sizing: border-box;
+}
+
 .banner-outer {
   display: flex;
   background-color: #0f2d50;
