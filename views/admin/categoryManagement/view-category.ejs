@@ -20,84 +20,88 @@
             enctype="multipart/form-data"
           >
             <!-- <input type="hidden" name="_method" value="PATCH" /> -->
-            <div class="row-1">
-              <div class="input-container">
-                <label for="cat-id">Category ID</label>
-                <input
-                  id="cat-id"
-                  type="text"
-                  disabled
-                  value="<%= categoryDetails._id%>"
-                />
+            <div class="row">
+              <div class="col">
+                <div class="input-container">
+                  <label for="cat-name">Category name</label>
+                  <input
+                    id="cat-name"
+                    type="text"
+                    name="name"
+                    value="<%= categoryDetails.category_name%>"
+                  />
+                  <div class="error-container" id="cat-name-error"></div>
+                </div>
+                <div class="input-container">
+                  <label for="cat-id">Category Offer</label>
+                  <input
+                    id="cat-offer"
+                    type="text"
+                    value="<%= categoryDetails.offer%>"
+                  />
+                  <div class="error-container" id="cat-offer-error"></div>
+                </div>
               </div>
-              <div class="input-container">
-                <label for="cat-name">Category name</label>
-                <input
-                  id="cat-name"
-                  type="text"
-                  name="name"
-                  value="<%= categoryDetails.category_name%>"
-                />
-                <div class="error-container" id="cat-name-error"></div>
-              </div>
-            </div>
-            <div class="row-1">
-              <div class="input-container">
-                <label for="cat-id">Category Offer</label>
-                <input
-                  id="cat-offer"
-                  type="text"
-                  value="<%= categoryDetails.offer%>"
-                />
-                <div class="error-container" id="cat-offer-error"></div>
-              </div>
-              
-            </div>
-            <div class="input-container">
-              <label for="cat-desc">Category description</label>
-              <textarea id="cat-desc" type="text" name="desc">
-    <%= categoryDetails.category_desc%></textarea
-              >
-              <div class="error-container" id="cat-desc-error"></div>
-            </div>
-    
-            <div class="input-container banner-images">
-              <label for="banner-images">Add banner images</label>
-              <input id="banner-images" type="file" name="images" accept="image/*" multiple />
-              <div id="image-preview" class="image-collection"></div>
-              <form></form>
-              <div class="button-group">
-                <input
-                  class="confirm-button"
-                  id="confirm-button"
-                  type="submit"
-                  value="Confirm changes"
-                  form="edit-cat-form"
-                  disabled
-                />
-              </div>
-              <div class="remove-banner-images-section">
-                <div>Remove banner images</div>
-                <div class="image-collection">
-                  <% if (categoryDetails.banner_images ) { %>
-                  <%categoryDetails.banner_images.forEach((banner, index) => { %>
-                  <div class="image-card">
-                    <img
-                      src="<%= banner.filepath %>"
-                      alt="<%= banner.filename %>"
-                    />
-                    <button class="delete-banner-button" data-catid="<%= categoryDetails._id %>" data-banid="<%= banner._id %>">
-                      <span class="material-symbols-outlined delete-icon"
-                        >delete</span
-                      >
-                    </button>
-                  </div>
-                  <% }); %> <% } %>
+              <div class="col">
+                <div class="input-container">
+                  <label for="cat-desc">Category description</label>
+                  <textarea id="cat-desc" type="text" name="desc"><%= categoryDetails.category_desc%></textarea>
+                  <div class="error-container" id="cat-desc-error"></div>
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <div class="input-container banner-images">
+                  <div class="label-row">
+                    <label for="banner-images">Add banner images</label>
+                    <input id="banner-images" type="file" name="images" accept="image/*" multiple />
+                  </div>
+                  <div id="image-preview" class="image-collection">
+                    
+                  </div>
+                  <form></form>
+                  
+                  
+                </div>
+              </div>
+              <div class="col">
+                <div class="remove-banner-images-section">
+                  <label>Remove banner images</label>
+                  <div class="image-collection">
+                    <% if (categoryDetails.banner_images ) { %>
+                    <%categoryDetails.banner_images.forEach((banner, index) => { %>
+                    <div class="image-card">
+                      <img
+                        src="<%= banner.filepath %>"
+                        alt="<%= banner.filename %>"
+                      />
+                      <button class="delete-banner-button" data-catid="<%= categoryDetails._id %>" data-banid="<%= banner._id %>">
+                        <span class="material-symbols-outlined delete-icon"
+                          >delete</span
+                        >
+                      </button>
+                    </div>
+                    <% }); %> <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            
           </form>
-          <button id="delete-button" data-id="<%= categoryDetails._id%>">Delete category</button>
+          <div class="button-group">
+            <input
+              class="confirm-button"
+              id="confirm-button"
+              type="submit"
+              value="Confirm changes"
+              form="edit-cat-form"
+              disabled
+            />
+            <button type="button" id="delete-button" data-id="<%= categoryDetails._id%>">Delete category</button>
+          </div>
+          
         </section>
       </div>
     </div>

@@ -4,6 +4,12 @@ body {
   font-weight: 500;
 }
 
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 img {
   height: 90px;
 }
@@ -24,7 +30,7 @@ img {
 }
 
 .main-right {
-  background-color: rgb(238, 238, 238);
+  background-color: rgb(249, 249, 249);
   width: 100%;
 }
 
@@ -39,7 +45,7 @@ img {
 .main-title {
   font-size: 38px;
   font-weight: 600;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
 .title-row {
@@ -51,8 +57,73 @@ img {
   align-items: center;
 }
 
-.card-product {
+.item-container {
   display: flex;
+  gap: 20px;
+}
+
+.item-container .product_image {
+  width: 125px;
+  height: 125px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 3px;
+  box-sizing: border-box;
+}
+
+.items-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.items-list td {
+  padding: 20px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+.items-list th {
+  background-color: #d6d6d6;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #434343;
+}
+
+.items-list th:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+.items-list th:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+.product-ov-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.product-og-price {
+  text-decoration: line-through;
+  color: #999999;
+  font-size: 14px;
+  text-align: center;
+}
+
+.variant-colour,
+.variant-size {
+  font-size: 14px;
+  color: #555555;
 }
 
 td {
@@ -66,4 +137,52 @@ td {
 
 .product-ov-price {
   font-size: 18px;
+}
+
+.product-name a {
+  font-weight: bold;
+  color: rgb(92, 179, 213);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.product-name a:hover {
+  text-decoration: underline;
+}
+
+.remove-button,
+.add-to-cart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 5px;
+  height: 40px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+
+.remove-button {
+  background-color: rgb(238, 120, 120);
+}
+
+.remove-button:hover {
+  background-color: rgb(224, 110, 110);
+}
+
+.remove-button:active {
+  background-color: rgb(208, 102, 102);
+}
+
+.add-to-cart-button {
+  background-color: rgb(119, 199, 231);
+}
+
+.add-to-cart-button:hover {
+  background-color: rgb(103, 184, 216);
+}
+
+.add-to-cart-button:active {
+  background-color: rgb(95, 168, 197);
 }

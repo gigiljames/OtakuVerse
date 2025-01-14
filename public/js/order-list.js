@@ -33,16 +33,20 @@ cancelButtons.forEach((button) => {
   });
 });
 
-const editStatusButtons = document.querySelectorAll(".edit-status-button");
-
-editStatusButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const orderID = button.dataset.id;
-    const orderRow = document.querySelector(`.order-${orderID}`);
-    const statusInput = orderRow.querySelector(".status-input");
-    const statusData = orderRow.querySelector(".status-data");
-    const saveButton = orderRow.querySelector(".save-status-button");
-    button.style.display = "none";
+const itemCards = document.querySelectorAll(".item-card");
+itemCards.forEach((card) => {
+  const editStatusButton = card.querySelector(".edit-status-button");
+  if (!editStatusButton) {
+    return;
+  }
+  editStatusButton.addEventListener("click", () => {
+    const orderID = editStatusButton.dataset.orderid;
+    const variantID = editStatusButton.dataset.variantid;
+    // const orderRow = document.querySelector(`.order-${orderID}`);
+    const statusInput = card.querySelector(".status-input");
+    const statusData = card.querySelector(".status-data");
+    const saveButton = card.querySelector(".save-status-button");
+    editStatusButton.style.display = "none";
     saveButton.style.display = "block";
     statusInput.style.display = "block";
     statusData.style.display = "none";
@@ -50,7 +54,7 @@ editStatusButtons.forEach((button) => {
       const status = statusInput.value;
       $.ajax({
         type: "PATCH",
-        url: `/admin/edit-order-status/${orderID}`,
+        url: `/admin/edit-item-status/${orderID}/${variantID}`,
         data: { status },
         success: function (response) {
           if (response.success) {
@@ -64,7 +68,7 @@ editStatusButtons.forEach((button) => {
             } else {
               cancelButton.style.display = "block";
             }
-            button.style.display = "block";
+            editStatusButton.style.display = "block";
             saveButton.style.display = "none";
             statusInput.style.display = "none";
             statusData.style.display = "block";
@@ -88,20 +92,28 @@ editStatusButtons.forEach((button) => {
   });
 });
 
-// const cancelOneItemButtons = document.querySelector(".cancel-one-item");
-// cancelOneItemButtons.forEach((button) => {
-//   const orderID = button.dataset.orderid;
-//   const variantID = button.dataset.variantid;
-//   $.ajax({
-//     url: `/cancel-item/${orderID}/${variantID}`,
-//     type: "DELETE",
-//     success: function (response) {
-//       if (response.success) {
-//         alert(response.message, "success");
-//       } else {
-//         alert(response.message, "error");
-//       }
-//     },
-//     error: function (error) {},
-//   });
-// });
+const editStatusButtons = document.querySelectorAll(".edit-status-button");
+
+editStatusButtons.forEach((button) => {});
+
+const cancelOneItemButtons = document.querySelectorAll(".cancel-one-item");
+cancelOneItemButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const orderID = button.dataset.orderid;
+    const variantID = button.dataset.variantid;
+    $.ajax({
+      url: `/admin/cancel-item/${orderID}/${variantID}`,
+      type: "DELETE",
+      success: function (response) {
+        if (response.success) {
+          alert(response.message, "success", () => {
+            window.location.reload();
+          });
+        } else {
+          alert(response.message, "error");
+        }
+      },
+      error: function (error) {},
+    });
+  });
+});

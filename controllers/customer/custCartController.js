@@ -31,7 +31,7 @@ const getBill = function (cart) {
     total_quantity: 0,
   };
   cart.cart_items.forEach((item) => {
-    console.log(item);
+    // console.log(item);
     if (item.variant_id.stock_quantity !== 0) {
       const product = item.product_id;
       bill.subtotal += product.price * item.quantity;
@@ -64,7 +64,7 @@ const cartPage = async (req, res) => {
         "product_name price discount product_images category"
       )
       .populate("cart_items.variant_id");
-
+    // console.log(cart);
     //Finding deleted products or variants from items included in cart and removing them
     const deletedItems = [];
     if (cart.cart_items.length > 0) {
@@ -165,7 +165,6 @@ const addToCart = async (req, res) => {
     const custID = req.session.user;
     const { productID } = req.params;
     const { variantID } = req.body;
-
     //Checking if item exists
     const productExists = await Product.findById(productID);
     const variantExists = await ProductVariant.findById(variantID);
@@ -198,15 +197,21 @@ const addToCart = async (req, res) => {
     }
     if (qty <= 5 && qty >= 1) {
       const cartItemExists = await Cart.findOne(
-        { "cart_items.variant_id": variantID },
+        {
+          "cart_items.variant_id": variantID,
+          customer_id: custID,
+        },
         { cart_items: { $elemMatch: { variant_id: variantID } } }
       );
+
+      // console.log(cartItemExists);
       if (cartItemExists) {
         // console.log(cartItemExists.cart_items[0].quantity);
         const quantity = cartItemExists.cart_items[0].quantity;
         // console.log(cartItemExists.cart_items);
         // console.log("qty in cart " + quantity);
         // console.log("qty adding " + qty);
+        // console.log(quantity + qty);
         if (quantity + qty > stockLeft) {
           return res.json({
             success: false,
@@ -240,10 +245,12 @@ const addToCart = async (req, res) => {
           variant_id: variantID,
           quantity: qty,
         };
+        // console.log(cartItem);
         await Cart.updateOne(
           { customer_id: custID },
           { $push: { cart_items: cartItem } }
         );
+
         return res.json({
           success: true,
           message: "Product added to cart successfully.",

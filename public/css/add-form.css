@@ -23,6 +23,7 @@
   width: 100vw;
   background-color: rgba(0, 0, 0, 0.605);
   display: none;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
   position: fixed;
@@ -38,7 +39,7 @@
 .add-form-outer .add-form-inner {
   background-color: white;
   border-radius: 10px;
-  padding: 40px;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   gap: 30px;

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Category = require("../../models/categoryModel");
+const Product = require("../../models/productModel");
 
 const getPage = async (req, res) => {
   try {
@@ -61,15 +62,24 @@ const addCategory = async (req, res) => {
 const editCategory = async (req, res) => {
   try {
     console.log(req.body.images);
+    const { catID } = req.params;
+    const category = await Category.findById(catID);
+    if (category.category_name === "uncategorized") {
+      return res.json({
+        success: false,
+        message: "This category cannot be edited.",
+      });
+    }
     const imageDocs = req.files.map((file) => ({
       filename: file.filename,
       filepath: file.path.slice(6), // removes "public" from path
     }));
-    const id = req.params.id;
+    const id = req.params.catID;
     const { name, desc, offer } = req.body;
     const categoryExists = await Category.findOne({
       category_name: name,
       is_deleted: false,
+      _id: { $ne: catID },
     });
     if (categoryExists) {
       return res.json({ success: false, message: "Category already exists." });
@@ -98,6 +108,29 @@ const editCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
+    const keepProducts = JSON.parse(req.query.keepProducts); //Boolean("false") returned true XD
+    console.log(keepProducts);
+    const category = await Category.findById(id);
+    if (category.category_name === "uncategorized") {
+      return res.json({
+        success: false,
+        message: "This category cannot be deleted.",
+      });
+    }
+    if (keepProducts) {
+      const uncategorized = await Category.findOne({
+        category_name: "uncategorized",
+      });
+      await Product.updateMany(
+        { category: id },
+        { $set: { category: uncategorized._id } }
+      );
+    } else {
+      await Product.updateMany(
+        { category: id },
+        { $set: { is_deleted: true } }
+      );
+    }
     const deleteConfirmation = await Category.updateOne(
       { _id: id },
       { $set: { is_deleted: true } }

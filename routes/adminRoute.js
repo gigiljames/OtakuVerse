@@ -13,15 +13,15 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // // CONSTANT LOGIN (For Development)
-// const constantLogin = async (req, res, next) => {
-//   const Admin = require("../models/adminModel");
-//   const admin = await Admin.findOne({});
-//   req.session.admin = admin._id;
-//   next();
-// };
-// router.use((req, res, next) => {
-//   constantLogin(req, res, next);
-// });
+const constantLogin = async (req, res, next) => {
+  const Admin = require("../models/adminModel");
+  const admin = await Admin.findOne({});
+  req.session.admin = admin._id;
+  next();
+};
+router.use((req, res, next) => {
+  constantLogin(req, res, next);
+});
 
 // router.use((req, res, next) => {
 //   if (!req.session.admin && req.path !== "/") {
@@ -53,7 +53,7 @@ router.get("/category-management", authMiddleware, categoryManagement.getPage);
 router.get("/category/:id", authMiddleware, categoryManagement.viewCategory);
 router.post("/add-category", authMiddleware, categoryManagement.addCategory);
 router.patch(
-  "/edit-category/:id",
+  "/edit-category/:catID",
   authMiddleware,
   upload.array("files", 10),
   categoryManagement.editCategory
@@ -73,12 +73,12 @@ router.delete(
 router.get("/customer-management", authMiddleware, customerManagement.getPage);
 router.get("/get-customers", authMiddleware, customerManagement.getCustomers);
 router.post("/add-customer", authMiddleware, customerManagement.addCustomer);
-router.get(
+router.patch(
   "/block-customer/:id",
   authMiddleware,
   customerManagement.blockCustomer
 );
-router.get(
+router.patch(
   "/unblock-customer/:id",
   authMiddleware,
   customerManagement.unblockCustomer
@@ -144,10 +144,20 @@ router.delete(
   authMiddleware,
   orderManagement.cancelOrder
 );
+// router.patch(
+//   "/edit-order-status/:orderID",
+//   authMiddleware,
+//   orderManagement.editStatus
+// );
 router.patch(
-  "/edit-order-status/:orderID",
+  "/edit-item-status/:orderID/:variantID",
   authMiddleware,
-  orderManagement.editStatus
+  orderManagement.editItemStatus
+);
+router.delete(
+  "/cancel-item/:orderID/:variantID",
+  authMiddleware,
+  orderManagement.cancelItem
 );
 
 // COUPON MANAGEMENT

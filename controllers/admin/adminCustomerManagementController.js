@@ -47,6 +47,17 @@ const viewCustomer = async (req, res) => {
   res.render("admin/customerManagement/view-customer");
 };
 
+function generateReferralCode(length = 16) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let referralCode = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    referralCode += characters[randomIndex];
+  }
+  return referralCode;
+}
+
 const addCustomer = async (req, res) => {
   try {
     const { name, email, password, status } = req.body;
@@ -62,6 +73,7 @@ const addCustomer = async (req, res) => {
       customer_email: email,
       customer_password: password,
       account_status: status,
+      referral_code: generateReferralCode(),
     });
     const saveConfirmation = await customer.save();
     return res.json({
@@ -82,40 +94,36 @@ const addCustomer = async (req, res) => {
 const blockCustomer = async (req, res) => {
   try {
     const { id } = req.params;
-    const { offset } = req.query;
-    const updateConfirmation = await Customer.updateOne(
+    await Customer.updateOne(
       { _id: id },
       { $set: { account_status: "banned" } }
     );
-    if (updateConfirmation) {
-      console.log("Customer blocked successfully");
-    } else {
-      console.log("Block Customer : Something went wrong");
-    }
-    return res.redirect(`/admin/customer-management?offset=${offset}`);
+    return res.json({ success: true });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Block Customer");
+    return res.json({
+      success: false,
+      message: "An error occured while blocking customer.",
+    });
   }
 };
 
 const unblockCustomer = async (req, res) => {
   try {
     const { id } = req.params;
-    const { offset } = req.query;
-    const updateConfirmation = await Customer.updateOne(
+    await Customer.updateOne(
       { _id: id },
       { $set: { account_status: "active" } }
     );
-    if (updateConfirmation) {
-      console.log("Customer unblocked successfully");
-    } else {
-      console.log("Unblock Customer : Something went wrong");
-    }
-    return res.redirect(`/admin/customer-management?offset=${offset}`);
+    return res.json({ success: true });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Unblock Customer");
+    return res.json({
+      success: false,
+      message: "An error occured while unblocking customer.",
+    });
   }
 };
 

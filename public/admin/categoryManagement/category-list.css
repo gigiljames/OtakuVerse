@@ -28,7 +28,7 @@
 .add-form-inner {
   background-color: white;
   border-radius: 10px;
-  padding: 40px;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
   gap: 30px;
@@ -121,8 +121,9 @@ body {
 
 .main-right {
   background-color: white;
-  height: 100vh;
+  height: calc(100vh - 60px);
   width: 100vw;
+  overflow: auto;
 }
 
 .submit-button {

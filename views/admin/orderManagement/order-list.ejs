@@ -1,7 +1,6 @@
 <%-include("../../partials/admin-template.ejs")%>
     <title>Order Management</title>
     <link rel="stylesheet" href="/admin/admin-navbar.css" />
-    <link rel="stylesheet" href="/admin/home/admin-home.css" />
     <link rel="stylesheet" href="/admin/orderManagement/order-list.css" />
   </head>
   <body>
@@ -22,15 +21,14 @@
                 <th></th>
                 <th>Order ID</th>
                 <th>Customer Name</th>
+                <th>Order date</th>
                 <th>Products</th>
-                <th>Order Status</th>
                 <th>Amount</th>
                 <th>Payment Status</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              <%orders=orders.reverse()%>
               <% orders.forEach(order => { %>
                 <tr class="order-<%=order._id%>">
                   <td>
@@ -45,7 +43,7 @@
         
                   <!-- Customer Name -->
                   <td><%= order.customer_id.customer_name %></td>
-        
+                  <td><%= order.createdAt %></td>
                   <!-- Product Names -->
                   <td>
                     <% order.order_items.forEach(item => { %>
@@ -65,28 +63,27 @@
                             <p><%= item.size %></p> <p><%= item.colour %></p>
                           </div>
                           <p>Quantity: <%= item.quantity %></p>
+                          <div class="status-data">
+                            <%= item.product_status %>
+                          </div>
+                          <%if(item.product_status!=="cancelled"){%>
+                            <div class="status-edit-container">
+                              <select class="status-input">
+                                <option value="processing">Processing</option>
+                                <option value="shipping">Shipping</option>
+                                <option value="out for delivery">Out for delivery</option>
+                                <option value="delivered">Delivered</option>
+                              </select>
+                              <button class="edit-status-button" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">Edit</button>
+                              <button class="save-status-button">Save</button>
+                            </div>
+                          <%}%>
+                          <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
+                            <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" >Cancel this item</button>
+                          <%}%>
                         </div>
                       </div>
                     <% }) %>
-                  </td>
-        
-                  <!-- Order Status -->
-                  <td>
-                    <div class="status-data">
-                      <%= order.order_status %>
-                    </div>
-                    <%if(order.order_status!=="cancelled"){%>
-                      <div class="status-edit-container">
-                        <select class="status-input">
-                          <option value="processing">Processing</option>
-                          <option value="shipping">Shipping</option>
-                          <option value="out for delivery">Out for delivery</option>
-                          <option value="delivered">Delivered</option>
-                        </select>
-                        <button class="edit-status-button" data-id="<%= order._id %>">Edit</button>
-                        <button class="save-status-button">Save</button>
-                      </div>
-                    <%}%>
                   </td>
         
                   <!-- Amount -->
@@ -95,7 +92,7 @@
                     <%= order.payment_status %>
                   </td>
                   <td>
-                    <%if(order.order_status!=="cancelled" && order.order_status!=="delivered"){ %>
+                    <%if(!order.is_cancelled){ %>
                     <button class="cancel-order-button" data-id="<%=order._id%>">Cancel Order</button>
                     <%}%>
                   </td>

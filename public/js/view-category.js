@@ -168,7 +168,8 @@ deleteBannerButtons.forEach((button) => {
       success: function (response) {
         if (response.success) {
           alert(response.message, "success", () => {
-            window.location.reload();
+            // window.location.reload();
+            button.closest(".image-card").remove();
           });
         } else {
           if (response.message) {
@@ -189,28 +190,48 @@ deleteBannerButtons.forEach((button) => {
 //DELETE CATEGORY
 const deleteCatButton = document.querySelector("#delete-button");
 
-deleteCatButton.addEventListener("click", (event) => {
+deleteCatButton.addEventListener("click", async (event) => {
   event.preventDefault();
   const catID = deleteCatButton.dataset.id;
-  $.ajax({
-    url: `/admin/delete-category/${catID}/`,
-    type: "DELETE",
-    success: function (response) {
-      if (response.success) {
-        alert(response.message, "success", () => {
-          window.location.href = response.redirectUrl;
-        });
-      } else {
-        if (response.message) {
-          alert(response.message, "error");
+  if (
+    await yes({
+      message: "Are you sure you want to delete this category?",
+      yesButtonColour: "red",
+    })
+  ) {
+    let keepProducts;
+    if (
+      await yes({
+        message: "Do you want to keep the products?",
+        yesButtonColour: "red",
+        yesButtonText: "Yes, keep products",
+        noButtonText: "No",
+      })
+    ) {
+      keepProducts = true;
+    } else {
+      keepProducts = false;
+    }
+    $.ajax({
+      url: `/admin/delete-category/${catID}?keepProducts=${keepProducts}`,
+      type: "DELETE",
+      success: function (response) {
+        if (response.success) {
+          alert(response.message, "success", () => {
+            window.location.href = response.redirectUrl;
+          });
+        } else {
+          if (response.message) {
+            alert(response.message, "error");
+          }
+          if (response.redirectUrl) {
+            window.location.href = response.redirectUrl;
+          }
         }
-        if (response.redirectUrl) {
-          window.location.href = response.redirectUrl;
-        }
-      }
-    },
-    error: function (xhr, status, error) {
-      alert("An error occurred while while deleting the category.", "error");
-    },
-  });
+      },
+      error: function (xhr, status, error) {
+        alert("An error occurred while while deleting the category.", "error");
+      },
+    });
+  }
 });

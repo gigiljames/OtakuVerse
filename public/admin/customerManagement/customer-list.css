@@ -122,8 +122,9 @@ body {
 
 .main-right {
   background-color: white;
-  height: 100vh;
+  height: calc(100vh - 60px);
   width: 100vw;
+  overflow: auto;
 }
 
 .pagination-links {

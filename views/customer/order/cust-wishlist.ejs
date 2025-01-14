@@ -9,13 +9,16 @@
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
       <div class="main-right-inner">
-        <div class="title-row">Wishlist</div>
+        <div class="title-row">
+          <div class="main-title">Wishlist</div>
+        </div>
         <div class="cart-container">
           <div class="items-list">
             <table>
               <tr>
                 <th>Product</th>
-                <th>Total price</th>
+                <th>Price</th>
+                <th></th>
               </tr>
               
               <%items.forEach((item)=>{%>
@@ -23,33 +26,38 @@
                     <%let product = item.product_id%>
                     <%let variant = item.variant_id%>
                     <td>
-                      <div class="card-product">
+                      <div class="item-container">
                         <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
-                        <div class="product-info">
+                        <div class="item-info">
                           <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
                           
                           <div class="variant-colour">Colour: <%=variant.colour%></div>
                           <div class="variant-size">Size: <%=variant.size%></div>
-                          <button class="remove-button" data-id="<%=item._id%>">
-                            Remove
-                            <span class="material-symbols-outlined">
-                              remove
-                            </span>
-                          </button>
-                          <button class="add-to-cart-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
-                            Move to cart
-                            <span class="material-symbols-outlined">
-                              shopping_cart
-                            </span>
-                          </button>
+                          
                         </div>
                       </div>
                     </td>
                     <td>
-                      <div class="product-og-price">₹ <%=product.price%></div>
                       <div class="product-ov-price">₹ <%=product.offer_price%></div>
+                      <div class="product-og-price">₹ <%=product.price%></div>
+                      
                     </td>
-                  
+                    <td>
+                      <div class="button-group">
+                        <button class="remove-button" data-id="<%=item._id%>">
+                          Remove
+                          <span class="material-symbols-outlined">
+                            remove
+                          </span>
+                        </button>
+                        <button class="add-to-cart-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
+                          Move to cart
+                          <span class="material-symbols-outlined">
+                            shopping_cart
+                          </span>
+                        </button>
+                      </div>
+                    </td>
                 </tr>
               <%})%>
             </table>

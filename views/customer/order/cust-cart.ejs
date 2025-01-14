@@ -10,51 +10,77 @@
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
       <div class="main-right-inner">
-        <div class="title-row">Shopping Cart</div>
+        <div class="title-row">
+          <div class="main-title">Shopping Cart</div>
+        </div>
         <div class="cart-container">
           <div class="items-list">
             <table>
-              <tr>
+              <thead>
                 <th>Product</th>
                 <th>Qty</th>
                 <th>Total price</th>
-              </tr>
-              <%items.forEach((item)=>{%>
-                <tr class="item-card">
-                    <%let product = item.product_id%>
-                    <%let variant = item.variant_id%>
-                    <td>
-                      <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
-                      <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
-                      <div class="product-og-price"><%=product.price%></div>
-                      <div class="product-ov-price"><%=product.offer_price%></div>
-                      <div class="variant-colour">Colour: <%=variant.colour%></div>
-                      <div class="variant-size">Size: <%=variant.size%></div>
-                      <button class="remove-button" data-id="<%=item._id%>">
-                        Remove
-                        <span class="material-symbols-outlined">
-                          remove
-                        </span>
-                      </button>
-                      <%if(variant.stock_quantity===0){%>
-                        <div class="out-of-stock">Out of stock</div>
-                      <%}%>
-                    </td>
-                    <td>
-                      <div class="quantity-container">
-                        <button class="dec-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>" >-</button>
-                        <input class="quantity" value="<%=item.quantity%>" disabled/>
-                        <button class="inc-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">+</button>
+              </thead>
+              <tbody>
+                <%items.forEach((item)=>{%>
+                  <tr class="item-card">
+                      <%let product = item.product_id%>
+                      <%let variant = item.variant_id%>
+                      <td>
+                        <div class="item-container">
+                          <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
+                          <div class="item-info">
+                            <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
+                            <div class="price-container">
+                              <div class="product-ov-price">₹<%=product.offer_price%></div>
+                              <div class="product-og-price">₹<%=product.price%></div>
+                            </div>
+                            <div class="variant-container">
+                              <div class="variant-colour">Colour: <%=variant.colour%></div>
+                              <div class="variant-size">Size: <%=variant.size%></div>
+                            </div>
+                            <button class="remove-button" data-id="<%=item._id%>">
+                              Remove
+                            </button> 
+                          </div>
+                          
+                        </div>
                         
                         
-                      </div>
-                    </td>
-                    <td>
-                      <div class="product-ov-price"><%=product.offer_price%></div>
-                    </td>
-                  
-                </tr>
-              <%})%>
+                        
+                        <%if(variant.stock_quantity===0){%>
+                          <div class="out-of-stock">Out of stock</div>
+                        <%}%>
+                      </td>
+                      <td>
+                        <div class="quantity-container">
+                          <button class="dec-button quantity-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>" >
+                            <span class="material-symbols-outlined">
+                              remove
+                              </span>
+                          </button>
+                          <input class="quantity " value="<%=item.quantity%>" disabled/>
+                          <button class="inc-button quantity-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
+                            <span class="material-symbols-outlined">
+                              add
+                              </span>
+                          </button>
+                          
+                          
+                        </div>
+                      </td>
+                      <td>
+                        <div class="product-total-price">
+                          <%=(product.offer_price * item.quantity).toFixed(2)%>
+                          
+                        </div>
+                        
+                      </td>
+                    
+                  </tr>
+                <%})%>
+              </tbody>
+              
             </table>
           </div>
           <div class="bill-section">
@@ -63,9 +89,11 @@
           </div>
         </div>
       </div>
+      
     </div>
   </div>
-  <%-include("../../partials/cust-footer.ejs")%>
+  
   <script src="/js/cust-cart.js"></script>
+  <%-include("../../partials/cust-footer.ejs")%>
 </body>
 </html>

@@ -13,17 +13,27 @@
     <div class="main-right">
       <div class="main-right-inner">
         <div class="main-title-row">
-          <div class="main-title">Wallet</div>
+          <div class="main-title">OtakuVerse Wallet</div>
         </div>
-        Wallet balance: <%=wallet.balance%>
-        <h2>Transaction History</h2>
-        <div class="transaction-list">
-          <table>
+        <div class="balance-container">
+          <div class="balance-title">
+            Wallet balance
+          </div>
+          <div class="balance">
+            ₹<%=wallet.balance%>
+          </div>
+        </div>
+         
+        
+        <div>
+          <h2 class="subtitle">Transaction History</h2>
+          <table class="transaction-list">
             <thead>
               <th>Amount</th>
-              <th>Transaction type</th>
+             
               <th>Date</th>
               <th>Time</th>
+              <th>Transaction type</th>
             </thead>
             <tbody>
               <%wallet.transaction_history.forEach((transaction)=>{%>
@@ -31,11 +41,28 @@
                 <%const indianDate = new Intl.DateTimeFormat("en-IN", options).format(transaction.time);%>
                 <%const timeOptions = { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };%>
                 <%const indianTime = new Intl.DateTimeFormat("en-IN", timeOptions).format(transaction.time);%>
-                <tr>
-                  <td><%=transaction.amount%></td>
-                  <td><%=transaction.transactionType%></td>
+                <tr 
+                 >
+                  
+                  
+                  <td class="amount">₹<%=transaction.amount%></td>
                   <td><%=indianDate%></td>
                   <td><%=indianTime%></td>
+                  <td>
+                    <% if (transaction.transactionType==="credit") { %>
+                      <div class="transaction-type credit-row">
+                        <span class="material-symbols-outlined">
+                          north
+                          </span>
+                      </div>
+                    <% } else if (transaction.transactionType==="debit") { %>
+                      <div class="transaction-type debit-row">
+                        <span class="material-symbols-outlined">
+                          south
+                          </span>
+                      </div>
+                    <%}%>
+                  </td>
                 </tr>
               <%})%>
             </tbody>
@@ -44,5 +71,6 @@
       </div>
     </div>
   </div>
+  <%-include("../../partials/cust-footer.ejs")%>
 </body>
 </html>

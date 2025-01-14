@@ -1,6 +1,8 @@
 function yes(options) {
   injectStyles();
   const { message, yesButtonColour } = options;
+  const yesButtonText = options.yesButtonText || "Confirm";
+  const noButtonText = options.noButtonText || "Cancel";
   const yesOuter = document.createElement("div");
   yesOuter.classList.add("yes-outer");
   let colour = "";
@@ -18,8 +20,8 @@ function yes(options) {
         ${message}
       </div>
       <div class="yes-buttons">
-        <button class="no-button"><div>Cancel</div></button>
-        <button class="yes-button ${colour}"><div>Confirm</div></button>
+        <button class="no-button"><div>${noButtonText}</div></button>
+        <button class="yes-button ${colour}"><div>${yesButtonText}</div></button>
       </div>
     </div>
   `;

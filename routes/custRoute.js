@@ -13,17 +13,17 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // CONSTANT LOGIN (For Development)
-// const constantLogin = async (req, res, next) => {
-//   const Customer = require("../models/customerModel");
-//   const customer = await Customer.findOne({
-//     customer_email: "hrx@fakemail.com",
-//   });
-//   req.session.user = customer._id;
-//   next();
-// };
-// router.use((req, res, next) => {
-//   constantLogin(req, res, next);
-// });
+const constantLogin = async (req, res, next) => {
+  const Customer = require("../models/customerModel");
+  const customer = await Customer.findOne({
+    customer_email: "hrx@fakemail.com",
+  });
+  req.session.user = customer._id;
+  next();
+};
+router.use((req, res, next) => {
+  constantLogin(req, res, next);
+});
 
 // AUTHENTICATION MIDDLEWARE
 const authMiddleware = async (req, res, next) => {

@@ -3,7 +3,7 @@ const Coupon = require("../../models/couponModel");
 const getPage = async (req, res) => {
   try {
     const { offset } = req.query;
-    const limit = 10;
+    const limit = 9;
     const couponCount = await Coupon.find().countDocuments();
     return res.render("admin/couponManagement/coupon-list", {
       pageCount: Math.ceil(couponCount / limit),
@@ -23,7 +23,7 @@ const getCoupons = async (req, res) => {
   try {
     const { search, sort } = req.query;
     const offset = req.query.offset || 1;
-    const limit = 10;
+    const limit = 9;
     const couponList = await Coupon.find({
       $or: [
         { title: { $regex: search, $options: "i" } },
@@ -32,6 +32,7 @@ const getCoupons = async (req, res) => {
     })
       .skip(limit * (offset - 1))
       .limit(limit);
+    // console.log(couponList);
     return res.json({
       success: true,
       couponList,
@@ -95,6 +96,22 @@ const addCoupon = async (req, res) => {
 
 const editCoupon = async (req, res) => {
   try {
+    const couponID = req.params.id;
+    const { title, desc, code, value, type, minSpent, uses } = req.body;
+    await Coupon.updateOne(
+      { _id: couponID },
+      {
+        $set: {
+          title: title,
+          desc: desc,
+          code: code,
+          value: value,
+          is_percentage: type,
+          min_spent: minSpent,
+          uses_per_person: uses,
+        },
+      }
+    );
     return res.json({ success: true, message: "Coupon updated successfully." });
   } catch (error) {
     console.log(error);

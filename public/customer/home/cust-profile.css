@@ -14,7 +14,7 @@
 .address-card {
   background-color: white;
   padding: 25px 40px;
-  border-radius: 20px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 10px;
@@ -44,6 +44,13 @@
   gap: 25px;
 }
 
+/* .address-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
+  gap: 25px;
+} */
+
 .address-section {
   display: flex;
   flex-direction: column;
@@ -54,6 +61,10 @@ body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
 }
 
 .error-container {
@@ -83,7 +94,7 @@ body {
 .general-info-card {
   background-color: white;
   padding: 25px 40px;
-  border-radius: 20px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
@@ -248,6 +259,51 @@ html {
   display: flex;
 }
 
+.edit-details-button,
+.save-details-button,
+.cancel-details-button {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 5px;
+  color: white;
+}
+
+.edit-details-button {
+  background-color: rgb(123, 201, 232);
+}
+
+.edit-details-button:hover {
+  background-color: rgb(103, 185, 217);
+}
+
+.edit-details-button:active {
+  background-color: rgb(100, 177, 208);
+}
+
+.save-details-button {
+  background-color: rgb(123, 232, 127);
+}
+
+.save-details-button:hover {
+  background-color: rgb(103, 217, 132);
+}
+
+.save-details-button:active {
+  background-color: rgb(100, 208, 113);
+}
+
+.cancel-details-button {
+  background-color: rgb(232, 123, 123);
+}
+
+.cancel-details-button:hover {
+  background-color: rgb(217, 103, 103);
+}
+
+.cancel-details-button:active {
+  background-color: rgb(208, 100, 100);
+}
+
 .edit-address-button {
   /* border: 2px solid rgb(123, 201, 232); */
   background-color: white;
@@ -272,6 +328,10 @@ html {
 .save-details-group,
 .address-input {
   display: none;
+}
+
+.save-details-group {
+  gap: 10px;
 }
 
 .save-address-group {

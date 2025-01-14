@@ -1,9 +1,3 @@
-function clearErrors() {
-  for (let i = 0; i < errorContainers.length; i++) {
-    errorContainers[i].innerText = "";
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   //SEARCH
   queryCustomers();
@@ -61,13 +55,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordError = document.getElementById("password-error");
   const repasswordError = document.getElementById("repassword-error");
   const errorContainers = document.getElementsByClassName("error-container");
+  function clearErrors() {
+    for (let i = 0; i < errorContainers.length; i++) {
+      errorContainers[i].innerText = "";
+    }
+  }
   // const passwordRegex =
   //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   addForm.addEventListener("submit", (event) => {
-    clearErrors();
     event.preventDefault();
+    clearErrors();
     const fullName = document.getElementById("fullname-input").value.trim();
     const email = document.getElementById("email-input").value.trim();
     const password = document.getElementById("password-input").value.trim();
@@ -106,7 +105,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (response.success) {
             addFormOuter.style.display = "none";
             alert(response.message, "success", () => {
-              window.location.reload();
+              // window.location.reload();
+              queryCustomers();
             });
           } else {
             if (response.message) {
@@ -160,14 +160,14 @@ function updateCustomerList(customers) {
         <td>${customer._id}</td>
         <td>${customer.customer_name}</td>
         <td>${customer.customer_email}</td>
-        <td>${customer.account_status}</td>
-        <td>
-          <a
+        <td class="status">${customer.account_status}</td>
+        <td class="status-button">
+          <button
             class="block-button"
-            href="/admin/block-customer/${customer._id}?offset=<%= offset %>"
+            data-id = "${customer._id}"
           >
             Block
-          </a>
+          </button>
         </td>
         `;
       } else if (customer.account_status === "banned") {
@@ -175,18 +175,63 @@ function updateCustomerList(customers) {
         <td>${customer._id}</td>
         <td>${customer.customer_name}</td>
         <td>${customer.customer_email}</td>
-        <td>${customer.account_status}</td>
-        <td>
-          <a
+        <td class="status">${customer.account_status}</td>
+        <td class="status-button">
+          <button
             class="unblock-button"
+            data-id = "${customer._id}"
             href="/admin/unblock-customer/${customer._id}?offset=<%= offset %>"
           >
             Unblock
-          </a>
+          </button>
         </td>
         `;
       }
       tbody.append(row);
     });
+    handleCustomerOperations();
   }
+}
+
+function handleCustomerOperations() {
+  const blockButtons = document.querySelectorAll(".block-button");
+  console.log(blockButtons);
+  blockButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const custID = button.dataset.id;
+      $.ajax({
+        url: `/admin/block-customer/${custID}`,
+        type: "PATCH",
+        success: function (response) {
+          if (response.success) {
+            queryCustomers();
+          } else {
+            alert(response.message, "error");
+          }
+        },
+        error: function (error) {},
+      });
+    });
+  });
+
+  const unblockButtons = document.querySelectorAll(".unblock-button");
+  unblockButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const custID = button.dataset.id;
+      $.ajax({
+        url: `/admin/unblock-customer/${custID}`,
+        type: "PATCH",
+        success: function (response) {
+          if (response.success) {
+            queryCustomers();
+          } else {
+            alert(response.message, "error");
+          }
+        },
+        error: function (error) {},
+      });
+    });
+  });
 }

@@ -16,14 +16,14 @@
         <div class="order-list">
           <%orders.forEach((order)=>{%>
               <%const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];%>
-              <%const paymentMethod = {"cod":"Cash on delivery", "upi":"UPI"}%>
+              <%const paymentMethod = {"cod":"Cash on delivery", "razorpay":"Razorpay","wallet":"OtakuVerse wallet"}%>
               <div class="order-card">
                 <div class="top-row">
                   <div class="order-date">
                     Ordered on:
                     <%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%>
                   </div>
-                  <div class="order-status">
+                  <!-- <div class="order-status">
                     Order status:
                     <%if(order.order_status==="cancelled"){%>
                       <div class="status redText"><%=order.order_status%></div>
@@ -33,7 +33,7 @@
                       <div class="status greenText"><%=order.order_status%></div>
                     <%}%>
                     
-                  </div>
+                  </div> -->
           
                   <div class="payment-method">
                     Payment method:
@@ -56,12 +56,16 @@
                     Total amount:
                     <%=order.amount%>
                   </div>
-                  <%if(order.order_status!=="cancelled"){%>
+                  <%if(!order.is_cancelled){%>
                   <div class="delivery-date">
                     Delivery on:
                     <%=order.delivery_date.getDate()+" "+months[order.delivery_date.getMonth()]+" "+order.delivery_date.getFullYear()%>
                   </div>
                   <%}%>
+                  <div class="refunded-amount">
+                    Refunded amount:
+                    <%= order.refunded_amount %>
+                  </div>
                 </div>
                 <%let items = order.order_items%>
                 <%items.forEach((item)=>{%>
@@ -72,8 +76,12 @@
                     Colour: <%=item.colour%>
                     Quantity: <%=item.quantity%>
                     Price: <%=item.price%>
-                    <%if(order.order_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
+                    Status: <%= item.product_status %>
+                    <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
                     <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
+                    <%}%>
+                    <%if(order.product_status==="delivered" && order.order_items.length>1 && order.payment_status==="completed"){%>
+                      <button class="return-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Return this item</button>
                     <%}%>
                   </div>
                 <%})%>
@@ -88,16 +96,18 @@
                     <div class="address-line4">Phone number: <%=address.phone_number%></div>
                     <%}%>
                   </div>
-                  <%if(order.order_status!=="cancelled"){%>
-                  <div class="order-functions">
-                    
-                    <%if(order.payment_status==="completed"){%>
-                      <button class="invoice-button" data-id="<%=order._id%>">Download invoice</button>
-                    <%}else if(order.payment_type==="razorpay" && order.payment_status==="failed"){%>
-                      <button class="retry-payment-button" data-id="<%=order._id%>">Retry payment</button>
-                    <%}%>
-                    <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
-                  </div>
+
+                  <%if(!order.is_cancelled){%>
+                    <div class="order-functions">
+                      <%if(order.payment_status==="completed"){%>
+                        <button class="invoice-button" data-id="<%=order._id%>">Download invoice</button>
+                      <%}else if(order.payment_type==="razorpay" && order.payment_status==="failed"){%>
+                        <button class="retry-payment-button" data-id="<%=order._id%>">Retry payment</button>
+                      <%}%>
+                      <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
+
+                      
+                    </div>
                   <%}%>
                 </div>
               </div>
@@ -105,6 +115,21 @@
           <%})%>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="add-form-outer">
+    <span class="material-symbols-outlined close-button"> close </span>
+    <div class="add-form-inner">
+      <div class="form-title">Return request</div>
+      <form id="add-form" method="POST">
+        
+        <div class="input-container">
+          <label for="reason">Provide a reason</label>
+          <textarea name="reason" id="reason" style="height: 150px;"></textarea>
+          <div class="error-container" id="reason-error"></div>
+        </div>
+        <input class="submit-button" type="submit" value="Send return request">
+      </form>
     </div>
   </div>
   <%-include("../../partials/cust-footer.ejs")%>

@@ -26,9 +26,12 @@ td {
   /* background-color: white; */
   width: 100%;
   padding: 2% 1% 2% 2%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: calc(100vh - 60px);
+  overflow: auto;
 }
 
 .main-right-body {

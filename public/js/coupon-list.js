@@ -183,87 +183,230 @@ function queryCoupons(offset = 1) {
 }
 
 function updateCouponList(coupons, mode = "initial") {
-  const tbody = document.querySelector("tbody");
+  const couponCards = document.querySelector(".coupon-cards");
   if (mode === "initial") {
-    tbody.innerHTML = "";
+    couponCards.innerHTML = "";
   }
 
   if (coupons.length === 0) {
-    let row = document.createElement("tr");
-    row.innerHTML = "<td colspan='7'>Nothing to show here.</td>";
+    couponCards.innerHTML = "Nothing to show here.";
   } else {
     coupons.forEach((coupon) => {
-      let row = document.createElement("tr");
+      let card = document.createElement("div");
+      card.classList.add("coupon-card");
       let type;
       if (coupon.is_percentage) {
         type = "Percentage";
       } else {
         type = "Flat";
       }
-      let availability;
-      let availabilityButton;
-      if (coupon.is_enabled) {
-        availability = "Enabled";
-        availabilityButton = `<button class="block-button" data-id="${coupon._id}">Disable</button>`;
-      } else {
-        availability = "Disabled";
-        availabilityButton = `<button class="unblock-button" data-id="${coupon._id}">Enable</button>`;
-      }
-      // <td>${availability}</td>
-      //   <td>
-      //     ${availabilityButton}
-      //   </td>
-      row.innerHTML = `
-        <td>${coupon.title}</td>
-        <td>${coupon.code}</td>
-        <td>${coupon.value}</td>
-        <td>${type}</td>
+      // let availability;
+      // let availabilityButton;
+      // if (coupon.is_enabled) {
+      //   availability = "Enabled";
+      //   availabilityButton = `<button class="block-button" data-id="${coupon._id}">Disable</button>`;
+      // } else {
+      //   availability = "Disabled";
+      //   availabilityButton = `<button class="unblock-button" data-id="${coupon._id}">Enable</button>`;
+      // }
+
+      card.innerHTML = `
+        <div class="coupon-title">
+          <div class="info-data">${coupon.title}</div>
+          <input class="info-input input-title" type="text" placeholder="Enter coupon title"/>
+        </div>
+        <div class="coupon-desc">
+          <div class="info-data">${coupon.desc}</div>
+          <input class="info-input input-desc" type="text" placeholder="Enter coupon description"/>
+        </div>
+        <div class="coupon-code">
+          <div class="info-data">${coupon.code}</div>
+          <input class="info-input input-code" type="text" placeholder="Enter coupon code"/>
+        </div>
+        <div class="coupon-info-grid">
+          <div class="coupon-value info-item">
+            <label>Value</label>
+            <div class="info-data">${coupon.value}</div>
+            <input class="info-input input-value" type="text" placeholder="Enter coupon value"/>
+          </div>
+          <div class="coupon-type info-item">
+            <label>Type</label>
+            <div class="info-data type-data">${type}</div>
+            <select class="info-input input-type" type="text">
+              <option class="percentage" value="true">Percentage</option>
+              <option class="flat" value="false">Flat</option>
+            </select>
+          </div>
+          <div class="coupon-min-spent info-item">
+            <label>Min spent</label>
+            <div class="info-data">${coupon.min_spent}</div>
+            <input class="info-input input-min-spent" type="text" placeholder="Enter minimum spent"/>
+          </div>
+          <div class="coupon-uses info-item">
+            <label>Uses per person</label>
+            <div class="info-data">${coupon.uses_per_person}</div>
+            <input class="info-input input-uses" type="text" placeholder="Enter uses per person"/>
+          </div>
+        </div>
         
-        <td>
-          <button class="edit-button" data-id="${coupon._id}">
-            <span class="material-symbols-outlined">
-            edit
-            </span>
-          </button>
-        </td>
-        <td>
-          <button class="delete-button" data-id="${coupon._id}">
-            <span class="material-symbols-outlined">
-            delete
-            </span>
-          </button>
-        </td>
+          <div class="button-group edit-group">
+            <button class="edit-button">
+              <span class="material-symbols-outlined">
+              edit
+              </span>
+            </button>
+            <button class="delete-button" data-id="${coupon._id}">
+              <span class="material-symbols-outlined">
+              delete
+              </span>
+            </button>
+          </div>
+          <div class="button-group save-group">
+            <button class="save-button" data-id="${coupon._id}">
+              <span class="material-symbols-outlined">
+              check
+              </span>
+            </button>
+            <button class="cancel-button" >
+              <span class="material-symbols-outlined">
+              close
+              </span>
+            </button>
+          </div>
         `;
-      tbody.append(row);
+      couponCards.append(card);
     });
-    //COUPON OPERATIONS
-    const rows = document.querySelectorAll("tbody tr");
-    rows.forEach((row) => {
-      const deleteButton = row.querySelector(".delete-button");
-      deleteButton.addEventListener("click", async () => {
-        if (
-          await yes({
-            message: "Are you sure you want to delete this coupon?",
-            yesButtonColour: "red",
-          })
-        ) {
-          const couponID = deleteButton.dataset.id;
-          $.ajax({
-            url: `/admin/delete-coupon/${couponID}`,
-            type: "DELETE",
-            success: function (response) {
-              if (response.success) {
-                alert(response.message, "success", () => {
-                  row.remove();
-                });
-              } else {
-                alert(response.message, "error");
-              }
-            },
-            error: function (error) {},
-          });
-        }
-      });
-    });
+    setupCouponFunctions();
   }
+}
+
+function setupCouponFunctions() {
+  const couponCards = document.querySelectorAll(".coupon-card");
+  couponCards.forEach((card) => {
+    const saveGroup = card.querySelector(".save-group");
+    const editGroup = card.querySelector(".edit-group");
+    const infoInputs = card.querySelectorAll(".info-input");
+    const infoDatas = card.querySelectorAll(".info-data");
+    const editButton = card.querySelector(".edit-button");
+    editButton.addEventListener("click", () => {
+      for (let i = 0; i < infoInputs.length; i++) {
+        if (infoDatas[i].classList.contains("type-data")) {
+          switch (infoDatas[i].innerText) {
+            case "Percentage":
+              infoInputs[i]
+                .querySelector(".percentage")
+                .setAttribute("selected", "selected");
+              break;
+            case "Flat":
+              infoInputs[i]
+                .querySelector(".flat")
+                .setAttribute("selected", "selected");
+              break;
+          }
+        } else {
+          infoInputs[i].value = infoDatas[i].innerText;
+        }
+        infoDatas[i].style.display = "none";
+        infoInputs[i].style.display = "block";
+      }
+      saveGroup.style.visibility = "visible";
+      editGroup.style.visibility = "hidden";
+    });
+    const cancelButton = card.querySelector(".cancel-button");
+    cancelButton.addEventListener("click", () => {
+      infoDatas.forEach((data) => {
+        data.style.display = "block";
+      });
+      infoInputs.forEach((input) => {
+        input.style.display = "none";
+      });
+      saveGroup.style.visibility = "hidden";
+      editGroup.style.visibility = "visible";
+    });
+    const saveButton = card.querySelector(".save-button");
+    saveButton.addEventListener("click", () => {
+      // Extracting input values
+      const title = card.querySelector(".input-title").value.trim();
+      const desc = card.querySelector(".input-desc").value.trim();
+      const code = card.querySelector(".input-code").value.trim();
+      const value = card.querySelector(".input-value").value.trim();
+      const type = card.querySelector(".input-type").value; //
+      const minSpent = card.querySelector(".input-min-spent").value.trim();
+      const uses = card.querySelector(".input-uses").value.trim();
+
+      // Validation object to collect errors
+      const validationErrors = [];
+
+      // Validation logic
+      if (!title) validationErrors.push("Title is required.");
+      if (!desc) validationErrors.push("Description is required.");
+      if (!code) validationErrors.push("Code is required.");
+      if (!value || isNaN(value) || Number(value) <= 0)
+        validationErrors.push("Value must be a positive number.");
+      if (type !== "true" && type !== "false")
+        validationErrors.push("Type must be either Percentage or Flat.");
+      if (!minSpent || isNaN(minSpent) || Number(minSpent) < 0)
+        validationErrors.push("Minimum spent must be a non-negative number.");
+      if (!uses || isNaN(uses) || Number(uses) <= 0)
+        validationErrors.push("Uses per person must be a positive number.");
+      if (validationErrors.length > 0) {
+        alert(validationErrors.join("\n"), "error", null, 6000);
+      } else {
+        const couponID = saveButton.dataset.id;
+        $.ajax({
+          url: `/admin/edit-coupon/${couponID}`,
+          type: "PATCH",
+          data: { title, desc, code, value, type, minSpent, uses },
+          success: function (response) {
+            if (response.success) {
+              alert(
+                response.message,
+                "success",
+                () => {
+                  queryCoupons();
+                  infoDatas.forEach((data) => {
+                    data.style.display = "block";
+                  });
+                  infoInputs.forEach((input) => {
+                    input.style.display = "none";
+                  });
+                  saveGroup.style.visibility = "hidden";
+                  editGroup.style.visibility = "visible";
+                },
+                1500
+              );
+            } else {
+              alert(response.message, "error");
+            }
+          },
+          error: function (error) {},
+        });
+      }
+    });
+    const deleteButton = card.querySelector(".delete-button");
+    deleteButton.addEventListener("click", async () => {
+      if (
+        await yes({
+          message: "Are you sure you want to delete this coupon?",
+          yesButtonColour: "red",
+        })
+      ) {
+        const couponID = deleteButton.dataset.id;
+        $.ajax({
+          url: `/admin/delete-coupon/${couponID}`,
+          type: "DELETE",
+          success: function (response) {
+            if (response.success) {
+              alert(response.message, "success", () => {
+                card.remove();
+              });
+            } else {
+              alert(response.message, "error");
+            }
+          },
+          error: function (error) {},
+        });
+      }
+    });
+  });
 }

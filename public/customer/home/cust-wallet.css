@@ -1,7 +1,36 @@
+.amount {
+  font-size: 18px;
+  font-weight: bold;
+  color: #292929;
+}
+
 body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
+}
+
+.balance-container {
+  background-color: rgb(123, 201, 232);
+  padding: 20px 60px;
+  border-radius: 10px;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 8px 0.5px rgba(0, 0, 0, 0.399);
+}
+
+.balance-title {
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.balance {
+  font-size: 34px;
+  font-weight: 700;
 }
 
 .error-container {
@@ -11,8 +40,20 @@ body {
   display: none;
 }
 
+h2 {
+  margin: 0;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+.credit-row {
+  color: rgb(125, 238, 125);
+}
+
+.debit-row {
+  color: rgb(238, 121, 121);
 }
 
 .main-right .info-title {
@@ -46,7 +87,7 @@ html {
 }
 
 .main-right {
-  background-color: rgb(238, 238, 238);
+  background-color: rgb(249, 249, 249);
   width: 100%;
 }
 
@@ -61,11 +102,42 @@ html {
 .main-title {
   font-size: 38px;
   font-weight: 600;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
 .main-title-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.subtitle {
+  margin-bottom: 15px;
+}
+
+.transaction-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.transaction-list td {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.transaction-list th {
+  background-color: #e2e2e2;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #434343;
+}
+
+.transaction-list th:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+.transaction-list th:last-child {
+  border-radius: 0px 5px 5px 0px;
 }

@@ -157,7 +157,7 @@ const applyCoupon = async (req, res) => {
       customer_id: custID,
       code: coupon.code,
     });
-    console.log(uses);
+    // console.log(uses);
     if (uses.length >= coupon.uses_per_person) {
       return res.json({
         success: false,
@@ -350,8 +350,8 @@ const createOrder = async (req, res) => {
           is_percentage: plainCart.coupon_id.is_percentage,
         };
       }
-      console.log("coupon applied");
-      console.log(coupon_applied);
+      // console.log("coupon applied");
+      // console.log(coupon_applied);
       let date = new Date();
       date.setDate(date.getDate() + 7);
       const DBOrder = new Order({
@@ -664,16 +664,6 @@ const ordersPage = async (req, res) => {
 const cancelItem = async (req, res) => {
   try {
     const { orderID, variantID } = req.params;
-    const { qty } = req.body;
-    //pull value
-    // await Order.updateOne(
-    //   { _id: orderID },
-    //   {
-    //     $pull: {
-    //       order_items: { variant_id: variantID },
-    //     },
-    //   }
-    // );
     const order = await Order.findOne(
       {
         _id: orderID,
@@ -681,18 +671,80 @@ const cancelItem = async (req, res) => {
       },
       {
         "order_items.$": 1,
+        coupon_applied: 1,
+        amount: 1,
+        customer_id: 1,
       }
     );
     const item = order.order_items[0];
-    const price = item.price;
-    const discount = item.discount;
+    //checking if already cancelled
+    if (item.product_status === "cancelled") {
+      return res.json({
+        success: false,
+        message: "Product is cancelled already.",
+      });
+    }
+    //update product status
+    await Order.updateOne(
+      {
+        _id: orderID,
+        "order_items.variant_id": variantID,
+      },
+      { $set: { "order_items.$.product_status": "cancelled" } }
+    );
+    let price = item.price;
+    // handling coupon reduction in refund
+    if (order.coupon_applied?.value) {
+      if (order.coupon_applied.is_percentage) {
+        price =
+          Math.round(price * (1 - order.coupon_applied.value / 100) * 100) /
+          100;
+      } else {
+        let couponPercentage =
+          (order.amount / order.coupon_applied.value) * 100;
+        price = Math.round(price * (1 - couponPercentage / 100) * 100) / 100;
+      }
+    }
+    price *= item.quantity;
+    //refund
+    const transaction = {
+      amount: price,
+      transactionType: "credit",
+    };
+    await Wallet.updateOne(
+      { customer_id: order.customer_id },
+      {
+        $inc: { balance: price },
+        $push: { transaction_history: transaction },
+      },
+      { upsert: true }
+    );
+    await Order.updateOne(
+      { _id: orderID },
+      { $inc: { refunded_amount: price } }
+    );
     //update stock
     await ProductVariant.updateOne(
       { _id: variantID },
-      { $inc: { stock_quantity: qty } }
+      { $inc: { stock_quantity: item.quantity } }
     );
-    // url adichu keriyalum error varathe irikkan ulla validation cheyyanam
-    // ippol button hide cheythitte ollu
+    //if all individuals items are cancelled set is_cancelled = true
+    const notCancelled = await Order.aggregate([
+      { $match: { _id: orderID } },
+      { $unwind: "$order_items" },
+      { $match: { "order_items.product_status": { $ne: "cancelled" } } },
+      { $limit: 1 },
+    ]);
+    if (notCancelled.length === 0) {
+      await Order.updateOne(
+        { _id: orderID },
+        {
+          $set: {
+            is_cancelled: true,
+          },
+        }
+      );
+    }
     return res.json({
       success: true,
       message: "Item has been cancelled successfully.",
@@ -708,12 +760,38 @@ const cancelOrder = async (req, res) => {
     const { orderID } = req.params;
     const custID = req.session.user;
     const order = await Order.findById(orderID);
+
+    //re-stock
+    order.order_items.forEach(async (item) => {
+      await ProductVariant.updateOne(
+        { _id: item.variant_id },
+        { $inc: { stock_quantity: item.quantity } }
+      );
+    });
+    if (order.is_cancelled) {
+      return res.json({
+        success: false,
+        message: "Order is already cancelled.",
+      });
+    }
+    //cancel order
+    await Order.updateOne(
+      { _id: orderID },
+      {
+        $set: {
+          "order_items.$[].product_status": "cancelled",
+          is_cancelled: true,
+        },
+      }
+    );
     //refund
+    let amount = 0;
     if (
       (order.payment_type === "razorpay" || order.payment_type === "wallet") &&
       order.payment_status === "completed"
     ) {
-      const amount = order.amount;
+      amount = order.amount - order.refunded_amount;
+      //crediting money
       const transaction = {
         amount: amount,
         transactionType: "credit",
@@ -727,18 +805,9 @@ const cancelOrder = async (req, res) => {
         { upsert: true }
       );
     }
-
-    //re-stock
-    order.order_items.forEach(async (item) => {
-      await ProductVariant.updateOne(
-        { _id: item.variant_id },
-        { $inc: { stock_quantity: item.quantity } }
-      );
-    });
-    //cancel order
     await Order.updateOne(
       { _id: orderID },
-      { $set: { order_status: "cancelled" }, $inc: { refunded_amount: amount } }
+      { $inc: { refunded_amount: amount } }
     );
     return res.json({
       success: true,

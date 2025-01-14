@@ -2,96 +2,121 @@ const orderCards = document.querySelectorAll(".order-card");
 
 //DOM is Being Re-rendered: If you dynamically update the DOM without removing previously attached listeners, the event listener will be duplicated.
 
-orderCards.forEach((orderCard) => {
-  const button = orderCard.querySelector(".cancel-button");
-  if (!button) {
-    return;
-  }
-  button.addEventListener("click", async () => {
-    if (
-      await yes({
-        message: "Are you sure you want to cancel this order?",
-        yesButtonColour: "red",
-      })
-    ) {
-      const orderID = button.dataset.id;
-      const status = orderCard.querySelector(".status");
-      const orderFunctions = orderCard.querySelector(".order-functions");
-      const deliveryDate = orderCard.querySelector(".delivery-date");
-      $.ajax({
-        type: "DELETE",
-        url: `/cancel-order/${orderID}`,
-        success: function (response) {
-          if (response.success) {
-            if (response.message) {
-              alert(response.message, "success");
-            }
-            status.innerText = "Cancelled";
-            status.style.color = "red";
-            deliveryDate.remove();
-            orderFunctions.remove();
-          } else {
-            if (response.message) {
-              alert(response.message, "error");
-            }
-            if (response.redirectUrl) {
-              window.location.href = response.redirectUrl;
-            }
-          }
-        },
+document.addEventListener("DOMContentLoaded", () => {
+  orderCards.forEach((orderCard) => {
+    const returnButton = orderCard.querySelector("return-button");
+    if (returnButton) {
+      returnButton.addEventListener("click", (event) => {
+        handleReturn();
       });
     }
-  });
-  const cancelOneItemButtons = document.querySelectorAll(".cancel-one-item");
-  cancelOneItemButtons.forEach((button) => {
-    if (!button.dataset.listenerAdded) {
-      button.dataset.listenerAdded = true;
-      button.addEventListener("click", async (event) => {
-        if (
-          await yes({
-            message: "Are you sure you want to cancel this item?",
-            yesButtonColour: "red",
-          })
-        ) {
-          const orderID = button.dataset.orderid;
-          const variantID = button.dataset.variantid;
-          const qty = button.dataset.qty;
-          const orderCard = button.closest(".order-card");
-          // console.log(variantID);
-          $.ajax({
-            url: `/cancel-item/${orderID}/${variantID}`,
-            type: "DELETE",
-            data: { qty },
-            success: function (response) {
-              if (response.success) {
+    const returnItemButtons = orderCard.querySelectorAll(".return-one-item");
+    returnItemButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        handleReturn();
+      });
+    });
+    const button = orderCard.querySelector(".cancel-button");
+    if (!button) {
+      return;
+    }
+    button.addEventListener("click", async () => {
+      if (
+        await yes({
+          message: "Are you sure you want to cancel this order?",
+          yesButtonColour: "red",
+        })
+      ) {
+        const orderID = button.dataset.id;
+        const status = orderCard.querySelector(".status");
+        const orderFunctions = orderCard.querySelector(".order-functions");
+        const deliveryDate = orderCard.querySelector(".delivery-date");
+        $.ajax({
+          type: "DELETE",
+          url: `/cancel-order/${orderID}`,
+          success: function (response) {
+            if (response.success) {
+              if (response.message) {
                 alert(response.message, "success", () => {
-                  const itemCard = orderCard.querySelector(
-                    `.item-${variantID}`
-                  );
-                  itemCard.remove();
-                  const itemCards = orderCard.querySelectorAll(".item-card");
-                  if (itemCards.length === 1) {
-                    const cancelButton =
-                      itemCards[0].querySelector(".cancel-one-item");
-                    cancelButton.remove();
-                  }
+                  window.location.reload();
                 });
-              } else {
-                if (response.message) {
-                  alert(response.message, "error");
-                }
-                if (response.redirectUrl) {
-                  window.location.href = response.redirectUrl;
-                }
               }
-            },
-            error: function (error) {},
-          });
-        }
-      });
-    }
+              // status.innerText = "Cancelled";
+              // status.style.color = "red";
+              // deliveryDate.remove();
+              // orderFunctions.remove();
+            } else {
+              if (response.message) {
+                alert(response.message, "error");
+              }
+              if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+              }
+            }
+          },
+        });
+      }
+    });
+    const cancelOneItemButtons = document.querySelectorAll(".cancel-one-item");
+    cancelOneItemButtons.forEach((button) => {
+      if (!button.dataset.listenerAdded) {
+        button.dataset.listenerAdded = true;
+        button.addEventListener("click", async (event) => {
+          if (
+            await yes({
+              message: "Are you sure you want to cancel this item?",
+              yesButtonColour: "red",
+            })
+          ) {
+            const orderID = button.dataset.orderid;
+            const variantID = button.dataset.variantid;
+            const orderCard = button.closest(".order-card");
+            // console.log(variantID);
+            $.ajax({
+              url: `/cancel-item/${orderID}/${variantID}`,
+              type: "DELETE",
+              success: function (response) {
+                if (response.success) {
+                  alert(response.message, "success", () => {
+                    window.location.reload();
+                    // const itemCard = orderCard.querySelector(
+                    //   `.item-${variantID}`
+                    // );
+                    // itemCard.remove();
+                    // const itemCards = orderCard.querySelectorAll(".item-card");
+                    // if (itemCards.length === 1) {
+                    //   const cancelButton =
+                    //     itemCards[0].querySelector(".cancel-one-item");
+                    //   cancelButton.remove();
+                    // }
+                  });
+                } else {
+                  if (response.message) {
+                    alert(response.message, "error");
+                  }
+                  if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;
+                  }
+                }
+              },
+              error: function (error) {},
+            });
+          }
+        });
+      }
+    });
   });
 });
+
+function handleReturn() {
+  const addForm = document.getElementById("add-form");
+  const addFormOuter = document.getElementsByClassName("add-form-outer")[0];
+  addFormOuter.style.display = "flex";
+  const closeButton = document.getElementsByClassName("close-button")[0];
+  closeButton.addEventListener("click", (event) => {
+    addFormOuter.style.display = "none";
+  });
+}
 
 const retryButtons = document.querySelectorAll(".retry-payment-button");
 retryButtons.forEach((button) => {
