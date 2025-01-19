@@ -5,11 +5,11 @@ function clearErrors(errorContainers) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  setupCouponFunctions();
   //SEARCH
-  queryCoupons();
   const searchButton = document.querySelector(".search-button");
   searchButton.addEventListener("click", () => {
-    queryCoupons();
+    window.location.href = `/admin/coupon-management?offset=1&search=${searchInput.value}`;
   });
   const searchInput = document.getElementById("search");
   const clearButton = document.querySelector(".clear-button");
@@ -27,19 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   // const sortButton = document.querySelector(".sort-button");
   // sortButton.addEventListener("click", () => {
-  //   queryCoupons();
   // });
   const addFormOuter = document.getElementsByClassName("add-form-outer")[0];
-
-  //PAGINATION LINKS
-  const paginationLinks = document.querySelectorAll(".pagination-links a");
-  paginationLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      const offset = link.dataset.offset;
-      queryCoupons(offset);
-    });
-  });
 
   //ADD FORM BUTTONS
 
@@ -142,8 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (response.success) {
             addFormOuter.style.display = "none";
             alert(response.message, "success", () => {
-              // window.location.reload();
-              updateCouponList([response.coupon], "append");
+              window.location.reload();
+              // updateCouponList([response.coupon], "append");
             });
           } else {
             if (response.message) {
@@ -159,126 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-function queryCoupons(offset = 1) {
-  const searchQuery = document.querySelector("#search").value.trim() || "";
-  const sortOption = document.querySelector("#sort")?.value.trim() || "";
-  $.ajax({
-    url: `/admin/get-coupons?search=${searchQuery}&sort=${sortOption}&offset=${offset}`,
-    type: "GET",
-    success: function (response) {
-      if (response.success) {
-        updateCouponList(response.couponList);
-      } else {
-        if (response.message) {
-          alert(response.message, "error");
-        }
-        if (response.redirectUrl) {
-          window.location.href = response.redirectUrl;
-        }
-      }
-    },
-    error: function (error) {},
-  });
-}
-
-function updateCouponList(coupons, mode = "initial") {
-  const couponCards = document.querySelector(".coupon-cards");
-  if (mode === "initial") {
-    couponCards.innerHTML = "";
-  }
-
-  if (coupons.length === 0) {
-    couponCards.innerHTML = "Nothing to show here.";
-  } else {
-    coupons.forEach((coupon) => {
-      let card = document.createElement("div");
-      card.classList.add("coupon-card");
-      let type;
-      if (coupon.is_percentage) {
-        type = "Percentage";
-      } else {
-        type = "Flat";
-      }
-      // let availability;
-      // let availabilityButton;
-      // if (coupon.is_enabled) {
-      //   availability = "Enabled";
-      //   availabilityButton = `<button class="block-button" data-id="${coupon._id}">Disable</button>`;
-      // } else {
-      //   availability = "Disabled";
-      //   availabilityButton = `<button class="unblock-button" data-id="${coupon._id}">Enable</button>`;
-      // }
-
-      card.innerHTML = `
-        <div class="coupon-title">
-          <div class="info-data">${coupon.title}</div>
-          <input class="info-input input-title" type="text" placeholder="Enter coupon title"/>
-        </div>
-        <div class="coupon-desc">
-          <div class="info-data">${coupon.desc}</div>
-          <input class="info-input input-desc" type="text" placeholder="Enter coupon description"/>
-        </div>
-        <div class="coupon-code">
-          <div class="info-data">${coupon.code}</div>
-          <input class="info-input input-code" type="text" placeholder="Enter coupon code"/>
-        </div>
-        <div class="coupon-info-grid">
-          <div class="coupon-value info-item">
-            <label>Value</label>
-            <div class="info-data">${coupon.value}</div>
-            <input class="info-input input-value" type="text" placeholder="Enter coupon value"/>
-          </div>
-          <div class="coupon-type info-item">
-            <label>Type</label>
-            <div class="info-data type-data">${type}</div>
-            <select class="info-input input-type" type="text">
-              <option class="percentage" value="true">Percentage</option>
-              <option class="flat" value="false">Flat</option>
-            </select>
-          </div>
-          <div class="coupon-min-spent info-item">
-            <label>Min spent</label>
-            <div class="info-data">${coupon.min_spent}</div>
-            <input class="info-input input-min-spent" type="text" placeholder="Enter minimum spent"/>
-          </div>
-          <div class="coupon-uses info-item">
-            <label>Uses per person</label>
-            <div class="info-data">${coupon.uses_per_person}</div>
-            <input class="info-input input-uses" type="text" placeholder="Enter uses per person"/>
-          </div>
-        </div>
-        
-          <div class="button-group edit-group">
-            <button class="edit-button">
-              <span class="material-symbols-outlined">
-              edit
-              </span>
-            </button>
-            <button class="delete-button" data-id="${coupon._id}">
-              <span class="material-symbols-outlined">
-              delete
-              </span>
-            </button>
-          </div>
-          <div class="button-group save-group">
-            <button class="save-button" data-id="${coupon._id}">
-              <span class="material-symbols-outlined">
-              check
-              </span>
-            </button>
-            <button class="cancel-button" >
-              <span class="material-symbols-outlined">
-              close
-              </span>
-            </button>
-          </div>
-        `;
-      couponCards.append(card);
-    });
-    setupCouponFunctions();
-  }
-}
 
 function setupCouponFunctions() {
   const couponCards = document.querySelectorAll(".coupon-card");
@@ -328,7 +197,7 @@ function setupCouponFunctions() {
       // Extracting input values
       const title = card.querySelector(".input-title").value.trim();
       const desc = card.querySelector(".input-desc").value.trim();
-      const code = card.querySelector(".input-code").value.trim();
+      const code = card.querySelector(".input-code").value.trim().toUpperCase();
       const value = card.querySelector(".input-value").value.trim();
       const type = card.querySelector(".input-type").value; //
       const minSpent = card.querySelector(".input-min-spent").value.trim();
@@ -363,15 +232,7 @@ function setupCouponFunctions() {
                 response.message,
                 "success",
                 () => {
-                  queryCoupons();
-                  infoDatas.forEach((data) => {
-                    data.style.display = "block";
-                  });
-                  infoInputs.forEach((input) => {
-                    input.style.display = "none";
-                  });
-                  saveGroup.style.visibility = "hidden";
-                  editGroup.style.visibility = "visible";
+                  window.location.reload();
                 },
                 1500
               );

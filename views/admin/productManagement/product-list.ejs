@@ -38,11 +38,22 @@
                       <td><%= productList[i]._id %></td>
                       <td><%= productList[i].product_name %></td>
                       <td><%= productList[i].category.category_name %></td>
-                      <td><%= productList[i].is_enabled %></td>
+                      <td id="visibility-<%=productList[i]._id%>"><% if (productList[i].is_enabled) { %>
+                            Visible
+                          <% } else { %>
+                            Blocked
+                      <% } %></td>
                       <%if(productList[i].is_enabled){%>
-                        <td><a class="block-button" href="/admin/disable-product/<%= productList[i]._id %>?offset=<%= offset %>">Disable</a></td>
+                        <td>
+                          <button class="visibility-button"
+                          id="button-<%=productList[i]._id%>"
+                          data-visible="true"  onclick="handleVisibility('<%=productList[i]._id%>')">Disable</button>
+                        </td>
                       <%}else{%>
-                        <td><a class="unblock-button" href="/admin/enable-product/<%= productList[i]._id %>?offset=<%= offset %>">Enable</a></td>
+                        <td>
+                          <button class="visibility-button"
+                          id="button-<%=productList[i]._id%>"  data-visible="false"  onclick="handleVisibility('<%=productList[i]._id%>')">Enable</button>
+                        </td>
                       <%}%>
                     </tr>
                   <%}%>

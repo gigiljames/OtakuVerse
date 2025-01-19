@@ -12,7 +12,7 @@ const getPage = async (req, res) => {
       .skip(limit * (offset - 1))
       .limit(limit)
       .populate("customer_id", "customer_name");
-    res.render("admin/orderManagement/order-list", {
+    return res.render("admin/orderManagement/order-list", {
       orders,
       pageCount: Math.ceil(orderCount / limit),
       offset,
@@ -54,6 +54,7 @@ const cancelOrder = async (req, res) => {
       const transaction = {
         amount: amount,
         transactionType: "credit",
+        message: "Refund on cancelled order",
       };
       await Wallet.updateOne(
         { customer_id: order.customer_id },
@@ -68,7 +69,7 @@ const cancelOrder = async (req, res) => {
       { _id: orderID },
       { $inc: { refunded_amount: amount } }
     );
-    res.json({
+    return res.json({
       success: true,
       message: "Order has been cancelled successfully.",
     });
@@ -117,8 +118,9 @@ const cancelItem = async (req, res) => {
           Math.round(price * (1 - order.coupon_applied.value / 100) * 100) /
           100;
       } else {
+        const actualAmount = order.amount + order.coupon_applied.value;
         let couponPercentage =
-          (order.amount / order.coupon_applied.value) * 100;
+          (order.coupon_applied.value * 100) / actualAmount;
         price = Math.round(price * (1 - couponPercentage / 100) * 100) / 100;
       }
     }
@@ -127,6 +129,7 @@ const cancelItem = async (req, res) => {
     const transaction = {
       amount: price,
       transactionType: "credit",
+      message: "Refund on cancelled item",
     };
     await Wallet.updateOne(
       { customer_id: order.customer_id },
@@ -195,7 +198,10 @@ const editItemStatus = async (req, res) => {
       },
       { $set: { "order_items.$.product_status": status } }
     );
-    res.json({ success: true, message: "Item status updated successfully." });
+    return res.json({
+      success: true,
+      message: "Item status updated successfully.",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Item Status");

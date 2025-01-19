@@ -128,10 +128,12 @@ const verifyOtp = async (req, res) => {
           const transaction1 = {
             amount: 100,
             transactionType: "credit",
+            message: "Referral reward",
           };
           const transaction2 = {
             amount: 25,
             transactionType: "credit",
+            message: "Reward for using referral link",
           };
           await Wallet.updateOne(
             { customer_id: referrer._id },
@@ -155,9 +157,9 @@ const verifyOtp = async (req, res) => {
 
       console.log("Customer signed in successfully.");
       req.session.user = customer._id;
-      res.json({ success: true, redirectUrl: "/login" });
+      return res.json({ success: true, redirectUrl: "/login" });
     } else {
-      res
+      return res
         .status(400)
         .json({ success: false, message: "Inavlid OTP, Please try again" });
     }
@@ -180,11 +182,11 @@ const resendOtp = async (req, res) => {
     const emailSent = await sendVerificationEmail(email, otp);
     if (emailSent) {
       console.log("Resend OTP: ", otp);
-      res
+      return res
         .status(200)
         .json({ success: true, message: "OTP resend successfully" });
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "Failed to resend OTP. Please try again",
       });

@@ -24,10 +24,19 @@ const getPage = async (req, res) => {
         is_enabled: true,
       })
         .limit(4)
-        .populate("variants", "stock_quantity");
-
-      if (productList.length > 0) {
-        temp.productList = productList;
+        .populate("variants", "stock_quantity")
+        .populate("category");
+      const plainProductList = productList.map((product) => product.toObject());
+      plainProductList.forEach((product) => {
+        let highestOffer =
+          product.discount > product.category.offer
+            ? product.discount
+            : product.category.offer;
+        let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+        product.offer_price = offerPrice;
+      });
+      if (productList.length > 3) {
+        temp.productList = plainProductList;
         temp.categoryInfo = categoryList[i];
         displayData.push(temp);
       }
@@ -99,7 +108,7 @@ const editDetails = async (req, res) => {
     const { name } = req.body;
     const id = req.session.user;
     await Customer.updateOne({ _id: id }, { $set: { customer_name: name } });
-    res.json({ success: true, message: "Name updated successfully." });
+    return res.json({ success: true, message: "Name updated successfully." });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Details");
@@ -149,11 +158,11 @@ const deleteAddress = async (req, res) => {
       { _id: custID },
       { $pull: { customer_addresses: id } }
     );
-    res.json({ success: true, message: "Address deletion successful." });
+    return res.json({ success: true, message: "Address deletion successful." });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Address");
-    res.json({
+    return res.json({
       success: false,
       message:
         "An error occurred while deleting the address. Please try again.",
@@ -192,7 +201,7 @@ const changePasswordPage = async (req, res) => {
       { is_deleted: false, is_enabled: true },
       { category_name: 1 }
     );
-    res.render("customer/home/cust-change-password", { categoryList });
+    return res.render("customer/home/cust-change-password", { categoryList });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Change Password");
@@ -224,19 +233,19 @@ const changePassword = async (req, res) => {
         { _id: id },
         { $set: { customer_password: hashPassword } }
       );
-      res.json({
+      return res.json({
         success: true,
         message: "Changed password successfully.",
         redirectUrl: "/logout",
       });
     } else {
       console.log("Incorrect password.");
-      res.json({ success: false, message: "Incorrect password." });
+      return res.json({ success: false, message: "Incorrect password." });
     }
   } catch (error) {
     console.log(error);
     console.log("ERROR : Change Password");
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Something went wrong on our side. Please try again.",
     });

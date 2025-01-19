@@ -68,7 +68,11 @@ itemCards.forEach((itemCard) => {
       success: function (response) {
         if (response.success) {
           const quantity = itemCard.querySelector(".quantity");
-          quantity.value = parseInt(quantity.value) + 1;
+          const price = itemCard.querySelector(".product-total-price");
+          let oldQuantity = parseInt(quantity.value);
+          let singlePrice = parseFloat(price.innerText) / oldQuantity;
+          quantity.value = oldQuantity + 1;
+          price.innerText = (quantity.value * singlePrice).toFixed(2);
           refreshBill();
         } else {
           if (response.message) {
@@ -90,7 +94,11 @@ itemCards.forEach((itemCard) => {
       success: function (response) {
         if (response.success) {
           const quantity = itemCard.querySelector(".quantity");
-          quantity.value = parseInt(quantity.value) - 1;
+          const price = itemCard.querySelector(".product-total-price");
+          let oldQuantity = parseInt(quantity.value);
+          let singlePrice = parseFloat(price.innerText) / oldQuantity;
+          quantity.value = oldQuantity - 1;
+          price.innerText = (quantity.value * singlePrice).toFixed(2);
           refreshBill();
         } else {
           if (response.message) {

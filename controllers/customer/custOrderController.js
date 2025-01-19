@@ -6,6 +6,7 @@ const CouponUses = require("../../models/couponUsesModel");
 const Customer = require("../../models/customerModel");
 const Order = require("../../models/orderModel");
 const Product = require("../../models/productModel");
+const ReturnRequest = require("../../models/returnRequestModel");
 const Wishlist = require("../../models/wishlistModel");
 const ProductVariant = require("../../models/productVariantModel");
 const Wallet = require("../../models/walletModel");
@@ -77,6 +78,7 @@ const getBill = function (cart) {
 
 const checkout = async (req, res) => {
   try {
+    let message = "";
     const categoryList = await getCategoryList();
     const coupons = await Coupon.find({ is_enabled: true });
     const custID = req.session.user;
@@ -89,7 +91,7 @@ const checkout = async (req, res) => {
     let cart = await Cart.findOne({ customer_id: custID })
       .populate(
         "cart_items.product_id",
-        "product_name price discount product_images category"
+        "product_name price discount product_images category is_enabled"
       )
       .populate("cart_items.variant_id");
     await cart.populate("cart_items.product_id.category", "offer");
@@ -97,10 +99,18 @@ const checkout = async (req, res) => {
     //Finding deleted products or variants from items included in cart and removing them
     const deletedItems = [];
     cart.cart_items.forEach((item) => {
-      if (item.variant_id === null || item.product_id === null) {
+      if (
+        item.variant_id === null ||
+        item.product_id === null ||
+        item.product_id.is_enabled === false
+      ) {
         deletedItems.push(item._id);
       }
     });
+    if (deletedItems.length > 0) {
+      message =
+        "One or more products have been removed due to unavailability. Kindly recheck the bill before proceeding with the purchase.";
+    }
     await Cart.updateOne(
       { customer_id: custID },
       {
@@ -120,7 +130,7 @@ const checkout = async (req, res) => {
       .populate("cart_items.variant_id");
     await cart.populate("cart_items.product_id.category", "offer");
     if (cart.cart_items.length === 0) {
-      res.redirect("/cart");
+      return res.redirect("/cart");
     }
 
     const plainCart = cart.toObject();
@@ -136,11 +146,12 @@ const checkout = async (req, res) => {
       // console.log(product.applied_discount);
     });
     const bill = getBill(plainCart);
-    res.render("customer/order/cust-checkout", {
+    return res.render("customer/order/cust-checkout", {
       categoryList,
       bill,
       addresses,
       coupons,
+      message: message,
     });
   } catch (error) {
     console.log(error);
@@ -264,13 +275,17 @@ const createOrder = async (req, res) => {
       .populate("cart_items.variant_id", "colour size")
       .populate(
         "cart_items.product_id",
-        "price discount product_name product_images category"
+        "price discount product_name product_images category is_enabled"
       );
 
     //Finding deleted products or variants from items included in cart
     cart.cart_items.forEach((item) => {
-      if (item.variant_id === null || item.product_id === null) {
-        res.json({
+      if (
+        item.variant_id === null ||
+        item.product_id === null ||
+        item.product_id.is_enabled === false
+      ) {
+        return res.json({
           success: false,
           message:
             "One or more products have been deleted. Please try placing a new order.",
@@ -483,13 +498,17 @@ const placeOrder = async (req, res) => {
       .populate("cart_items.variant_id", "colour size")
       .populate(
         "cart_items.product_id",
-        "price discount product_name product_images category"
+        "price discount product_name product_images category is_enabled"
       );
 
     //Finding deleted products or variants from items included in cart
     cart.cart_items.forEach((item) => {
-      if (item.variant_id === null || item.product_id === null) {
-        res.json({
+      if (
+        item.variant_id === null ||
+        item.product_id === null ||
+        item.product_id.is_enabled === false
+      ) {
+        return res.json({
           success: false,
           message:
             "One or more products have been deleted or disabled. Please try placing a new order.",
@@ -610,6 +629,7 @@ const placeOrder = async (req, res) => {
                 order_id: order._id,
                 amount: amount,
                 transactionType: "debit",
+                message: "Order purchase",
               },
             },
           }
@@ -650,11 +670,29 @@ const placeOrder = async (req, res) => {
 const ordersPage = async (req, res) => {
   try {
     const custID = req.session.user;
-    const orders = await Order.find({ customer_id: custID }).populate(
-      "address"
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
+    const limit = 5;
+    const numberOfPages = Math.ceil(
+      (await Order.find({
+        customer_id: custID,
+      }).countDocuments()) / limit
     );
+    const orders = await Order.find({ customer_id: custID })
+      .populate("address")
+      .sort({ createdAt: -1 })
+      .skip((offset - 1) * limit)
+      .limit(limit);
     const categoryList = await getCategoryList();
-    res.render("customer/order/cust-orders", { orders, categoryList });
+    return res.render("customer/order/cust-orders", {
+      orders,
+      categoryList,
+      currentURL: "/orders?",
+      offset,
+      numberOfPages,
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Orders Page");
@@ -700,8 +738,9 @@ const cancelItem = async (req, res) => {
           Math.round(price * (1 - order.coupon_applied.value / 100) * 100) /
           100;
       } else {
+        const actualAmount = order.amount + order.coupon_applied.value;
         let couponPercentage =
-          (order.amount / order.coupon_applied.value) * 100;
+          (order.coupon_applied.value * 100) / actualAmount;
         price = Math.round(price * (1 - couponPercentage / 100) * 100) / 100;
       }
     }
@@ -710,6 +749,7 @@ const cancelItem = async (req, res) => {
     const transaction = {
       amount: price,
       transactionType: "credit",
+      message: "Refund on cancelled item",
     };
     await Wallet.updateOne(
       { customer_id: order.customer_id },
@@ -755,6 +795,40 @@ const cancelItem = async (req, res) => {
   }
 };
 
+const returnItem = async (req, res) => {
+  try {
+    const { orderID, variantID } = req.params;
+    const custID = req.session.user;
+    const { reason } = req.body;
+    // console.log(orderID, variantID, reason);
+    //update db
+    const returnRequest = new ReturnRequest({
+      customer_id: custID,
+      order_id: orderID,
+      variant_id: variantID,
+      reason: reason,
+    });
+    await returnRequest.save();
+    //update status
+    await Order.updateOne(
+      {
+        _id: orderID,
+        "order_items.variant_id": variantID,
+      },
+      {
+        $set: { "order_items.$.product_status": "waiting for return approval" },
+      }
+    );
+    return res.json({
+      success: true,
+      message: "Return request sent successfully.",
+    });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : Return Item");
+  }
+};
+
 const cancelOrder = async (req, res) => {
   try {
     const { orderID } = req.params;
@@ -795,6 +869,7 @@ const cancelOrder = async (req, res) => {
       const transaction = {
         amount: amount,
         transactionType: "credit",
+        message: "Refund on cancelled order",
       };
       await Wallet.updateOne(
         { customer_id: custID },
@@ -884,7 +959,7 @@ const getInvoice = async (req, res) => {
     data.coupon_discount = data.coupon_discount.toFixed(2);
     data.subtotal_amount = data.subtotal_amount.toFixed(2);
     // console.log(data);
-    res.json({ success: true, data: data });
+    return res.json({ success: true, data: data });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Invoice");
@@ -908,6 +983,7 @@ module.exports = {
   editPaymentStatus,
   placeOrder,
   ordersPage,
+  returnItem,
   cancelItem,
   cancelOrder,
   getInvoice,

@@ -2,28 +2,22 @@ const Coupon = require("../../models/couponModel");
 
 const getPage = async (req, res) => {
   try {
-    const { offset } = req.query;
-    const limit = 9;
-    const couponCount = await Coupon.find().countDocuments();
-    return res.render("admin/couponManagement/coupon-list", {
-      pageCount: Math.ceil(couponCount / limit),
-      offset,
-    });
-  } catch (error) {
-    console.log(error);
-    console.log("ERROR : Coupon Management Get Page");
-    return res.json({
-      success: false,
-      message: "An error occured while loading this page.",
-    });
-  }
-};
-
-const getCoupons = async (req, res) => {
-  try {
-    const { search, sort } = req.query;
-    const offset = req.query.offset || 1;
-    const limit = 9;
+    // Search & sort
+    const search = req.query.search || "";
+    const sort = req.query.sort || "";
+    // Pagination
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
+    const limit = 6;
+    const couponCount = await Coupon.find({
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { code: { $regex: search, $options: "i" } },
+      ],
+    }).countDocuments();
+    const numberOfPages = Math.ceil(couponCount / limit);
     const couponList = await Coupon.find({
       $or: [
         { title: { $regex: search, $options: "i" } },
@@ -32,18 +26,18 @@ const getCoupons = async (req, res) => {
     })
       .skip(limit * (offset - 1))
       .limit(limit);
-    // console.log(couponList);
-    return res.json({
-      success: true,
+    return res.render("admin/couponManagement/coupon-list", {
       couponList,
       offset,
+      numberOfPages,
+      currentURL: `/admin/coupon-management?search=${search}&sort=${sort}&`,
     });
   } catch (error) {
     console.log(error);
-    console.log("ERROR : Get Coupons");
+    console.log("ERROR : Coupon Management Get Page");
     return res.json({
       success: false,
-      message: "An error occured while loading coupons.",
+      message: "An error occured while loading this page.",
     });
   }
 };
@@ -169,7 +163,6 @@ const deleteCoupon = async (req, res) => {
 
 module.exports = {
   getPage,
-  getCoupons,
   addCoupon,
   editCoupon,
   enableCoupon,

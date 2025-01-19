@@ -97,5 +97,10 @@
         </div>
     </div>
     <script src="/js/admin-home.js"></script>
+    <script>
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('start').setAttribute('max', today);
+      document.getElementById('end').setAttribute('max', today);
+    </script>
   </body>
 </html>

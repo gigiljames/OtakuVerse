@@ -19,100 +19,112 @@
               <%const paymentMethod = {"cod":"Cash on delivery", "razorpay":"Razorpay","wallet":"OtakuVerse wallet"}%>
               <div class="order-card">
                 <div class="top-row">
-                  <div class="order-date">
-                    Ordered on:
-                    <%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%>
+                  <div class="order-date top-row-item">
+                    <div class="top-row-title">Ordered on</div>
+                    <div class="top-row-data"><%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%></div>
                   </div>
-                  <!-- <div class="order-status">
-                    Order status:
-                    <%if(order.order_status==="cancelled"){%>
-                      <div class="status redText"><%=order.order_status%></div>
-                    <%} else if(order.order_status==="delivered"){%>
-                      <div class="status blackText"><%=order.order_status%></div>
-                    <%}else{%>
-                      <div class="status greenText"><%=order.order_status%></div>
-                    <%}%>
-                    
-                  </div> -->
           
-                  <div class="payment-method">
-                    Payment method:
-                    <%=paymentMethod[order.payment_type]%>
+                  <div class="payment-method top-row-item">
+                    <div class="top-row-title">Payment method</div>
+                    <div class="top-row-data"><%=paymentMethod[order.payment_type]%></div>
                   </div>
-                  <div class="payment-status">
-                    Payment status:
-                    <%if(order.payment_status==="failed"){%>
-                      <div class="status redText">Failed</div>
-                    <%} else if(order.payment_status==="completed"){%>
-                      <div class="status greenText">Completed</div>
-                    <%} else if(order.payment_status==="pending"){%>
-                      <div class="status orangeText">Pending</div>
-                    <%}else{%>
-                      <div class="status blackText"><%=order.payment_status%></div>
-                    <%}%>
+                  <div class="payment-status top-row-item">
+                    <div class="top-row-title">Payment status</div>
+                    <div class="top-row-data">
+                      <%if(order.payment_status==="failed"){%>
+                        <div class="status redText">Failed</div>
+                      <%} else if(order.payment_status==="completed"){%>
+                        <div class="status greenText">Completed</div>
+                      <%} else if(order.payment_status==="pending"){%>
+                        <div class="status orangeText">Pending</div>
+                      <%}else{%>
+                        <div class="status blackText"><%=order.payment_status%></div>
+                      <%}%>
+                    </div>
                     
                   </div>
-                  <div class="total-amount">
-                    Total amount:
-                    <%=order.amount%>
+                  <div class="total-amount top-row-item">
+                    <div class="top-row-title">Total amount</div>
+                    <div class="top-row-data">₹<%=order.amount%></div>
                   </div>
                   <%if(!order.is_cancelled){%>
-                  <div class="delivery-date">
-                    Delivery on:
-                    <%=order.delivery_date.getDate()+" "+months[order.delivery_date.getMonth()]+" "+order.delivery_date.getFullYear()%>
+                  <div class="delivery-date top-row-item">
+                    <div class="top-row-title">Delivery on</div>
+                    <div class="top-row-data"><%=order.delivery_date.getDate()+" "+months[order.delivery_date.getMonth()]+" "+order.delivery_date.getFullYear()%></div>
                   </div>
                   <%}%>
-                  <div class="refunded-amount">
-                    Refunded amount:
-                    <%= order.refunded_amount %>
+                  <div class="refunded-amount top-row-item">
+                    <div class="top-row-title">Refunded amount</div>
+                    <div class="top-row-data">₹<%= order.refunded_amount %></div>
                   </div>
                 </div>
-                <%let items = order.order_items%>
-                <%items.forEach((item)=>{%>
-                  <div class="item-card item-<%=item.variant_id%>">
-                    <img src="<%=item.product_images[0].filepath%>" class="product-image">
-                    <a href="/product/<%=item.product_id%>"><%=item.product_name%></a>
-                    Size: <%=item.size%>
-                    Colour: <%=item.colour%>
-                    Quantity: <%=item.quantity%>
-                    Price: <%=item.price%>
-                    Status: <%= item.product_status %>
-                    <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
-                    <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
-                    <%}%>
-                    <%if(order.product_status==="delivered" && order.order_items.length>1 && order.payment_status==="completed"){%>
-                      <button class="return-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Return this item</button>
-                    <%}%>
-                  </div>
-                <%})%>
+                
                 <div class="bottom-row">
+                  <div class="item-cards">
+                    <%let items = order.order_items%>
+                                    <%items.forEach((item)=>{%>
+                    <div class="item-card item-<%=item.variant_id%>">
+                      <img src="<%=item.product_images[0].filepath%>" class="product-image">
+                      <div class="item-info">
+                        <a class="product-name" href="/product/<%=item.product_id%>"><%=item.product_name%></a>
+                        <div class="variant-container">
+                          <div class="variant-size">Size: <%=item.size%></div>
+                          <div class="variant-colour">Colour: <%=item.colour%></div>
+                          Quantity: <%=item.quantity%>
+                        </div>
+                        Price: ₹<%=item.price%>
+                        <div class="product-status">
+                          Status:
+                          <%if(item.product_status==="returned"){%>
+                            Returned. Processing refund.
+                          <% } else if (item.product_status==="refunded") { %>
+                            Returned and refunded.
+                          <% } else { %>
+                            <%= item.product_status %>
+                           <% } %>
+                        </div>
+                      </div>
+                    
+                      <%if((item.product_status==="processing" || item.product_status==="shipping" || item.product_status==="out for delivery") && order.order_items.length>1 && order.payment_status!=="failed"){%>
+                      <button class="cancel-one-item item-card-button" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
+                      <%}%>
+                      <%if(item.product_status==="delivered" && order.payment_status==="completed"){%>
+                        <button class="return-one-item item-card-button" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>">Return this item</button>
+                      <%}%>
+                    </div>
+                                    <%})%>
+                  </div>
                   <div class="shipping-address">
-                    Shipping address
-                    <%let address = order.address%>
-                    <%if(address){%>
-                    <div class="address-line1"><%=address.recipient_name%></div>
-                    <div class="address-line2"><%=address.apartment+", "+address.street+", "+address.city%></div>
-                    <div class="address-line3"><%=address.state+", "+address.pincode%></div>
-                    <div class="address-line4">Phone number: <%=address.phone_number%></div>
+                    <div class="address-card">
+                      <div class="address-title">Shipping address</div>
+                      <%let address = order.address%>
+                      <%if(address){%>
+                      <div class="address-line1"><%=address.recipient_name%></div>
+                      <div class="address-line2"><%=address.apartment+", "+address.street+", "+address.city%></div>
+                      <div class="address-line3"><%=address.state+", "+address.pincode%></div>
+                      <div class="address-line4">Phone number: <%=address.phone_number%></div>
+                      <%}%>
+                    </div>
+                    <%if(!order.is_cancelled){%>
+                      <div class="order-functions">
+                        <%if(order.payment_status==="completed"){%>
+                          <button class="invoice-button" data-id="<%=order._id%>">Download invoice</button>
+                        <%}else if(order.payment_type==="razorpay" && order.payment_status==="failed"){%>
+                          <button class="retry-payment-button" data-id="<%=order._id%>">Retry payment</button>
+                        <%}%>
+                        <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
+  
+                        
+                      </div>
                     <%}%>
                   </div>
 
-                  <%if(!order.is_cancelled){%>
-                    <div class="order-functions">
-                      <%if(order.payment_status==="completed"){%>
-                        <button class="invoice-button" data-id="<%=order._id%>">Download invoice</button>
-                      <%}else if(order.payment_type==="razorpay" && order.payment_status==="failed"){%>
-                        <button class="retry-payment-button" data-id="<%=order._id%>">Retry payment</button>
-                      <%}%>
-                      <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
-
-                      
-                    </div>
-                  <%}%>
+                  
                 </div>
               </div>
           
           <%})%>
+          <%- include("../../partials/pagination.ejs")%>
         </div>
       </div>
     </div>

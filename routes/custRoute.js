@@ -121,6 +121,11 @@ router.delete(
   order.cancelItem
 );
 router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
+router.post(
+  "/return-request/:orderID/:variantID",
+  authMiddleware,
+  order.returnItem
+);
 router.get("/get-invoice/:orderID", authMiddleware, order.getInvoice);
 //Wishlist
 router.get("/wishlist", authMiddleware, cart.wishlistPage);

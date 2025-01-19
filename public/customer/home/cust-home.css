@@ -15,7 +15,7 @@ body {
 .main-right-inner {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  /* gap: 30px; */
   /* padding: 40px 100px 40px 60px; */
   box-sizing: border-box;
 }
@@ -23,8 +23,8 @@ body {
 .banner-outer {
   display: flex;
   background-color: #0f2d50;
-  height: 350px;
-  padding: 0 100px;
+  height: 450px;
+  padding: 0 80px;
 }
 
 .banner-text {
@@ -32,6 +32,7 @@ body {
   flex-direction: column;
   width: 40%;
   padding: 2%;
+  padding-right: 0;
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
@@ -39,7 +40,7 @@ body {
 
 .banner-text-line1 {
   font-family: "Bungee Shade", sans-serif;
-  font-size: 60px;
+  font-size: 69px;
   color: #ff5555;
   width: 100%;
 }
@@ -47,14 +48,14 @@ body {
 .banner-text-line2 {
   font-family: "Micro 5", sans-serif;
   color: #66d351;
-  font-size: 80px;
+  font-size: 90px;
   width: 100%;
 }
 
 .banner-text-line3 {
   font-family: "Pixelify sans", sans-serif;
-  color: white;
-  font-size: 20px;
+  color: rgba(231, 231, 231, 0.738);
+  font-size: 25px;
   width: 100%;
 }
 
@@ -68,14 +69,22 @@ body {
 
 .banner-images-inner {
   background-color: black;
-  height: 300px;
+  height: 400px;
   border-radius: 10px;
   width: 100%;
 }
 
+.banner-images-inner img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
 .category-title {
-  font-size: 26px;
+  font-size: 36px;
   font-weight: 600;
+  text-transform: capitalize;
 }
 
 .category-wise {
@@ -83,6 +92,10 @@ body {
   margin-bottom: 60px;
   display: flex;
   flex-direction: column;
+}
+
+hr {
+  border: 0.5px solid rgb(225, 225, 225);
 }
 
 .title-row {
@@ -100,6 +113,7 @@ body {
   display: grid;
   /* justify-content: space-between; */
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 30px;
 }
 
 .product-cards a {
@@ -116,6 +130,8 @@ body {
   flex-direction: column;
   gap: 5px;
   box-sizing: border-box;
+  height: 100%;
+  position: relative;
 }
 
 .product-card:hover {
@@ -153,16 +169,36 @@ body {
   overflow: hidden;
   white-space: nowrap;
   height: 20px;
+  font-weight: 600;
 }
 
 .total-stock {
-  height: 20px;
+  /* height: 20px; */
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgb(248, 248, 248);
+  border-radius: 3px;
+  padding: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  vertical-align: middle;
 }
 
 .products-section {
   margin-top: 30px;
   margin-bottom: 80px;
-  padding: 0 13%;
+  /* padding: 0 10%; */
+  display: flex;
+  justify-content: center;
+}
+
+.redText {
+  color: rgb(241, 80, 80);
+}
+
+.orangeText {
+  color: rgb(241, 134, 80);
 }
 
 .review-count {

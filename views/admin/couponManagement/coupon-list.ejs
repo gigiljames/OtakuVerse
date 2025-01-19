@@ -26,32 +26,83 @@
           </div>
 
           <div class="coupon-cards">
-
+            <% couponList.forEach(coupon => { %>
+              <div class="coupon-card">
+                <div class="coupon-title">
+                  <div class="info-data"><%= coupon.title %></div>
+                  <input class="info-input input-title" type="text" placeholder="Enter coupon title"/>
+                </div>
+                <div class="coupon-desc">
+                  <div class="info-data"><%= coupon.desc %></div>
+                  <input class="info-input input-desc" type="text" placeholder="Enter coupon description"/>
+                </div>
+                <div class="coupon-code">
+                  <div class="info-data"><%= coupon.code %></div>
+                  <input class="info-input input-code" type="text" placeholder="Enter coupon code"/>
+                </div>
+                <div class="coupon-info-grid">
+                  <div class="coupon-value info-item">
+                    <label>Value</label>
+                    <div class="info-data"><%= coupon.value %></div>
+                    <input class="info-input input-value" type="text" placeholder="Enter coupon value"/>
+                  </div>
+                  <div class="coupon-type info-item">
+                    <label>Type</label>
+                    <%let type;%>
+                    <%if (coupon.is_percentage) {%>
+                      <%type = "Percentage";%>
+                    <%} else {%>
+                      <%type = "Flat";%>
+                    <%}%>
+                    <div class="info-data type-data"><%= type %></div>
+                    <select class="info-input input-type" type="text">
+                      <option class="percentage" value="true">Percentage</option>
+                      <option class="flat" value="false">Flat</option>
+                    </select>
+                  </div>
+                  <div class="coupon-min-spent info-item">
+                    <label>Min spent</label>
+                    <div class="info-data"><%= coupon.min_spent %></div>
+                    <input class="info-input input-min-spent" type="text" placeholder="Enter minimum spent"/>
+                  </div>
+                  <div class="coupon-uses info-item">
+                    <label>Uses per person</label>
+                    <div class="info-data"><%= coupon.uses_per_person %></div>
+                    <input class="info-input input-uses" type="text" placeholder="Enter uses per person"/>
+                  </div>
+                </div>
+                
+                  <div class="button-group edit-group">
+                    <button class="edit-button">
+                      <span class="material-symbols-outlined">
+                      edit
+                      </span>
+                    </button>
+                    <button class="delete-button" data-id="<%= coupon._id %>">
+                      <span class="material-symbols-outlined">
+                      delete
+                      </span>
+                    </button>
+                  </div>
+                  <div class="button-group save-group">
+                    <button class="save-button" data-id="<%= coupon._id %>">
+                      <span class="material-symbols-outlined">
+                      check
+                      </span>
+                    </button>
+                    <button class="cancel-button" >
+                      <span class="material-symbols-outlined">
+                      close
+                      </span>
+                    </button>
+                  </div>
+              </div>
+            <% }) %>
+            
           </div>
           
             
-            <div class="pagination-links">
-                <%if(offset>1){%>
-                  <!-- <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a> -->
-                  <a class="prev-next-buttons" href="" data-offset="<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons">&lt;Previous</a>
-                <%}%>
-                <%for(let i=1;i<=pageCount;i++){%>
-                  <%if(i==offset){%>
-                    <a  href="" data-offset="<%= i %>"><%= i %></a>
-                  <%}else{%>
-                    <a  href="" data-offset="<%= i %>"><%= i %></a>
-                  <%}%>
-            
-                <%}%>
-                <%if(offset<pageCount){%>
-                  <a class="prev-next-buttons" href="" data-offset="<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                <%}else{%>
-                  <a href="" class="prev-next-buttons ">Next&gt;</a>
-                <%}%>
-              
-            </div>
+            <%- include("../../partials/pagination.ejs")%>
           </div>
         </div>
       </div>

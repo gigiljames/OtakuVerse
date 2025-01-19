@@ -1,0 +1,302 @@
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.add-button {
+  height: 40px;
+  width: 120px;
+  border: 0;
+  background-color: rgb(58, 225, 80);
+  border-radius: 5px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+#add-form {
+  display: flex;
+  /* gap: 20px; */
+  /* flex-direction: column; */
+}
+
+.add-form-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.request-modal {
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.605);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 6;
+}
+
+.add-form-inner {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: black;
+  /* transform: scale(2); */
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: white;
+  background-color: rgb(46, 46, 46);
+  border-radius: 50%;
+}
+
+.customer-list {
+  padding: 0% 0% 2% 6%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.customer-info {
+  display: grid;
+  grid-template-columns: 5fr 3fr;
+  grid-auto-flow: row;
+}
+
+.customer-info .info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.error-container {
+  height: 20px;
+  color: red;
+  font-size: 14px;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.item-container {
+  display: flex;
+  gap: 20px;
+}
+
+.item-container .product_image {
+  width: 125px;
+  height: 125px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 3px;
+  box-sizing: border-box;
+}
+
+.main {
+  display: flex;
+}
+
+.main-right {
+  background-color: white;
+  height: calc(100vh - 60px);
+  width: 100vw;
+  overflow: auto;
+}
+
+.order-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pagination-links {
+  text-align: center;
+}
+
+.pagination-links a {
+  border: 1px solid black;
+  padding: 2px 4px;
+  border-radius: 2px;
+  min-width: 20px;
+  display: inline-block;
+  text-decoration: none;
+  color: rgb(89, 136, 228);
+}
+
+.pagination-links .selected-offset {
+  background-color: rgb(89, 136, 228);
+  color: white;
+}
+
+.password-instructions {
+  font-size: 11px;
+  width: 400px;
+  margin-bottom: 10px;
+  text-align: justify;
+  color: #c5c5c5;
+}
+
+.prev-next-buttons {
+  width: 80px;
+}
+
+.product-name {
+  font-weight: bold;
+  color: rgb(92, 179, 213);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.product-ov-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.reason-cell {
+  /* text-overflow: ellipsis; */
+  max-height: 70px;
+  overflow-y: auto;
+}
+
+.reason-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 700px;
+}
+
+.request-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: relative;
+  max-width: 700px;
+}
+
+.request-container h3 {
+  margin: 0;
+  /* margin-bottom: 10px; */
+}
+
+.request-container .product-image {
+  width: 125px;
+  height: 125px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.return-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.shipping-address {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.submit-button {
+  width: 400px;
+  height: 36px;
+  border-radius: 5px;
+  background-color: rgb(58, 225, 80);
+  border: 0;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+table {
+  border: 1px solid rgb(167, 167, 167);
+  border-collapse: collapse;
+  border-radius: 7px;
+}
+
+th {
+  color: white;
+  background-color: rgb(36, 36, 36);
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(218, 218, 218);
+}
+
+td,
+th {
+  border: 1px solid rgb(168, 168, 168);
+  padding: 7px;
+  max-width: 250px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4% 25% 2% 6%;
+}
+
+.title {
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-auto-flow: row;
+}
+
+.top-row-title {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+  color: #9a9a9a;
+}
+
+.variant-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.variant-colour,
+.variant-size,
+.quantity {
+  font-size: 14px;
+  color: #555555;
+}

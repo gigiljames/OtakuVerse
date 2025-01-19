@@ -19,7 +19,7 @@ const getPage = async (req, res) => {
       { is_deleted: false },
       { category_name: 1 }
     );
-    res.render("admin/productManagement/product-list", {
+    return res.render("admin/productManagement/product-list", {
       productList,
       categoryList,
       pageCount: Math.ceil(productCount / limit),
@@ -41,12 +41,12 @@ const viewProduct = async (req, res) => {
       { _id: id },
       { variants: 1 }
     ).populate("variants");
-    console.log(variants);
+    // console.log(variants);
     const categoryList = await Category.find(
       { is_deleted: false },
       { category_name: 1 }
     );
-    res.render("admin/productManagement/view-product", {
+    return res.render("admin/productManagement/view-product", {
       productDetails,
       categoryList,
       variants,
@@ -70,9 +70,8 @@ const addProduct = async (req, res) => {
       product_desc: desc,
       product_specs: specs,
     });
-    const saveConfirmation = await product.save();
-    console.log("Product added successfully");
-    res.redirect("/admin/product-management?offset=1");
+    await product.save();
+    return res.json({ success: true, message: "Product added successfully" });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Add Product");
@@ -82,13 +81,11 @@ const addProduct = async (req, res) => {
 const enableProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { offset } = req.query;
-    const updateConfirmation = await Product.updateOne(
-      { _id: id },
-      { $set: { is_enabled: true } }
-    );
-    console.log("Product enabled successfully");
-    return res.redirect(`/admin/product-management?offset=${offset}`);
+    await Product.updateOne({ _id: id }, { $set: { is_enabled: true } });
+    return res.json({
+      success: true,
+      message: "Product enabled successfully",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Enable Product");
@@ -98,13 +95,11 @@ const enableProduct = async (req, res) => {
 const disableProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { offset } = req.query;
-    const updateConfirmation = await Product.updateOne(
-      { _id: id },
-      { $set: { is_enabled: false } }
-    );
-    console.log("Product disabled successfully");
-    return res.redirect(`/admin/product-management?offset=${offset}`);
+    await Product.updateOne({ _id: id }, { $set: { is_enabled: false } });
+    return res.json({
+      success: true,
+      message: "Product disabled successfully",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Disable Product");
@@ -114,12 +109,12 @@ const disableProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleteConfirmation = await Product.updateOne(
-      { _id: id },
-      { $set: { is_deleted: true } }
-    );
-    console.log("Product deleted successfully");
-    return res.redirect("/admin/product-management?offset=1");
+    await Product.updateOne({ _id: id }, { $set: { is_deleted: true } });
+    return res.json({
+      success: true,
+      message: "Product deleted successfully",
+      redirectUrl: "/admin/product-management?offset=1",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Product");
@@ -128,14 +123,10 @@ const deleteProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    // const imageDoc = {
-    //   filename: req.file.filename,
-    //   filepath: req.file.path.replace(/^public\//, ""), // Remove "public" from path
-    // };
     const { id } = req.params;
     const { name, price, desc, category, discount, visibility, specs } =
       req.body;
-    const editConfirmation = await Product.updateOne(
+    await Product.updateOne(
       { _id: id },
       {
         $set: {
@@ -147,11 +138,9 @@ const editProduct = async (req, res) => {
           discount: discount,
           is_enabled: visibility,
         },
-        // $push: { product_images: imageDoc },
       }
     );
-    console.log("Product edited successfully");
-    res.redirect(`/admin/view-product/${id}`);
+    return res.json({ success: true, message: "Product edited successfully" });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Product");
@@ -165,7 +154,7 @@ const addImage = async (req, res) => {
       filename: req.file.filename,
       filepath: req.file.path.slice(6),
     };
-    console.log(imageDoc);
+    // console.log(imageDoc);
     const editConfirmation = await Product.updateOne(
       { _id: id },
       {
@@ -199,7 +188,7 @@ const deleteImage = async (req, res) => {
       }
     });
     console.log("Banner image deleted successfully");
-    res.redirect(`/admin/view-product/${productId}`);
+    return res.redirect(`/admin/view-product/${productId}`);
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Image");
@@ -217,15 +206,10 @@ const addVariant = async (req, res) => {
       colour,
       stock_quantity: stock,
     });
-    const saveConfirmation = await variant.save();
+    await variant.save();
     // Updating variant in product collection
-    const updateConfirmation = await Product.updateOne(
-      { _id: id },
-      { $push: { variants: variant._id } }
-    );
-    console.log(variant._id);
-    console.log("Variant added successfully");
-    res.redirect(`/admin/view-product/${id}`);
+    await Product.updateOne({ _id: id }, { $push: { variants: variant._id } });
+    return res.json({ success: true, message: "Variant added successfully" });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Add Variant");
@@ -235,14 +219,18 @@ const addVariant = async (req, res) => {
 const deleteVariant = async (req, res) => {
   try {
     const { productId, variantId } = req.params;
-    const deleteFromProduct = await Product.updateOne(
+    // console.log(productId, variantId);
+    await Product.updateOne(
       { _id: productId },
       { $pull: { variants: variantId } }
     );
-    const deleteFromProductVariant = await ProductVariant.deleteOne({
+    await ProductVariant.deleteOne({
       _id: variantId,
     });
-    return res.redirect(`/admin/view-product/${productId}`);
+    return res.json({
+      success: true,
+      message: "Variant deleted successfully.",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Delete Variant");
@@ -257,7 +245,7 @@ const editStock = async (req, res) => {
       { _id: variantID },
       { $set: { stock_quantity: stock } }
     );
-    res.json({ success: true, message: "Stock updated successfully." });
+    return res.json({ success: true, message: "Stock updated successfully." });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Variant");

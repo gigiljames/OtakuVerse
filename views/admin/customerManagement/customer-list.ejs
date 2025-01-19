@@ -43,37 +43,29 @@
                   </tr>
                 </thead>
                 <tbody>
-                  
-                </tbody>
-                  <tfoot>
+                  <% customerList.forEach(customer => { %>
                     <tr>
-                      <td colspan="5" class="pagination-links">
-                        <%if(offset>1){%>
-                          <!-- <a class="prev-next-buttons" href="/admin/customer-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a> -->
-                          <a class="prev-next-buttons" href="" data-offset="<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                        <%}else{%>
-                          <a href="" class="prev-next-buttons">&lt;Previous</a>
-                        <%}%>
-                        <%for(let i=1;i<=customerCount;i++){%>
-                          <%if(i==offset){%>
-                            <a  href="" data-offset="<%= i %>"><%= i %></a>
-                          <%}else{%>
-                            <a  href="" data-offset="<%= i %>"><%= i %></a>
-                          <%}%>
-                    
-                        <%}%>
-                        <%if(offset<customerCount){%>
-                          <a class="prev-next-buttons" href="" data-offset="<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                        <%}else{%>
-                          <a href="" class="prev-next-buttons ">Next&gt;</a>
-                        <%}%>
-                      </td>
+                      <td><%= customer._id %></td>
+                      <td><%=customer.customer_name%></td>
+                      <td><%=customer.customer_email%></td>
+                      <td id="status-<%=customer._id%>"><%=customer.account_status%></td>
+                      <%if(customer.account_status==="active"){%>
+                        <td>
+                          <button class="visibility-button"
+                          id="button-<%=customer._id%>"
+                          data-status="active"  onclick="handleStatus('<%=customer._id%>')">Block</button>
+                        </td>
+                      <%}else if (customer.account_status==="banned"){%>
+                        <td>
+                          <button class="visibility-button"
+                          id="button-<%=customer._id%>"  data-status="banned"  onclick="handleStatus('<%=customer._id%>')">Unblock</button>
+                        </td>
+                      <%}%>
                     </tr>
-                  </tfoot>
-                
+                  <% }) %>
+                </tbody>
               </table>
-            
-            
+              <%- include("../../partials/pagination.ejs") %>
           </div>
         </div>
       </div>

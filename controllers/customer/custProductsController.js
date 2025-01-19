@@ -84,7 +84,7 @@ const viewProduct = async (req, res) => {
 const getShopPage = async (req, res) => {
   try {
     const categoryList = await getCategoryList();
-    res.render("customer/product/cust-shop", { categoryList });
+    return res.render("customer/product/cust-shop", { categoryList });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Shop Page");
@@ -138,7 +138,8 @@ const getProducts = async (req, res) => {
     const productList = await Product.find(query)
       .sort(sortOptions)
       .collation({ locale: "en", strength: 2 })
-      .populate("category");
+      .populate("category")
+      .populate("variants", "stock_quantity");
     const plainProductList = productList.map((product) => product.toObject());
     plainProductList.forEach((product) => {
       let highestOffer =
@@ -150,7 +151,7 @@ const getProducts = async (req, res) => {
     });
     // console.log(plainProductList);
 
-    res.json({ success: true, productList: plainProductList });
+    return res.json({ success: true, productList: plainProductList });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Products");

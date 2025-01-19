@@ -57,11 +57,16 @@ const getBill = function (cart) {
 const cartPage = async (req, res) => {
   try {
     const custID = req.session.user;
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
+    const limit = 5;
     const categoryList = await getCategoryList();
     let cart = await Cart.findOne({ customer_id: custID })
       .populate(
         "cart_items.product_id",
-        "product_name price discount product_images category"
+        "product_name price discount product_images category is_enabled"
       )
       .populate("cart_items.variant_id");
     // console.log(cart);
@@ -69,7 +74,11 @@ const cartPage = async (req, res) => {
     const deletedItems = [];
     if (cart.cart_items.length > 0) {
       cart.cart_items.forEach((item) => {
-        if (item.variant_id === null || item.product_id === null) {
+        if (
+          item.variant_id === null ||
+          item.product_id === null ||
+          item.product_id.is_enabled === false
+        ) {
           deletedItems.push(item._id);
         }
       });
@@ -113,10 +122,17 @@ const cartPage = async (req, res) => {
         .populate("cart_items.variant_id", "stock_quantity")
         .populate("cart_items.product_id", "product_name");
       let bill = getBill(plainCart);
+      const startPoint = (offset - 1) * limit;
+      const reverseCartItems = plainCart.cart_items.reverse();
+      const cartItems = reverseCartItems.slice(startPoint, startPoint + limit);
+      const numberOfPages = Math.ceil(plainCart.cart_items.length / limit);
       return res.render("customer/order/cust-cart", {
         categoryList,
-        items: plainCart.cart_items,
+        items: cartItems,
         bill,
+        currentURL: "/cart?",
+        offset,
+        numberOfPages,
       });
     } else {
       return res.render("customer/order/cust-cart", {
@@ -313,7 +329,7 @@ const removeFromCart = async (req, res) => {
       )
       .populate("cart_items.variant_id");
     let bill = getBill(cart);
-    res.json({
+    return res.json({
       success: true,
       message: "Item removed from cart successfully.",
       bill,
@@ -327,6 +343,11 @@ const removeFromCart = async (req, res) => {
 const wishlistPage = async (req, res) => {
   try {
     const custID = req.session.user;
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
+    const limit = 5;
     const categoryList = await getCategoryList();
     let wishlist = await Wishlist.findOne({ customer_id: custID })
       .populate("wishlist_items.product_id")
@@ -370,9 +391,21 @@ const wishlistPage = async (req, res) => {
       product.applied_discount = highestOffer;
     });
     if (wishlist) {
+      const startPoint = (offset - 1) * limit;
+      const reverseWishlistItems = plainWishlist.wishlist_items.reverse();
+      const wishlistItems = reverseWishlistItems.slice(
+        startPoint,
+        startPoint + limit
+      );
+      const numberOfPages = Math.ceil(
+        plainWishlist.wishlist_items.length / limit
+      );
       return res.render("customer/order/cust-wishlist", {
-        items: plainWishlist.wishlist_items,
+        items: wishlistItems,
         categoryList,
+        currentURL: "/wishlist?",
+        offset,
+        numberOfPages,
       });
     } else {
       return res.render("customer/order/cust-wishlist", {

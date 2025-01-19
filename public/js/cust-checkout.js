@@ -138,10 +138,16 @@ function handleAddressFunctions() {
               }
             } else {
               if (response.message) {
-                alert(response.message, "error");
-              }
-              if (response.redirectUrl) {
-                window.location.href = response.redirectUrl;
+                alert(
+                  response.message,
+                  "error",
+                  () => {
+                    if (response.redirectUrl) {
+                      window.location.href = response.redirectUrl;
+                    }
+                  },
+                  3000
+                );
               }
             }
           },
@@ -234,10 +240,16 @@ addForm.addEventListener("submit", (event) => {
           }
         } else {
           if (response.message) {
-            alert(response.message, "error");
-          }
-          if (response.redirectUrl) {
-            window.location.href = response.redirectUrl;
+            alert(
+              response.message,
+              "error",
+              () => {
+                if (response.redirectUrl) {
+                  window.location.href = response.redirectUrl;
+                }
+              },
+              3000
+            );
           }
         }
       },
@@ -339,15 +351,21 @@ function orderButtonHandler() {
                     () => {
                       window.location.href = response.redirectUrl;
                     },
-                    1500
+                    3000
                   );
                 }
               } else {
                 if (response.message) {
-                  alert(response.message, "error");
-                }
-                if (response.redirectUrl) {
-                  window.location.href = response.redirectUrl;
+                  alert(
+                    response.message,
+                    "error",
+                    () => {
+                      if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                      }
+                    },
+                    3000
+                  );
                 }
               }
             },
@@ -395,24 +413,35 @@ function orderButtonHandler() {
                 };
                 var razorpayObject = new Razorpay(options);
                 razorpayObject.on("payment.failed", function (response) {
-                  alert("Payment failed.", "error", () => {
-                    $.ajax({
-                      url: `/edit-payment-status/${DBOrderID}?status=failed`,
-                      type: "PATCH",
-                      success: function (response) {
-                        if (response.success && response.redirectUrl) {
-                          window.location.href = "/orders";
-                        }
-                      },
-                    });
-                  });
+                  alert(
+                    "Payment failed.",
+                    "error",
+                    () => {
+                      $.ajax({
+                        url: `/edit-payment-status/${DBOrderID}?status=failed`,
+                        type: "PATCH",
+                        success: function (response) {
+                          if (response.success && response.redirectUrl) {
+                            window.location.href = "/orders";
+                          }
+                        },
+                      });
+                    },
+                    3000
+                  );
                 });
                 razorpayObject.open();
               } else {
-                alert(response.message, "error");
-                if (response.redirectUrl) {
-                  window.location.href = response.redirectUrl;
-                }
+                alert(
+                  response.message,
+                  "error",
+                  () => {
+                    if (response.redirectUrl) {
+                      window.location.href = response.redirectUrl;
+                    }
+                  },
+                  3000
+                );
               }
             },
           });

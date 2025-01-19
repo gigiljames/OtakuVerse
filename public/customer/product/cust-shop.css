@@ -83,6 +83,9 @@ body {
   padding: 20px 0px;
   border-right: 1.5px solid rgb(210, 210, 210);
   margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
   /* background-color: #858585; */
 }
 
@@ -115,6 +118,8 @@ body {
   flex-direction: column;
   gap: 5px;
   box-sizing: border-box;
+  position: relative;
+  height: 100%;
 }
 
 .product-card:hover {
@@ -152,6 +157,15 @@ body {
   overflow: hidden;
   white-space: nowrap;
   height: 20px;
+  font-weight: 600;
+}
+
+.redText {
+  color: rgb(241, 80, 80);
+}
+
+.orangeText {
+  color: rgb(241, 134, 80);
 }
 
 .review-count {
@@ -159,7 +173,17 @@ body {
 }
 
 .total-stock {
-  height: 20px;
+  /* height: 20px; */
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgb(248, 248, 248);
+  border-radius: 3px;
+  padding: 5px;
+  font-size: 13px;
+  font-weight: 550;
+  vertical-align: middle;
+  box-shadow: 0px 0px 4px 0.5px rgba(0, 0, 0, 0.307);
 }
 
 /*PRODUCT CARD ENDS*/

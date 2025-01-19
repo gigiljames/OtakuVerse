@@ -3,18 +3,6 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema(
   {
-    // order_status: {
-    //   type: String,
-    //   enum: [
-    //     "processing",
-    //     "shipping",
-    //     "out for delivery",
-    //     "delivered",
-    //     "cancelled",
-    //   ],
-    //   default: "processing",
-    //   required: true,
-    // },
     is_cancelled: {
       type: Boolean,
       required: true,
@@ -150,7 +138,9 @@ const orderSchema = new Schema(
             "cancelled",
             "waiting for return approval",
             "return approved",
+            "return rejected",
             "returned",
+            "refunded",
           ],
           default: "processing",
           required: true,

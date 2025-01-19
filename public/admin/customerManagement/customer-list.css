@@ -72,6 +72,10 @@ body {
   padding: 0% 25% 2% 6%;
 }
 
+.customer-list table {
+  margin-bottom: 25px;
+}
+
 .error-container {
   height: 20px;
   color: red;

@@ -12,11 +12,23 @@ const returnRequestSchema = new Schema({
     ref: "Order",
     required: true,
   },
-  item_id: {
+  variant_id: {
     type: Schema.Types.ObjectId,
+    required: true,
   },
   reason: {
     type: String,
+    required: true,
+  },
+  return_status: {
+    type: String,
+    enum: ["action required", "pending", "returned", "rejected"],
+    required: true,
+    default: "action required",
+  },
+  is_refunded: {
+    type: Boolean,
+    default: false,
     required: true,
   },
 });

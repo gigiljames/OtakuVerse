@@ -4,6 +4,19 @@ body {
   font-weight: 500;
 }
 
+.address-card {
+  font-size: 14px;
+  color: rgb(84, 84, 84);
+}
+
+.address-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: rgb(103, 103, 103);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
 .main-right .info-title {
   font-size: 12px;
   color: grey;
@@ -59,7 +72,7 @@ body {
 
 .order-list {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   gap: 25px;
 }
 
@@ -67,11 +80,34 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   margin-bottom: 20px;
+  column-gap: 20px;
+}
+
+.top-row-item {
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
+  gap: 5px;
+}
+
+.top-row-title {
+  font-size: 13px;
+  font-weight: bold;
+  color: rgb(165, 165, 165);
+  text-transform: uppercase;
 }
 
 .order-card .bottom-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 1fr;
+}
+
+.product-name {
+  font-weight: bold;
+  color: rgb(92, 179, 213);
+  text-decoration: none;
+  font-size: 18px;
 }
 
 .title-row {
@@ -83,19 +119,9 @@ body {
   align-items: center;
 }
 
-/*chatgpt css*/
 .main-right {
   padding: 20px;
   background-color: #f8f9fa; /* Light background for the orders page */
-}
-
-.main-title {
-  font-size: 2rem;
-  color: #ff7eb9; /* Vibrant anime-inspired accent color */
-  margin-bottom: 20px;
-  text-align: center;
-  border-bottom: 2px solid #ff7eb9;
-  padding-bottom: 10px;
 }
 
 .order-card {
@@ -103,7 +129,6 @@ body {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ebd8b7; /* Subtle border for structure */
 }
 
 .bottom-row {
@@ -131,35 +156,63 @@ body {
   color: #f44336; /* Red for cancelled orders */
 }
 
+.item-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .item-card {
+  position: relative;
   display: flex;
   align-items: center;
+  height: 100%;
   gap: 15px;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
   padding: 10px;
   border: 1px solid #ebd8b7;
   border-radius: 5px;
-  background-color: #fef6e4; /* Subtle light background */
+  background-color: #ededed; /* Subtle light background */
 }
 
 .item-card img {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
   object-fit: cover;
   border-radius: 5px;
-}
-
-.item-card a {
-  color: #ff7eb9; /* Link color matching theme */
-  text-decoration: none;
-  font-weight: bold;
 }
 
 .item-card a:hover {
   text-decoration: underline;
 }
 
+.item-card-button {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  padding: 10px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.cancel-one-item {
+  background-color: rgb(240, 131, 131);
+  color: rgb(248, 248, 248);
+  font-weight: 600;
+}
+
+.cancel-one-item:hover {
+  background-color: rgb(235, 115, 115);
+}
+
+.cancel-one-item:active {
+  background-color: rgb(219, 105, 105);
+}
+
 .shipping-address {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   font-size: 1rem;
   color: #333;
   flex: 1;
@@ -174,9 +227,12 @@ body {
 
 .order-functions {
   display: flex;
+  flex-direction: column;
   gap: 10px;
-  justify-content: flex-end;
-  align-items: flex-end;
+}
+
+.order-functions button {
+  width: 100%;
 }
 
 .cancel-button {
@@ -210,26 +266,16 @@ body {
   background-color: #1976d2;
 }
 
-@media (max-width: 768px) {
-  .top-row,
-  .bottom-row {
-    flex-direction: column;
-  }
+.variant-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
 
-  .order-card {
-    padding: 15px;
-  }
-
-  .item-card img {
-    width: 50px;
-    height: 50px;
-  }
-
-  .cancel-button,
-  .order-functions button {
-    padding: 8px 10px;
-    font-size: 0.9rem;
-  }
+.variant-colour,
+.variant-size {
+  font-size: 14px;
+  color: #555555;
 }
 
 /*TEXT COLOURS*/

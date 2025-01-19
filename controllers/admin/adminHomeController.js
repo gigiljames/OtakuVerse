@@ -6,9 +6,9 @@ const fs = require("fs");
 const getPage = async (req, res) => {
   try {
     if (req.session.admin) {
-      res.render("admin/home/admin-home");
+      return res.render("admin/home/admin-home");
     } else {
-      res.redirect("/admin");
+      return res.redirect("/admin");
     }
   } catch (error) {
     console.log(error);
@@ -185,19 +185,20 @@ const getCustomRangeData = async (req, res) => {
         };
       }
       if (value.total_amount) {
-        processedData[key].total_amount = value.total_amount;
+        processedData[key].total_amount = value.total_amount.toFixed(2);
       }
       if (value.total_discount) {
-        processedData[key].total_discount = value.total_discount;
+        processedData[key].total_discount = value.total_discount.toFixed(2);
       }
       if (value.total_sales) {
-        processedData[key].total_sales = value.total_sales;
+        processedData[key].total_sales = value.total_sales.toFixed(2);
       }
       if (value.total_new_users) {
-        processedData[key].total_new_users = value.total_new_users;
+        processedData[key].total_new_users = value.total_new_users.toFixed(2);
       }
       if (value.total_coupon_discount) {
-        processedData[key].total_coupon_discount = value.total_coupon_discount;
+        processedData[key].total_coupon_discount =
+          value.total_coupon_discount.toFixed(2);
       }
     });
     // console.log(processedData);
@@ -321,10 +322,10 @@ const getSalesData = async (req, res) => {
         };
       }
       if (value.total_amount) {
-        processedData[key].total_amount = value.total_amount;
+        processedData[key].total_amount = value.total_amount.toFixed(2);
       }
       if (value.total_discount) {
-        processedData[key].total_discount = value.total_discount;
+        processedData[key].total_discount = value.total_discount.toFixed(2);
       }
       if (value.total_sales) {
         processedData[key].total_sales = value.total_sales;
@@ -333,7 +334,8 @@ const getSalesData = async (req, res) => {
         processedData[key].total_new_users = value.total_new_users;
       }
       if (value.total_coupon_discount) {
-        processedData[key].total_coupon_discount = value.total_coupon_discount;
+        processedData[key].total_coupon_discount =
+          value.total_coupon_discount.toFixed(2);
       }
     });
     // console.log(processedData);
@@ -378,7 +380,7 @@ const getTopProducts = async (req, res) => {
       { $limit: count },
     ]);
     // console.log(list);
-    res.json({ success: true, list });
+    return res.json({ success: true, list });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Top 10 Products");
@@ -426,7 +428,7 @@ const getTopCategories = async (req, res) => {
       },
     ]);
     // console.log(list);
-    res.json({ success: true, list });
+    return res.json({ success: true, list });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Top 10 Categories");

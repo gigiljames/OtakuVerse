@@ -1,0 +1,70 @@
+<%-include("../../partials/admin-template.ejs")%>
+    <title>Return Requests</title>
+    <link rel="stylesheet" href="/admin/returnRequest/request-list.css" />
+  </head>
+  <body>
+    <%- include('../../partials/admin-navbar.ejs') %>
+    <%-include("../../partials/alert.ejs")%>
+    <div class="main">
+      <div class="main-left">
+        <%- include('../../partials/admin-sidebar.ejs') %>
+      </div>
+      <div class="main-right">
+        <div class="main-right-inner">
+          <div class="title-row">
+            <div class="title">Return Requests</div>
+          </div>
+          <div class="customer-list">
+              <table>
+                <thead>
+                  <th>Customer ID</th>
+                  <th>Order ID</th>
+                  <th>Reason</th>
+                  <th>Return status</th>
+                  <th>Refund status</th>
+                  <th></th>
+                </thead>
+                <tbody>
+                  <% if(requests.length===0){ %>
+                    <tr><td colspan="6">Nothing to show here.</td></tr>
+                  <%}else{%>
+                    <% requests.forEach(request => { %>
+                      <tr>
+                        <td><%= request.customer_id %></td>
+                        <td><%= request.order_id %></td>
+                        <td ><div class="reason-cell"><%= request.reason %></div></td>
+                        <td><%= request.return_status %></td>
+                        <td>
+                          <%if(request.is_refunded){%>
+                            Amount refunded
+                          <% } else if (!request.is_refunded && request.return_status==="returned") { %>
+                            Pending refund
+                          <% } else if (!request.is_refunded) { %>
+                            Not refunded
+                          <% } %>
+                        </td>
+                        <td>
+                          <button class="view-button" data-orderid="<%= request.order_id %>" data-variantid="<%= request.variant_id %>" data-reqid="<%= request._id %>">View request</button>
+                        </td>
+                      </tr>
+                    <% }) %>
+                  <%}%>
+                </tbody>
+
+                
+              </table>
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="request-modal">
+      <div class="request-container">
+        
+        
+      </div>
+    </div>
+    <script src="/js/request-list.js"></script>
+  </body>
+</html>

@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   //SEARCH
-  queryCustomers();
   const searchButton = document.querySelector(".search-button");
   searchButton.addEventListener("click", () => {
-    queryCustomers();
+    window.location.href = `/admin/customer-management?offset=1&search=${searchInput.value}`;
   });
   const searchInput = document.getElementById("search");
   const clearButton = document.querySelector(".clear-button");
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const offset = link.dataset.offset;
-      queryCustomers(offset);
+      // queryCustomers(offset);
     });
   });
 
@@ -105,8 +104,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (response.success) {
             addFormOuter.style.display = "none";
             alert(response.message, "success", () => {
-              // window.location.reload();
-              queryCustomers();
+              window.location.reload();
+              // queryCustomers();/
             });
           } else {
             if (response.message) {
@@ -123,115 +122,34 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function queryCustomers(offset = 1) {
-  const searchQuery = document.querySelector("#search").value.trim() || "";
-  const sortOption = document.querySelector("#sort")?.value.trim() || "";
-  $.ajax({
-    url: `/admin/get-customers?search=${searchQuery}&sort=${sortOption}&offset=${offset}`,
-    type: "GET",
-    success: function (response) {
-      if (response.success) {
-        updateCustomerList(response.customerList);
-      } else {
-        if (response.message) {
-          alert(response.message, "error");
+function handleStatus(custID) {
+  const button = document.querySelector(`#button-${custID}`);
+  const visible = button.dataset.status;
+  if (visible === "active") {
+    $.ajax({
+      url: `/admin/block-customer/${custID}`,
+      type: "PATCH",
+      success: function (response) {
+        if (response.success) {
+          button.innerText = "Unblock";
+          button.dataset.status = "banned";
+          const statusData = document.querySelector(`#status-${custID}`);
+          statusData.innerText = "banned";
         }
-        if (response.redirectUrl) {
-          window.location.href = response.redirectUrl;
-        }
-      }
-    },
-    error: function (error) {},
-  });
-}
-
-function updateCustomerList(customers) {
-  const tbody = document.querySelector("tbody");
-  tbody.innerHTML = "";
-
-  if (customers.length === 0) {
-    let row = document.createElement("tr");
-    row.innerHTML = "<td colspan='5'>Nothing to show here.</td>";
-  } else {
-    customers.forEach((customer) => {
-      let row = document.createElement("tr");
-      if (customer.account_status === "active") {
-        row.innerHTML = `
-        <td>${customer._id}</td>
-        <td>${customer.customer_name}</td>
-        <td>${customer.customer_email}</td>
-        <td class="status">${customer.account_status}</td>
-        <td class="status-button">
-          <button
-            class="block-button"
-            data-id = "${customer._id}"
-          >
-            Block
-          </button>
-        </td>
-        `;
-      } else if (customer.account_status === "banned") {
-        row.innerHTML = `
-        <td>${customer._id}</td>
-        <td>${customer.customer_name}</td>
-        <td>${customer.customer_email}</td>
-        <td class="status">${customer.account_status}</td>
-        <td class="status-button">
-          <button
-            class="unblock-button"
-            data-id = "${customer._id}"
-            href="/admin/unblock-customer/${customer._id}?offset=<%= offset %>"
-          >
-            Unblock
-          </button>
-        </td>
-        `;
-      }
-      tbody.append(row);
+      },
     });
-    handleCustomerOperations();
+  } else if (visible === "banned") {
+    $.ajax({
+      url: `/admin/unblock-customer/${custID}`,
+      type: "PATCH",
+      success: function (response) {
+        if (response.success) {
+          button.innerText = "Block";
+          button.dataset.status = "active";
+          const statusData = document.querySelector(`#status-${custID}`);
+          statusData.innerText = "active";
+        }
+      },
+    });
   }
-}
-
-function handleCustomerOperations() {
-  const blockButtons = document.querySelectorAll(".block-button");
-  console.log(blockButtons);
-  blockButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const custID = button.dataset.id;
-      $.ajax({
-        url: `/admin/block-customer/${custID}`,
-        type: "PATCH",
-        success: function (response) {
-          if (response.success) {
-            queryCustomers();
-          } else {
-            alert(response.message, "error");
-          }
-        },
-        error: function (error) {},
-      });
-    });
-  });
-
-  const unblockButtons = document.querySelectorAll(".unblock-button");
-  unblockButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const custID = button.dataset.id;
-      $.ajax({
-        url: `/admin/unblock-customer/${custID}`,
-        type: "PATCH",
-        success: function (response) {
-          if (response.success) {
-            queryCustomers();
-          } else {
-            alert(response.message, "error");
-          }
-        },
-        error: function (error) {},
-      });
-    });
-  });
 }

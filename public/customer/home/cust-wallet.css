@@ -118,6 +118,7 @@ html {
 .transaction-list {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 25px;
 }
 
 .transaction-list td {

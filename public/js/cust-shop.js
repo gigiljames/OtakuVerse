@@ -70,17 +70,29 @@ function updateProductList(products) {
     );
     let totalStock = 0;
     let stockMessage = "";
+    let stockTextClass = "";
     if (product.variants.length > 0) {
       product.variants.forEach((variant) => {
         totalStock += variant.stock_quantity;
+        console.log(variant.stock_quantity);
       });
+
       if (totalStock > 0 && totalStock < 10) {
         stockMessage = `${totalStock} Left!!`;
+        stockTextClass = "orangeText";
       } else if (totalStock === 0) {
-        stockMessage = "Out of stock.";
+        stockMessage = "Out of stock";
+        stockTextClass = "redText";
       }
     } else {
       stockMessage = "Currently unavailable";
+      stockTextClass = "redText";
+    }
+    let totalStockElement = "";
+    if (stockMessage) {
+      totalStockElement = `<div class="total-stock ${stockTextClass}">
+                            ${stockMessage}
+                          </div>`;
     }
 
     productCard.setAttribute("href", `/product/${product._id}`);
@@ -103,9 +115,7 @@ function updateProductList(products) {
                         <div class="original-price">₹${product.price}</div>
                           
                       </div>
-                      <div class="total-stock">
-                            ${stockMessage}
-                          </div>
+                      ${totalStockElement}
                     </div>`;
     productCards.append(productCard);
   });

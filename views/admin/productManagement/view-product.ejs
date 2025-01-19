@@ -24,8 +24,7 @@
         <form
           id="edit-form"
           method="POST"
-          action="/admin/edit-product/<%= productDetails._id %>?_method=PATCH"
-          enctype="multipart/form-data"
+          data-productid="<%=productDetails._id%>"
         >
           <div class="edit-form-top">
             <div class="edit-form-left">
@@ -115,19 +114,8 @@
           </div>
           
         </form>
-        
-        <form
-          id="delete-form"
-          method="POST"
-          action="/admin/delete-product/<%=productDetails._id%>?_method=DELETE"
-        ></form>
         <div class="button-group">
-          <input
-            class="delete-button"
-            type="submit"
-            value="Delete product"
-            form="delete-form"
-          />
+          <button class="delete-button" data-productid="<%=productDetails._id%>">Delete product</button>
           <input
             class="submit-button"
             type="submit"
@@ -194,15 +182,10 @@
               </div>
               <div class="stock-update-error error-container"></div>
             </div>
-            
-            <form
-              id="<%= productDetails._id %>"
-              action="/admin/delete-variant/<%= productDetails._id %>/<%=variant._id%>?_method=DELETE"
-              method="POST"
-            >
               <button
                 class="delete-variant-button"
-                form="<%= productDetails._id %>"
+                data-variantid="<%=variant._id%>"
+                data-productid="<%= productDetails._id %>"
               >
                 Delete variant
               </button>
@@ -236,7 +219,7 @@
         <form
           id="add-form"
           method="POST"
-          action="/admin/add-variant/<%=productDetails._id%>"
+          data-productid ="<%=productDetails._id%>"
         >
           <div class="add-form-left">
             <div class="input-container">
