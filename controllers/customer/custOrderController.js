@@ -141,17 +141,17 @@ const checkout = async (req, res) => {
     )
       .populate("cart_items.variant_id", "stock_quantity")
       .populate("cart_items.product_id", "product_name");
-    let flag = 0;
-    let outOfStockMessage = "";
+    // let flag = 0;
+    // let outOfStockMessage = "";
     cartWithQty.cart_items.forEach((item) => {
       if (item.quantity > item.variant_id.stock_quantity) {
-        flag = 1;
-        outOfStockMessage += `${item.product_id.product_name} just got out of stock.\n`;
+        // flag = 1;
+        message += `${item.product_id.product_name} got out of stock.`;
       }
     });
-    if (flag === 1) {
-      return res.json({ success: false, message: outOfStockMessage });
-    }
+    // if (flag === 1) {
+    //   return res.json({ success: false, message: outOfStockMessage });
+    // }
     const plainCart = cart.toObject();
     plainCart.cart_items.forEach((product) => {
       product = product.product_id;
@@ -165,6 +165,7 @@ const checkout = async (req, res) => {
       // console.log(product.applied_discount);
     });
     const bill = getBill(plainCart);
+    console.log(message);
     return res.render("customer/order/cust-checkout", {
       categoryList,
       bill,

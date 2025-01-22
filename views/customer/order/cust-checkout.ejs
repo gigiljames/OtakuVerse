@@ -10,8 +10,8 @@
   <%-include("../../partials/alert.ejs")%>
   <%if(locals.message){%> 
     <script>
-      alert("<%=message%>","warning",null,6000);
-    </script>
+      alert("<%=locals.message%>","error");
+    </script> 
   <%}%>
   <div class="main">
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
