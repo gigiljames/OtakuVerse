@@ -768,21 +768,33 @@ const cancelItem = async (req, res) => {
       { _id: variantID },
       { $inc: { stock_quantity: item.quantity } }
     );
-    //if all individuals items are cancelled set is_cancelled = true
-    const notCancelled = await Order.aggregate([
-      { $match: { _id: orderID } },
-      { $unwind: "$order_items" },
-      { $match: { "order_items.product_status": { $ne: "cancelled" } } },
-      { $limit: 1 },
-    ]);
-    if (notCancelled.length === 0) {
+    //if all individuals items are cancelled set is_cancellable = true
+    let cancellable = false;
+    let removeDeliveryDate = 1;
+    let orderItems = await Order.findById(orderID);
+    for (let item of orderItems.order_items) {
+      let status = item.product_status;
+      if (
+        status === "processing" ||
+        status === "shipping" ||
+        status === "out for delivery"
+      ) {
+        cancellable = true;
+      }
+      if (status === "cancelled") {
+        removeDeliveryDate *= 1;
+      } else {
+        removeDeliveryDate *= 0;
+      }
+    }
+    await Order.updateOne(
+      { _id: orderID },
+      { $set: { is_cancellable: cancellable } }
+    );
+    if (removeDeliveryDate === 1) {
       await Order.updateOne(
         { _id: orderID },
-        {
-          $set: {
-            is_cancelled: true,
-          },
-        }
+        { $set: { delivery_date: null } }
       );
     }
     return res.json({

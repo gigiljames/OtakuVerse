@@ -3,10 +3,10 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema(
   {
-    is_cancelled: {
+    is_cancellable: {
       type: Boolean,
       required: true,
-      default: false,
+      default: true,
     },
     // is_delivered: {
     //   type: Boolean,
