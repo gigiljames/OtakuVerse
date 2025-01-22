@@ -50,7 +50,7 @@ const cancelOrder = async (req, res) => {
       {
         $set: {
           "order_items.$[].product_status": "cancelled",
-          is_cancellable: true,
+          is_cancellable: false,
         },
       }
     );

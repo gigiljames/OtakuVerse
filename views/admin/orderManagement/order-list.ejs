@@ -36,7 +36,7 @@
                       </div>
                     </div>
                     <div class="customer-name info-item">
-                      <div class="label">Order ID</div>
+                      <div class="label">Customer name</div>
                       <div class="data">
                         <%= order.customer_id.customer_name %>
                       </div>
@@ -74,7 +74,7 @@
                             </div>
                             <div class="status-data">
                               <div class="label">Status:</div>
-                              <div class="data"><%= item.product_status %>
+                              <div class="data"><div class="data-data"><%= item.product_status %></div>
                               <%if(item.product_status!=="cancelled"){%>
                                 <div class="status-edit-container">
                                   <select class="status-input">
@@ -122,7 +122,7 @@
                     </div>
                   </td>
                   <td>
-                    <%if(!order.is_cancelled){ %>
+                    <%if(order.is_cancellable){ %>
                     <button class="cancel-order-button" data-id="<%=order._id%>">Cancel Order</button>
                     <%}%>
                   </td>

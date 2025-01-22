@@ -66,6 +66,23 @@ body {
   visibility: visible;
 }
 
+.apply-coupon-button {
+  color: rgb(249, 249, 249);
+  border: 0;
+  background-color: #ffba53;
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: 700;
+}
+
+.apply-coupon-button:hover {
+  background-color: #e9a949;
+}
+
+.apply-coupon-button:active {
+  background-color: #db9d41;
+}
+
 .coupon-cards {
   display: flex;
   overflow-x: scroll;
@@ -81,6 +98,7 @@ body {
   padding: 15px 20px;
   min-width: 200px;
   border-radius: 10px;
+  justify-content: space-between;
 }
 
 .coupon-title {
@@ -269,27 +287,21 @@ html {
 
 /*chatgpt css*/
 .bill {
-  background-color: #fef6e4; /* Light anime-inspired background */
   padding: 20px;
-  border-radius: 10px;
-  border: 1px solid #ebd8b7; /* Subtle border for structure */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin: 0 auto;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
 
 .bill-title {
-  font-size: 1.8rem;
+  font-size: 20px;
   font-weight: bold;
-  color: #ff7eb9; /* Anime-theme vibrant accent color */
-  text-align: center;
   margin-bottom: 15px;
-  border-bottom: 2px solid #ff7eb9;
-  padding-bottom: 10px;
+  color: #333333;
 }
 
 .bill ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
@@ -297,53 +309,53 @@ html {
 .bill li {
   display: flex;
   justify-content: space-between;
-  font-size: 1rem;
   padding: 10px 0;
-  border-bottom: 1px solid #ebd8b7;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  color: #555555;
 }
 
-.bill li span {
-  color: #333;
+.bill li:last-child {
+  border-bottom: none;
 }
 
-.bill li span#grand-total {
+#grand-total {
   font-weight: bold;
-  font-size: 1.2rem;
-  color: #ff7eb9; /* Highlighted total */
+  color: #333333;
 }
 
-.bill li span#you-save {
-  color: #4caf50; /* Savings in green */
+#you-save {
+  color: #28a745;
   font-weight: bold;
-}
-
-.bill li span#you-save-percent {
-  color: #4caf50; /* Percentage in green */
-  font-style: italic;
 }
 
 .order-button {
-  display: block;
   width: 100%;
-  background-color: #ff7eb9; /* Button color matching theme */
-  color: #fff;
-  text-align: center;
-  font-size: 1.2rem;
-  padding: 15px;
+  padding: 12px 0;
+  background-color: #28a745;
+  color: white;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
+  border-radius: 8px;
+  font-size: 16px;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  text-align: center;
 }
 
 .order-button:hover {
-  background-color: #ff567a; /* Slightly darker hover effect */
+  background-color: #218838;
 }
 
-.order-button:active {
-  background-color: #e64a68;
+#remove-coupon-button {
+  color: rgb(246, 88, 88);
+  background-color: transparent;
+  border: 0;
+  font-weight: 600;
+}
+
+#remove-coupon-button:hover {
+  text-decoration: underline;
+  color: rgb(211, 67, 67);
 }
 
 @media (max-width: 768px) {

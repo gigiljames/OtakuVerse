@@ -16,7 +16,7 @@
     <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
       <div class="main-right-inner">
-        <div class="title-row">Checkout</div>
+        <div class="title-row"><div class="main-title">Checkout</div></div>
         <div class="order-container">
           <div class="details-section">
             <div class="address-section">
@@ -95,7 +95,7 @@
               </div>
             </div>
             <div class="coupon-section">
-              Coupons
+              <div class="subtitle">Coupons</div>
               <div class="coupon-cards">
                 <%coupons.forEach((coupon)=>{%>
                   <div class="coupon-card">
