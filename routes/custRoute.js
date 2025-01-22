@@ -13,21 +13,25 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Customer = require("../models/customerModel");
-  const customer = await Customer.findOne({
-    customer_email: "hrx@fakemail.com",
-  });
-  req.session.user = customer._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
-});
+// const constantLogin = async (req, res, next) => {
+//   const Customer = require("../models/customerModel");
+//   const customer = await Customer.findOne({
+//     customer_email: "hrx@fakemail.com",
+//   });
+//   req.session.user = customer._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
 
 // AUTHENTICATION MIDDLEWARE
 const authMiddleware = async (req, res, next) => {
   if (!req.session.user) {
+    if (req.xhr) {
+      // distinguishing btw ajax and normal req
+      return res.json({ success: false, redirectUrl: "/login" });
+    }
     return res.redirect("/login");
   } else {
     const customer = await Customer.findOne(
@@ -36,7 +40,6 @@ const authMiddleware = async (req, res, next) => {
     );
     if (customer && customer.account_status === "banned") {
       if (req.xhr) {
-        // distinguishing btw ajax and normal req
         return res.json({ success: false, redirectUrl: "/logout" });
       }
       return res.redirect("/logout");

@@ -28,6 +28,9 @@
                       <%let variant = item.variant_id%>
                       <td>
                         <div class="item-container">
+                          <%if(variant.stock_quantity===0){%>
+                            <div class="out-of-stock">Out of stock</div>
+                          <%}%>
                           <img class="product_image" src="<%=product.product_images[0]?.filepath%>" alt="product_image">
                           <div class="item-info">
                             <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
@@ -48,9 +51,7 @@
                         
                         
                         
-                        <%if(variant.stock_quantity===0){%>
-                          <div class="out-of-stock">Out of stock</div>
-                        <%}%>
+                        
                       </td>
                       <td>
                         <div class="quantity-container">

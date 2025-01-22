@@ -1,6 +1,7 @@
 const Order = require("../../models/orderModel");
 const Wallet = require("../../models/walletModel");
 const ProductVariant = require("../../models/productVariantModel");
+const restrictOrderCancellation = require("../../helpers/restrictOrderCancellation");
 
 const getPage = async (req, res) => {
   try {
@@ -40,7 +41,7 @@ const cancelOrder = async (req, res) => {
       {
         $set: {
           "order_items.$[].product_status": "cancelled",
-          is_cancelled: true,
+          is_cancellable: true,
         },
       }
     );
@@ -148,23 +149,8 @@ const cancelItem = async (req, res) => {
       { _id: variantID },
       { $inc: { stock_quantity: item.quantity } }
     );
-    //if all individuals items are cancelled set is_cancelled = true
-    const notCancelled = await Order.aggregate([
-      { $match: { _id: orderID } },
-      { $unwind: "$order_items" },
-      { $match: { "order_items.product_status": { $ne: "cancelled" } } },
-      { $limit: 1 },
-    ]);
-    if (notCancelled.length === 0) {
-      await Order.updateOne(
-        { _id: orderID },
-        {
-          $set: {
-            is_cancelled: true,
-          },
-        }
-      );
-    }
+    restrictOrderCancellation(orderID);
+
     return res.json({
       success: true,
       message: "Item has been cancelled successfully.",
@@ -198,6 +184,7 @@ const editItemStatus = async (req, res) => {
       },
       { $set: { "order_items.$.product_status": status } }
     );
+    restrictOrderCancellation(orderID);
     return res.json({
       success: true,
       message: "Item status updated successfully.",

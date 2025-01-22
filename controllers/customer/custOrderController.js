@@ -11,6 +11,7 @@ const Wishlist = require("../../models/wishlistModel");
 const ProductVariant = require("../../models/productVariantModel");
 const Wallet = require("../../models/walletModel");
 const Razorpay = require("razorpay");
+const restrictOrderCancellation = require("../../helpers/restrictOrderCancellation");
 require("dotenv").config();
 const { RAZORPAY_ID_KEY, RAZORPAY_SECRET_KEY } = process.env;
 
@@ -133,6 +134,24 @@ const checkout = async (req, res) => {
       return res.redirect("/cart");
     }
 
+    //checking stock availability
+    const cartWithQty = await Cart.findOne(
+      { customer_id: custID },
+      { cart_items: 1 }
+    )
+      .populate("cart_items.variant_id", "stock_quantity")
+      .populate("cart_items.product_id", "product_name");
+    let flag = 0;
+    let outOfStockMessage = "";
+    cartWithQty.cart_items.forEach((item) => {
+      if (item.quantity > item.variant_id.stock_quantity) {
+        flag = 1;
+        outOfStockMessage += `${item.product_id.product_name} just got out of stock.\n`;
+      }
+    });
+    if (flag === 1) {
+      return res.json({ success: false, message: outOfStockMessage });
+    }
     const plainCart = cart.toObject();
     plainCart.cart_items.forEach((product) => {
       product = product.product_id;
@@ -768,35 +787,7 @@ const cancelItem = async (req, res) => {
       { _id: variantID },
       { $inc: { stock_quantity: item.quantity } }
     );
-    //if all individuals items are cancelled set is_cancellable = true
-    let cancellable = false;
-    let removeDeliveryDate = 1;
-    let orderItems = await Order.findById(orderID);
-    for (let item of orderItems.order_items) {
-      let status = item.product_status;
-      if (
-        status === "processing" ||
-        status === "shipping" ||
-        status === "out for delivery"
-      ) {
-        cancellable = true;
-      }
-      if (status === "cancelled") {
-        removeDeliveryDate *= 1;
-      } else {
-        removeDeliveryDate *= 0;
-      }
-    }
-    await Order.updateOne(
-      { _id: orderID },
-      { $set: { is_cancellable: cancellable } }
-    );
-    if (removeDeliveryDate === 1) {
-      await Order.updateOne(
-        { _id: orderID },
-        { $set: { delivery_date: null } }
-      );
-    }
+    restrictOrderCancellation(orderID);
     return res.json({
       success: true,
       message: "Item has been cancelled successfully.",
@@ -831,6 +822,7 @@ const returnItem = async (req, res) => {
         $set: { "order_items.$.product_status": "waiting for return approval" },
       }
     );
+    restrictOrderCancellation(orderID);
     return res.json({
       success: true,
       message: "Return request sent successfully.",
@@ -854,7 +846,7 @@ const cancelOrder = async (req, res) => {
         { $inc: { stock_quantity: item.quantity } }
       );
     });
-    if (order.is_cancelled) {
+    if (!order.is_cancellable) {
       return res.json({
         success: false,
         message: "Order is already cancelled.",
@@ -866,7 +858,7 @@ const cancelOrder = async (req, res) => {
       {
         $set: {
           "order_items.$[].product_status": "cancelled",
-          is_cancelled: true,
+          is_cancellable: false,
         },
       }
     );

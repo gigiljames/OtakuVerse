@@ -20,13 +20,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let userMenuDisplay = false;
   const userMenu = document.getElementById("user-menu");
   const userDp = document.getElementById("user-dp");
-  userDp.addEventListener("click", (event) => {
-    if (userMenuDisplay) {
-      userMenu.style.display = "none";
-      userMenuDisplay = false;
-    } else {
-      userMenu.style.display = "flex";
-      userMenuDisplay = true;
-    }
-  });
+  if (userDp) {
+    userDp.addEventListener("click", (event) => {
+      if (userMenuDisplay) {
+        userMenu.style.display = "none";
+        userMenuDisplay = false;
+      } else {
+        userMenu.style.display = "flex";
+        userMenuDisplay = true;
+      }
+    });
+  }
 });

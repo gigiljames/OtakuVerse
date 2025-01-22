@@ -436,6 +436,7 @@ const addToWishlist = async (req, res) => {
     }
 
     const itemExists = await Wishlist.findOne({
+      customer_id: custID,
       "wishlist_items.product_id": id,
       "wishlist_items.variant_id": variantID,
     });

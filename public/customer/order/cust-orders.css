@@ -112,6 +112,20 @@ body {
   font-size: 18px;
 }
 
+.return-one-item {
+  font-weight: 600;
+  background-color: rgb(123, 201, 232);
+  color: rgb(247, 247, 247);
+}
+
+.return-one-item:hover {
+  background-color: rgb(109, 188, 219);
+}
+
+.return-one-item:active {
+  background-color: rgb(93, 162, 189);
+}
+
 .title-row {
   font-size: 24px;
   font-weight: 500;
