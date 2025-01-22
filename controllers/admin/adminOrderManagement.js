@@ -5,9 +5,17 @@ const restrictOrderCancellation = require("../../helpers/restrictOrderCancellati
 
 const getPage = async (req, res) => {
   try {
-    const { offset } = req.query;
+    // Search & sort
+    const search = req.query.search || "";
+    const sort = req.query.sort || "";
+    // Pagination
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
     const limit = 10;
     const orderCount = await Order.find().countDocuments();
+    const numberOfPages = Math.ceil(orderCount / limit);
     const orders = await Order.find()
       .sort({ createdAt: -1 })
       .skip(limit * (offset - 1))
@@ -15,7 +23,8 @@ const getPage = async (req, res) => {
       .populate("customer_id", "customer_name");
     return res.render("admin/orderManagement/order-list", {
       orders,
-      pageCount: Math.ceil(orderCount / limit),
+      numberOfPages,
+      currentURL: `/admin/order-management/?search=${search}&sort=${sort}&`,
       offset,
     });
   } catch (error) {
@@ -160,18 +169,6 @@ const cancelItem = async (req, res) => {
     console.log("ERROR : Cancel Item");
   }
 };
-
-// const editStatus = async (req, res) => {
-//   try {
-//     const { orderID } = req.params;
-//     const { status } = req.body;
-//     await Order.updateOne({ _id: orderID }, { $set: { order_status: status } });
-//     res.json({ success: true, message: "Order status updated successfully." });
-//   } catch (error) {
-//     console.log(error);
-//     console.log("ERROR : Edit Status");
-//   }
-// };
 
 const editItemStatus = async (req, res) => {
   try {

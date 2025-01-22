@@ -3,6 +3,7 @@ const fs = require("fs");
 const Product = require("../../models/productModel");
 const Category = require("../../models/categoryModel");
 const ProductVariant = require("../../models/productVariantModel");
+const upload = require("../../helpers/upload");
 
 const getPage = async (req, res) => {
   try {
@@ -150,12 +151,12 @@ const editProduct = async (req, res) => {
 const addImage = async (req, res) => {
   try {
     const { id } = req.params;
+    const result = await upload.uploadFile(req.file.path);
     const imageDoc = {
       filename: req.file.filename,
-      filepath: req.file.path.slice(6),
+      filepath: result.secure_url,
     };
-    // console.log(imageDoc);
-    const editConfirmation = await Product.updateOne(
+    await Product.updateOne(
       { _id: id },
       {
         $push: { product_images: imageDoc },
@@ -171,23 +172,10 @@ const addImage = async (req, res) => {
 const deleteImage = async (req, res) => {
   try {
     const { productId, imgId } = req.params;
-    const imagePath = await Product.findOne(
-      { "product_images._id": imgId },
-      { "product_images.filepath": 1 }
-    );
-    const deleteConfirmation = await Product.updateOne(
+    await Product.updateOne(
       { _id: productId },
       { $pull: { product_images: { _id: imgId } } }
     );
-    const filePath = imagePath.product_images[0].filepath;
-    fs.unlink("public" + filePath, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Image deleted from directory successfully.");
-      }
-    });
-    console.log("Banner image deleted successfully");
     return res.redirect(`/admin/view-product/${productId}`);
   } catch (error) {
     console.log(error);

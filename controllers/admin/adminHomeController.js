@@ -1,7 +1,5 @@
 const Order = require("../../models/orderModel");
 const Customer = require("../../models/customerModel");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
 
 const getPage = async (req, res) => {
   try {
@@ -391,7 +389,7 @@ const getTopCategories = async (req, res) => {
   try {
     const count = 10;
     const list = await Order.aggregate([
-      { $unwind: "$order_items" }, // Deconstructs the order_items array
+      { $unwind: "$order_items" },
       {
         $lookup: {
           from: "products",
@@ -400,30 +398,30 @@ const getTopCategories = async (req, res) => {
           as: "productDetails",
         },
       },
-      { $unwind: "$productDetails" }, // Unwind the productDetails array
+      { $unwind: "$productDetails" },
       {
         $group: {
-          _id: "$productDetails.category", // Group by the category ID
-          count: { $sum: 1 }, // Count occurrences
+          _id: "$productDetails.category",
+          count: { $sum: 1 },
         },
       },
-      { $sort: { count: -1 } }, // Sort by count in descending order
-      { $limit: count }, // Limit the results to the top `count` categories
+      { $sort: { count: -1 } },
+      { $limit: count },
       {
         $lookup: {
-          from: "categories", // Replace "categories" with your actual collection name
-          localField: "_id", // The category ID from the group stage
-          foreignField: "_id", // The category ID in the Category collection
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
           as: "categoryDetails",
         },
       },
-      { $unwind: "$categoryDetails" }, // Unwind the categoryDetails array
+      { $unwind: "$categoryDetails" },
       {
         $project: {
-          _id: 0, // Exclude the original _id field
-          category_id: "$_id", // Include the category ID
-          category_name: "$categoryDetails.category_name", // Include the category name
-          count: 1, // Include the count
+          _id: 0,
+          category_id: "$_id",
+          category_name: "$categoryDetails.category_name",
+          count: 1,
         },
       },
     ]);

@@ -9,19 +9,25 @@ const couponManagement = require("../controllers/admin/adminCouponManagement");
 const returnRequest = require("../controllers/admin/adminReturnRequestController");
 const walletManagement = require("../controllers/admin/adminWalletManagement");
 const upload = require("../upload");
+const multer = require("multer");
 
 const router = express.Router();
 router.use(express.static("public"));
 
 // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Admin = require("../models/adminModel");
-  const admin = await Admin.findOne({});
-  req.session.admin = admin._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
+// const constantLogin = async (req, res, next) => {
+//   const Admin = require("../models/adminModel");
+//   const admin = await Admin.findOne({});
+//   req.session.admin = admin._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
+
+var uploader = multer({
+  storage: multer.diskStorage({}),
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 // AUTHENTICATION MIDDLEWARE
@@ -51,18 +57,12 @@ router.post("/add-category", authMiddleware, categoryManagement.addCategory);
 router.patch(
   "/edit-category/:catID",
   authMiddleware,
-  upload.array("files", 10),
   categoryManagement.editCategory
 );
 router.delete(
   "/delete-category/:id",
   authMiddleware,
   categoryManagement.deleteCategory
-);
-router.delete(
-  "/delete-catbanner/:catId/:imgId",
-  authMiddleware,
-  categoryManagement.deleteCatBanner
 );
 
 // CUSTOMER MANAGEMENT
@@ -112,7 +112,7 @@ router.patch(
 );
 router.post(
   "/add-product-image/:id",
-  upload.single("image"),
+  uploader.single("image"),
   authMiddleware,
   productManagement.addImage
 );
@@ -140,11 +140,6 @@ router.delete(
   authMiddleware,
   orderManagement.cancelOrder
 );
-// router.patch(
-//   "/edit-order-status/:orderID",
-//   authMiddleware,
-//   orderManagement.editStatus
-// );
 router.patch(
   "/edit-item-status/:orderID/:variantID",
   authMiddleware,

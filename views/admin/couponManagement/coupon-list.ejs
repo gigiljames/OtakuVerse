@@ -24,7 +24,6 @@
             </div>
             <button class="add-button">Add Coupon</button>
           </div>
-
           <div class="coupon-cards">
             <% couponList.forEach(coupon => { %>
               <div class="coupon-card">
@@ -71,7 +70,6 @@
                     <input class="info-input input-uses" type="text" placeholder="Enter uses per person"/>
                   </div>
                 </div>
-                
                   <div class="button-group edit-group">
                     <button class="edit-button">
                       <span class="material-symbols-outlined">
@@ -98,16 +96,12 @@
                   </div>
               </div>
             <% }) %>
-            
           </div>
-          
-            
             <%- include("../../partials/pagination.ejs")%>
           </div>
         </div>
       </div>
     </div>
-    
     <div class="add-form-outer">
       <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
@@ -137,8 +131,6 @@
                   <div id="value-error" class="error-container"></div>
                 </div>
               </div>
-              
-              
               <div class="multiple-input-container">
                 <div class="input-container">
                   <label for="type-input">Type</label>
@@ -169,9 +161,7 @@
                   <div id="uses-error" class="error-container"></div>
                 </div>
               </div>
-              
             </div>
-              
           </div>
           <input class="submit-button" type="submit" value="SUBMIT" />
         </form>

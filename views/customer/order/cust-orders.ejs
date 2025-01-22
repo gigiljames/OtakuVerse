@@ -1,7 +1,6 @@
 <%- include("../../partials/cust-template.ejs")%>
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/order/cust-orders.css" rel="stylesheet"/>
-
 <title>Orders</title>
 </head>
 <body>
@@ -23,7 +22,6 @@
                     <div class="top-row-title">Ordered on</div>
                     <div class="top-row-data"><%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%></div>
                   </div>
-          
                   <div class="payment-method top-row-item">
                     <div class="top-row-title">Payment method</div>
                     <div class="top-row-data"><%=paymentMethod[order.payment_type]%></div>
@@ -41,7 +39,6 @@
                         <div class="status blackText"><%=order.payment_status%></div>
                       <%}%>
                     </div>
-                    
                   </div>
                   <div class="total-amount top-row-item">
                     <div class="top-row-title">Total amount</div>
@@ -63,9 +60,7 @@
                       <div class="top-row-data">₹<%= order.refunded_amount %></div>
                     </div>
                   <% } %>
-                  
                 </div>
-                
                 <div class="bottom-row">
                   <div class="item-cards">
                     <%let items = order.order_items%>
@@ -91,7 +86,6 @@
                            <% } %>
                         </div>
                       </div>
-                    
                       <%if((item.product_status==="processing" || item.product_status==="shipping" || item.product_status==="out for delivery") && order.order_items.length>1 && order.payment_status!=="failed"){%>
                       <button class="cancel-one-item item-card-button" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" data-qty="<%=item.quantity%>">Cancel this item</button>
                       <%}%>
@@ -121,14 +115,10 @@
                       <% if (order.is_cancellable) { %>
                         <button class="cancel-button" data-id="<%=order._id%>">Cancel order</button>
                       <% } %>
-                      
                     </div>
                   </div>
-
-                  
                 </div>
               </div>
-          
           <%})%>
           <%- include("../../partials/pagination.ejs")%>
         </div>
@@ -140,7 +130,6 @@
     <div class="add-form-inner">
       <div class="form-title">Return request</div>
       <form id="add-form" method="POST">
-        
         <div class="input-container">
           <label for="reason">Provide a reason</label>
           <textarea name="reason" id="reason" style="height: 150px;"></textarea>

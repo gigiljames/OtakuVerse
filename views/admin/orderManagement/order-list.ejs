@@ -18,78 +18,108 @@
           <table border="1" cellspacing="0" cellpadding="10">
             <thead>
               <tr>
-                <th></th>
-                <th>Order ID</th>
-                <th>Customer Name</th>
-                <th>Order date</th>
+                <th>Order Details</th>
                 <th>Products</th>
-                <th>Amount</th>
-                <th>Payment Status</th>
+                <th>Payment Details</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <% orders.forEach(order => { %>
                 <tr class="order-<%=order._id%>">
-                  <td>
-                    <a href="/admin/view-order/<%= order._id %>">
-                      <span class="material-symbols-outlined">
-                        open_in_new
-                        </span>
-                    </a>
-                  </td>
                   <!-- Order ID -->
-                  <td><%= order._id %></td>
-        
-                  <!-- Customer Name -->
-                  <td><%= order.customer_id.customer_name %></td>
-                  <td><%= order.createdAt %></td>
+                  <td>
+                    <div class="order-id info-item">
+                      <div class="label">Order ID</div>
+                      <div class="data">
+                        <%= order._id %>
+                      </div>
+                    </div>
+                    <div class="customer-name info-item">
+                      <div class="label">Order ID</div>
+                      <div class="data">
+                        <%= order.customer_id.customer_name %>
+                      </div>
+                    </div>
+                    <%const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];%>
+                    <%const paymentMethod = {"cod":"Cash on delivery", "razorpay":"Razorpay","wallet":"OtakuVerse wallet"}%>
+                    <div class="order-date info-item">
+                      <div class="label">Order date</div>
+                      <div class="data">
+                        <%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%>
+                      </div>
+                    </div>
+                  </td>
                   <!-- Product Names -->
                   <td>
-                    <% order.order_items.forEach(item => { %>
-                      <div class="item-card">
-                        <% if (item.product_images && item.product_images.length > 0) { %>
-                          <div class="product-image">
-                            <% item.product_images.forEach(image => { %>
-                              <img src="<%= image.filepath %>" alt="Product Image">
-                            <% }) %>
-                          </div>
-                        <% } else { %>
-                          <p>No Images Available</p>
-                        <% } %>
-                        <div class="product-info">
-                          <p class="product-name"><%= item.product_name %></p>
-                          <div class="variant-info">
-                            <p><%= item.size %></p> <p><%= item.colour %></p>
-                          </div>
-                          <p>Quantity: <%= item.quantity %></p>
-                          <div class="status-data">
-                            <%= item.product_status %>
-                          </div>
-                          <%if(item.product_status!=="cancelled"){%>
-                            <div class="status-edit-container">
-                              <select class="status-input">
-                                <option value="processing">Processing</option>
-                                <option value="shipping">Shipping</option>
-                                <option value="out for delivery">Out for delivery</option>
-                                <option value="delivered">Delivered</option>
-                              </select>
-                              <button class="edit-status-button" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">Edit</button>
-                              <button class="save-status-button">Save</button>
+                    <div class="item-cards">
+                      <% order.order_items.forEach(item => { %>
+                        <div class="item-card">
+                          <% if (item.product_images && item.product_images.length > 0) { %>
+                            <div class="product-image">
+                              <% item.product_images.forEach(image => { %>
+                                <img src="<%= image.filepath %>" alt="Product Image">
+                              <% }) %>
                             </div>
-                          <%}%>
-                          <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
-                            <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" >Cancel this item</button>
-                          <%}%>
+                          <% } else { %>
+                            <p>No Images Available</p>
+                          <% } %>
+                          <div class="product-info">
+                            <p class="product-name"><%= item.product_name %></p>
+                            <div class="variant-info">
+                              <div class="label">Size:</div> <p><%= item.size %></p> <div class="label">Colour:</div> <p><%= item.colour %></p>
+                            </div>
+                            <div class="quantity-info">
+                              <div class="label">Quantity:</div> <p><%= item.quantity %></p>
+                            </div>
+                            <div class="status-data">
+                              <div class="label">Status:</div>
+                              <div class="data"><%= item.product_status %>
+                              <%if(item.product_status!=="cancelled"){%>
+                                <div class="status-edit-container">
+                                  <select class="status-input">
+                                    <option value="processing">Processing</option>
+                                    <option value="shipping">Shipping</option>
+                                    <option value="out for delivery">Out for delivery</option>
+                                    <option value="delivered">Delivered</option>
+                                  </select>
+                                  <button class="edit-status-button" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">Edit status</button>
+                                  <button class="save-status-button">Save</button>
+                                </div>
+                              <%}%>
+                            </div>
+                            </div>
+                      
+                          </div>
+                          <div class="status-functions">
+                      
+                            <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
+                              <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" >Cancel this item</button>
+                            <%}%>
+                          </div>
                         </div>
-                      </div>
-                    <% }) %>
+                      <% }) %>
+                    </div>
                   </td>
         
                   <!-- Amount -->
-                  <td><%= order.amount.toFixed(2) %></td>
                   <td>
-                    <%= order.payment_status %>
+                    <div class="amount info-item">
+                      <div class="label">
+                        Amount
+                      </div>
+                      <div class="data">
+                        <%= order.amount.toFixed(2) %>
+                      </div>
+                    </div>
+                    <div class="payment-status info-item">
+                      <div class="label">
+                        Status
+                      </div>
+                      <div class="data">
+                        <%= order.payment_status %>
+                      </div>
+                    </div>
                   </td>
                   <td>
                     <%if(!order.is_cancelled){ %>
@@ -99,30 +129,11 @@
                 </tr>
                 
               <% }) %>
-              <tr class="pagination-row">
-                <td colspan="7" class="pagination-links">
-                  <%if(offset>1){%>
-                    <a class="prev-next-buttons" href="/admin/order-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                  <%}else{%>
-                    <a href="" class="prev-next-buttons">&lt;Previous</a>
-                  <%}%>
-                  <%for(let i=1;i<=pageCount;i++){%>
-                    <%if(i==offset){%>
-                      <a class="selected-offset" href="/admin/order-management?offset=<%= i %>"><%= i %></a>
-                    <%}else{%>
-                      <a  href="/admin/order-management?offset=<%= i %>"><%= i %></a>
-                    <%}%>
-                    
-                  <%}%>
-                  <%if(offset<pageCount){%>
-                    <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                  <%}else{%>
-                    <a href="" class="prev-next-buttons ">Next&gt;</a>
-                  <%}%>
-                </td>
-              </tr> 
+              
             </tbody>
+            
           </table>
+          <%- include('../../partials/pagination.ejs') %>
         </div>
       </div>
     </div>

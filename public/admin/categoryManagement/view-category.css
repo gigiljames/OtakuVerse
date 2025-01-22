@@ -23,7 +23,10 @@ body {
 }
 
 .cat-details {
-  padding: 40px 20% 30px 10%;
+  padding: 40px 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .confirm-button {
@@ -121,6 +124,7 @@ body {
   border: 1px solid black;
   box-sizing: border-box;
   padding: 0 10px;
+  min-width: 450px;
 }
 
 #edit-cat-form textarea {
@@ -129,9 +133,10 @@ body {
   box-sizing: border-box;
   border: 1px solid black;
   border-radius: 5px;
-  height: 125px;
+  height: 145px;
   padding: 10px;
   font-family: "Inter", sans-serif;
+  min-width: 450px;
 }
 
 .label-row {
@@ -148,6 +153,7 @@ body {
   height: calc(100vh - 60px);
   width: 100vw;
   overflow: auto;
+  align-items: center;
 }
 
 .remove-banner-images-section {

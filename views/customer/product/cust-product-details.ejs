@@ -22,19 +22,26 @@
           <section class="section-1">
             <div class="image-collection">
               <div class="image-list">
-                <%product.product_images.forEach((image)=>{%>
+                <% if (product.product_images.length===0) { %>
                   <img
                     class="image-tile"
-                    src="<%=image.filepath%>"
+                    src="https://placehold.co/590x590"
                     alt="Product image here"
                   />
-                <%})%>
+                <% }else{ %>
+                  <%product.product_images.forEach((image)=>{%>
+                    <img
+                      class="image-tile"
+                      src="<%=image.filepath%>"
+                      alt="Product image here"
+                    />
+                  <%})%>
+                <% } %>
               </div>
               <div class="big-image">
                 <div class="product-image-container">
                   <img id="display-image" src="" alt="Product Image" id="product-image" />
                 </div>
-                
               </div>
               <div class="zoom-result" id="zoom-result"></div>
             </div>
@@ -51,11 +58,15 @@
               </div>
               <div class="line2">
                 <div class="product-pricing">
-                  <div class="ov-price">₹<%=product.offer_price%></div>
-                  <div class="original-price">
-                    ₹<%=product.price%>
-                  </div>
-                  <div class="discount"><%=product.applied_discount%>% discount!</div>
+                  <% if (Number(product.offer_price)===Number(product.price)) { %>
+                    <div class="ov-price">₹<%=product.offer_price%></div>
+                  <% }else{ %>
+                    <div class="ov-price">₹<%=product.offer_price%></div>
+                    <div class="original-price">
+                      ₹<%=product.price%>
+                    </div>
+                    <div class="discount"><%=product.applied_discount%>% discount!</div>
+                  <% } %>
                 </div>
                 <%if(product.variants.length>0){%>
                 <div class="quantity">
@@ -95,7 +106,6 @@
                   <%})%>
                 </div>
               </div>
-      
               <%let totalStock = 0;%>
               <%if (product.variants.length > 0) {%>
                 <%product.variants.forEach((variant) => {%>
@@ -145,7 +155,6 @@
               <%})%>
             </div>
           </section>
-      
           <section class="recommended-section">
             <%if(locals.recommendedData){%>
             <div class="category-wise">
@@ -184,13 +193,9 @@
         </div>
       </div>
     </div>  
-    
     <%-include('../../partials/cust-footer.ejs') %>
     <script src="/js/cust-product-details.js"></script>
     <script src="/js/cust-navbar.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnify/2.3.3/js/jquery.magnify.min.js"></script>
-
-
-
   </body>
 </html>

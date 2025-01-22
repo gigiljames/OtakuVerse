@@ -23,8 +23,6 @@
             ₹<%=wallet.balance%>
           </div>
         </div>
-         
-        
         <div>
           <h2 class="subtitle">Transaction History</h2>
           <table class="transaction-list">
@@ -41,10 +39,7 @@
                 <%const indianDate = new Intl.DateTimeFormat("en-IN", options).format(transaction.time);%>
                 <%const timeOptions = { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };%>
                 <%const indianTime = new Intl.DateTimeFormat("en-IN", timeOptions).format(transaction.time);%>
-                <tr 
-                 >
-                  
-                  
+                <tr>
                   <td class="amount">₹<%=transaction.amount%></td>
                   <td class="message"><%=transaction.message%></td>
                   <td><%=indianDate%></td>

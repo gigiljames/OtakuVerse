@@ -2,7 +2,6 @@
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/order/cust-checkout.css" rel="stylesheet"/>
 <link href="/customer/cust-sidebar.css" rel="stylesheet"/>
-
 <title>OtakuVerse Checkout</title>
 </head>
 <body>
@@ -86,7 +85,6 @@
                     </label>
                   </div>
                 <%})%>
-                
                 <div class="add-button-container">
                   <button class="add-button">
                     <span class="material-symbols-outlined">
@@ -105,10 +103,8 @@
                     <div class="coupon-desc"><%=coupon.desc%></div>
                     <div class="coupon-code"><%=coupon.code%></div>
                     <button class="apply-coupon-button" data-id="<%=coupon._id%>">APPLY</button>
-                    
                   </div>
                 <%})%>
-                
               </div>
             </div>
             <div class="payment-section">
@@ -129,7 +125,6 @@
               </div>
             </div>
           </div>
-          
           <div class="bill-section">
             <div class="bill">
             </div>
@@ -149,26 +144,21 @@
             <input id="name-input" class="login-input" type="text" name="name"/>
             <div id="name-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="apt-input">Apartment</label>
             <input id="apt-input" class="login-input" type="text" name="apt"/>
             <div id="apt-error" class="error-container"></div>
           </div>
-          
-          
           <div class="input-container">
             <label for="city-input">City</label>
             <input id="city-input" class="login-input" type="text" name="city"/>
             <div id="city-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="pin-input">Postal code</label>
             <input id="pin-input" class="login-input" type="text" name="pin"/>
             <div id="pin-error" class="error-container"></div>
           </div>
-          
         </div>
         <div class="add-form-left">
           <div class="input-container">
@@ -176,21 +166,16 @@
             <input id="phno-input" class="login-input" type="text" name="phno"/>
             <div id="apt-error" class="error-container"></div>
           </div>
-          
-          
           <div class="input-container">
             <label for="street-input">Street/Road</label>
             <input id="street-input" class="login-input" type="text" name="street"/>
             <div id="street-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="state-input">State</label>
             <input id="state-input" class="login-input" type="text" name="state"/>
             <div id="state-error" class="error-container"></div>
           </div>
-          
-          
           <input class="submit-button" type="submit" value="SUBMIT" />
         </div>
       </form>

@@ -1,7 +1,6 @@
 <%- include("../../partials/cust-template.ejs")%>
 <link href="/css/add-form.css" rel="stylesheet"/>
 <link href="/customer/home/cust-profile.css" rel="stylesheet"/>
-
 <title>Profile</title>
 </head>
 <body>
@@ -15,7 +14,6 @@
           <div class="main-title">Profile</div>
           <a href="#referral" class="pulseBtn" id="referral-redirect">Refer a friend to get free ₹100 in your OtakuVerse Wallet</a>
         </div>
-        
         <div class="general-section">
           <div class="title-row">General Information</div>
           <div class="general-info-card">
@@ -37,7 +35,6 @@
             </div>
           </div>
         </div>
-        
         <div class="address-section">
           <div class="title-row">
             <div class="title">Addresses</div>
@@ -123,12 +120,7 @@
               <li><input type="text" value="https://otakuverse.shop/signup?code=<%=customerData.referral_code%>" disabled>  <button class="copy-button"><span class="material-symbols-outlined">
                 content_copy
                 </span></button></li>
-              <!-- <li><input type="text" value="<%=customerData.referral_code%>" disabled> <button class="copy-button"><span class="material-symbols-outlined">
-                content_copy
-                </span></button></li> -->
             </ul>
-            
-            
           </div>
         </div>
         <%if(!isGoogle){%>
@@ -159,26 +151,21 @@
             <input id="name-input" class="login-input" type="text" name="name"/>
             <div id="name-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="apt-input">Apartment</label>
             <input id="apt-input" class="login-input" type="text" name="apt"/>
             <div id="apt-error" class="error-container"></div>
           </div>
-          
-          
           <div class="input-container">
             <label for="city-input">City</label>
             <input id="city-input" class="login-input" type="text" name="city"/>
             <div id="city-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="pin-input">Postal code</label>
             <input id="pin-input" class="login-input" type="text" name="pin"/>
             <div id="pin-error" class="error-container"></div>
           </div>
-          
         </div>
         <div class="add-form-left">
           <div class="input-container">
@@ -186,21 +173,16 @@
             <input id="phno-input" class="login-input" type="text" name="phno"/>
             <div id="phno-error" class="error-container"></div>
           </div>
-          
-          
           <div class="input-container">
             <label for="street-input">Street/Road</label>
             <input id="street-input" class="login-input" type="text" name="street"/>
             <div id="street-error" class="error-container"></div>
           </div>
-          
           <div class="input-container">
             <label for="state-input">State</label>
             <input id="state-input" class="login-input" type="text" name="state"/>
             <div id="state-error" class="error-container"></div>
           </div>
-          
-          
           <input class="submit-button" type="submit" value="SUBMIT" />
         </div>
       </form>

@@ -19,7 +19,6 @@
             method="POST"
             enctype="multipart/form-data"
           >
-            <!-- <input type="hidden" name="_method" value="PATCH" /> -->
             <div class="row">
               <div class="col">
                 <div class="input-container">
@@ -42,6 +41,8 @@
                   <div class="error-container" id="cat-offer-error"></div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col">
                 <div class="input-container">
                   <label for="cat-desc">Category description</label>
@@ -50,45 +51,6 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col">
-                <div class="input-container banner-images">
-                  <div class="label-row">
-                    <label for="banner-images">Add banner images</label>
-                    <input id="banner-images" type="file" name="images" accept="image/*" multiple />
-                  </div>
-                  <div id="image-preview" class="image-collection">
-                    
-                  </div>
-                  <form></form>
-                  
-                  
-                </div>
-              </div>
-              <div class="col">
-                <div class="remove-banner-images-section">
-                  <label>Remove banner images</label>
-                  <div class="image-collection">
-                    <% if (categoryDetails.banner_images ) { %>
-                    <%categoryDetails.banner_images.forEach((banner, index) => { %>
-                    <div class="image-card">
-                      <img
-                        src="<%= banner.filepath %>"
-                        alt="<%= banner.filename %>"
-                      />
-                      <button class="delete-banner-button" data-catid="<%= categoryDetails._id %>" data-banid="<%= banner._id %>">
-                        <span class="material-symbols-outlined delete-icon"
-                          >delete</span
-                        >
-                      </button>
-                    </div>
-                    <% }); %> <% } %>
-                  </div>
-                </div>
-              </div>
-            </div>
-    
-            
           </form>
           <div class="button-group">
             <input
@@ -101,12 +63,9 @@
             />
             <button type="button" id="delete-button" data-id="<%= categoryDetails._id%>">Delete category</button>
           </div>
-          
         </section>
       </div>
     </div>
-    
-
     <script src="/js/view-category.js"></script>
   </body>
 </html>

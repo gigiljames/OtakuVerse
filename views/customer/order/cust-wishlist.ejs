@@ -20,7 +20,6 @@
                 <th>Price</th>
                 <th></th>
               </tr>
-              
               <%items.forEach((item)=>{%>
                 <tr class="item-card">
                     <%let product = item.product_id%>
@@ -30,17 +29,14 @@
                         <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
                         <div class="item-info">
                           <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
-                          
                           <div class="variant-colour">Colour: <%=variant.colour%></div>
                           <div class="variant-size">Size: <%=variant.size%></div>
-                          
                         </div>
                       </div>
                     </td>
                     <td>
                       <div class="product-ov-price">₹ <%=product.offer_price%></div>
                       <div class="product-og-price">₹ <%=product.price%></div>
-                      
                     </td>
                     <td>
                       <div class="button-group">
@@ -69,7 +65,5 @@
   </div>
   <%-include("../../partials/cust-footer.ejs")%>
   <script src="/js/cust-wishlist.js"></script>
-</body>
-  
 </body>
 </html>

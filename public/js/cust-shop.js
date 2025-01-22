@@ -94,12 +94,16 @@ function updateProductList(products) {
                             ${stockMessage}
                           </div>`;
     }
+    let imageUrl = "https://placehold.co/270x306";
+    if (product.product_images[0]?.filepath) {
+      imageUrl = product.product_images[0].filepath;
+    }
 
     productCard.setAttribute("href", `/product/${product._id}`);
     productCard.innerHTML = `<div class="product-card">
                       <div class="product-image">
                         <img
-                          src="${product.product_images[0]?.filepath}"
+                          src="${imageUrl}"
                           alt="product-image"
                         />
                       </div>

@@ -1,35 +1,42 @@
 const cancelButtons = document.querySelectorAll(".cancel-order-button");
 
 cancelButtons.forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", async () => {
     const orderID = button.dataset.id;
     const orderRow = document.querySelector(`.order-${orderID}`);
     const status = orderRow.querySelector(".status-data");
     const statusEditContainer = orderRow.querySelector(
       ".status-edit-container"
     );
-    $.ajax({
-      type: "DELETE",
-      url: `/admin/cancel-order/${orderID}`,
-      success: function (response) {
-        if (response.success) {
-          if (response.message) {
-            alert(response.message, "success");
+    if (
+      await yes({
+        message: "Are you sure you want to cancel this order?",
+        yesButtonColour: "red",
+      })
+    ) {
+      $.ajax({
+        type: "DELETE",
+        url: `/admin/cancel-order/${orderID}`,
+        success: function (response) {
+          if (response.success) {
+            alert(response.message, "success", () => {
+              window.location.reload();
+            });
+            // status.innerText = "Cancelled";
+            // button.remove();
+            // statusEditContainer.remove();
+          } else {
+            if (response.message) {
+              alert(response.message, "error");
+            }
+            if (response.redirectUrl) {
+              window.location.href = response.redirectUrl;
+            }
           }
-          status.innerText = "Cancelled";
-          button.remove();
-          statusEditContainer.remove();
-        } else {
-          if (response.message) {
-            alert(response.message, "error");
-          }
-          if (response.redirectUrl) {
-            window.location.href = response.redirectUrl;
-          }
-        }
-      },
-      error: function (error) {},
-    });
+        },
+        error: function (error) {},
+      });
+    }
   });
 });
 
@@ -44,7 +51,7 @@ itemCards.forEach((card) => {
     const variantID = editStatusButton.dataset.variantid;
     // const orderRow = document.querySelector(`.order-${orderID}`);
     const statusInput = card.querySelector(".status-input");
-    const statusData = card.querySelector(".status-data");
+    const statusData = card.querySelector(".status-data .data");
     const saveButton = card.querySelector(".save-status-button");
     editStatusButton.style.display = "none";
     saveButton.style.display = "block";
@@ -98,22 +105,29 @@ editStatusButtons.forEach((button) => {});
 
 const cancelOneItemButtons = document.querySelectorAll(".cancel-one-item");
 cancelOneItemButtons.forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", async () => {
     const orderID = button.dataset.orderid;
     const variantID = button.dataset.variantid;
-    $.ajax({
-      url: `/admin/cancel-item/${orderID}/${variantID}`,
-      type: "DELETE",
-      success: function (response) {
-        if (response.success) {
-          alert(response.message, "success", () => {
-            window.location.reload();
-          });
-        } else {
-          alert(response.message, "error");
-        }
-      },
-      error: function (error) {},
-    });
+    if (
+      await yes({
+        message: "Are you sure you want to cancel this item?",
+        yesButtonColour: "red",
+      })
+    ) {
+      $.ajax({
+        url: `/admin/cancel-item/${orderID}/${variantID}`,
+        type: "DELETE",
+        success: function (response) {
+          if (response.success) {
+            alert(response.message, "success", () => {
+              window.location.reload();
+            });
+          } else {
+            alert(response.message, "error");
+          }
+        },
+        error: function (error) {},
+      });
+    }
   });
 });

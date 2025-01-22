@@ -46,12 +46,7 @@
                               Remove
                             </button> 
                           </div>
-                          
                         </div>
-                        
-                        
-                        
-                        
                       </td>
                       <td>
                         <div class="quantity-container">
@@ -66,22 +61,16 @@
                               add
                               </span>
                           </button>
-                          
-                          
                         </div>
                       </td>
                       <td>
                         <div class="product-total-price">
                           <%=(product.offer_price * item.quantity).toFixed(2)%>
-                          
                         </div>
-                        
                       </td>
-                    
                   </tr>
                 <%})%>
               </tbody>
-              
             </table>
               <%- include("../../partials/pagination.ejs")%>
           </div>
@@ -91,10 +80,8 @@
           </div>
         </div>
       </div>
-      
     </div>
   </div>
-  
   <script src="/js/cust-cart.js"></script>
   <%-include("../../partials/cust-footer.ejs")%>
 </body>

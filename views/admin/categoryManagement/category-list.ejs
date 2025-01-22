@@ -13,18 +13,17 @@
       <div class="main-right">
         <div class="main-right-inner">
           <div class="title-row">
-                <div class="title">Category Management</div>
-                <button class="add-button">Add Category</button>
-              </div>
-              <div class="category-list">
-                <% if(categoryList.length===0){ %>
-          <div>Nothing to show here.</div>
-                <%}%>
-                <% for(let i=0;i<categoryList.length;i++){ %>
-          <a href="/admin/category/<%= categoryList[i]._id %>"><div class="category-button"><%= categoryList[i].category_name %></div></a>
-                <% } %>
-              </div>
-              
+            <div class="title">Category Management</div>
+            <button class="add-button">Add Category</button>
+          </div>
+          <div class="category-list">
+            <% if(categoryList.length===0){ %>
+              <div>Nothing to show here.</div>
+            <%}%>
+            <% for(let i=0;i<categoryList.length;i++){ %>
+              <a href="/admin/category/<%= categoryList[i]._id %>"><div class="category-button"><%= categoryList[i].category_name %></div></a>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>
