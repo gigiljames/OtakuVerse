@@ -18,5 +18,8 @@
     "pdfkit": "^0.15.2",
     "razorpay": "^2.9.5",
     "sweetalert": "^2.1.2"
+  },
+  "scripts": {
+    "dev": "nodemon app.js"
   }
 }

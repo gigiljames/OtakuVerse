@@ -13,15 +13,15 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Admin = require("../models/adminModel");
-  const admin = await Admin.findOne({});
-  req.session.admin = admin._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
-});
+// const constantLogin = async (req, res, next) => {
+//   const Admin = require("../models/adminModel");
+//   const admin = await Admin.findOne({});
+//   req.session.admin = admin._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
 
 // router.use((req, res, next) => {
 //   if (!req.session.admin && req.path !== "/") {
@@ -56,17 +56,17 @@ router.patch(
   "/edit-category/:catID",
   authMiddleware,
   upload.array("files", 10),
-  categoryManagement.editCategory
+  categoryManagement.editCategory,
 );
 router.delete(
   "/delete-category/:id",
   authMiddleware,
-  categoryManagement.deleteCategory
+  categoryManagement.deleteCategory,
 );
 router.delete(
   "/delete-catbanner/:catId/:imgId",
   authMiddleware,
-  categoryManagement.deleteCatBanner
+  categoryManagement.deleteCatBanner,
 );
 
 //Customer management
@@ -76,12 +76,12 @@ router.post("/add-customer", authMiddleware, customerManagement.addCustomer);
 router.patch(
   "/block-customer/:id",
   authMiddleware,
-  customerManagement.blockCustomer
+  customerManagement.blockCustomer,
 );
 router.patch(
   "/unblock-customer/:id",
   authMiddleware,
-  customerManagement.unblockCustomer
+  customerManagement.unblockCustomer,
 );
 
 //Product management
@@ -89,52 +89,52 @@ router.get("/product-management", authMiddleware, productManagement.getPage);
 router.get(
   "/product-management/product",
   authMiddleware,
-  productManagement.viewProduct
+  productManagement.viewProduct,
 );
 router.post("/add-product", authMiddleware, productManagement.addProduct);
 router.get(
   "/enable-product/:id",
   authMiddleware,
-  productManagement.enableProduct
+  productManagement.enableProduct,
 );
 router.get(
   "/disable-product/:id",
   authMiddleware,
-  productManagement.disableProduct
+  productManagement.disableProduct,
 );
 router.get("/view-product/:id", authMiddleware, productManagement.viewProduct);
 router.delete(
   "/delete-product/:id",
   authMiddleware,
-  productManagement.deleteProduct
+  productManagement.deleteProduct,
 );
 router.patch(
   "/edit-product/:id",
   authMiddleware,
   upload.single("images"),
-  productManagement.editProduct
+  productManagement.editProduct,
 );
 router.post(
   "/add-product-image/:id",
   upload.single("image"),
   authMiddleware,
-  productManagement.addImage
+  productManagement.addImage,
 );
 router.delete(
   "/delete-product-image/:productId/:imgId",
   authMiddleware,
-  productManagement.deleteImage
+  productManagement.deleteImage,
 );
 router.post("/add-variant/:id", authMiddleware, productManagement.addVariant);
 router.delete(
   "/delete-variant/:productId/:variantId",
   authMiddleware,
-  productManagement.deleteVariant
+  productManagement.deleteVariant,
 );
 router.patch(
   "/edit-stock/:variantID",
   authMiddleware,
-  productManagement.editStock
+  productManagement.editStock,
 );
 
 // ORDER MANAGEMENT
@@ -142,7 +142,7 @@ router.get("/order-management", authMiddleware, orderManagement.getPage);
 router.delete(
   "/cancel-order/:orderID",
   authMiddleware,
-  orderManagement.cancelOrder
+  orderManagement.cancelOrder,
 );
 // router.patch(
 //   "/edit-order-status/:orderID",
@@ -152,12 +152,12 @@ router.delete(
 router.patch(
   "/edit-item-status/:orderID/:variantID",
   authMiddleware,
-  orderManagement.editItemStatus
+  orderManagement.editItemStatus,
 );
 router.delete(
   "/cancel-item/:orderID/:variantID",
   authMiddleware,
-  orderManagement.cancelItem
+  orderManagement.cancelItem,
 );
 
 // COUPON MANAGEMENT
@@ -169,12 +169,12 @@ router.get("/enable-coupon/:id", authMiddleware, couponManagement.enableCoupon);
 router.get(
   "/disable-coupon/:id",
   authMiddleware,
-  couponManagement.disableCoupon
+  couponManagement.disableCoupon,
 );
 router.delete(
   "/delete-coupon/:id",
   authMiddleware,
-  couponManagement.deleteCoupon
+  couponManagement.deleteCoupon,
 );
 
 // WALLET MANAGEMENT

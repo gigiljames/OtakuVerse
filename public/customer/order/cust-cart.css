@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Quicksand", sans-serif;
   font-weight: 500;
 }
 
@@ -16,8 +16,8 @@ body {
 }
 
 .item-container .product_image {
-  width: 125px;
-  height: 125px;
+  width: 150px;
+  height: 150px;
   border-radius: 5px;
   object-fit: cover;
 }
@@ -48,11 +48,13 @@ body {
 
 .main {
   display: flex;
+  min-height: 100vh;
 }
 
 .main-right {
   background-color: rgb(249, 249, 249);
   width: 100%;
+  padding: 0 10%;
 }
 
 .main-right-inner {
@@ -212,7 +214,7 @@ body {
 /* Bill Section */
 .bill {
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: rgb(253, 253, 253);
   border: 1px solid #e0e0e0;
   border-radius: 8px;
 }

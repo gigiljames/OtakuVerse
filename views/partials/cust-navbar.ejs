@@ -1,25 +1,25 @@
 <nav>
   <div class="nav-outer">
     <div class="nav-left">
-      <div class="burger-menu">
+      <!-- <div class="burger-menu">
         <span id="burger-menu" class="material-symbols-outlined"> menu </span>
-      </div>
+      </div> -->
       <div class="logo"><a href="/">OtakuVerse</a></div>
     </div>
 
     <%if(!locals.isLoggedOut){%>
     <div class="nav-right">
       <div class="nav-icon">
-        <a href="/shop"><span class="material-symbols-outlined"> store </span>Store</a>
+        <a href="/shop">Store</a>
       </div>
       <div class="nav-icon">
-        <a href="/cart"><span class="material-symbols-outlined"> shopping_cart </span>Cart</a>
+        <a href="/cart">Cart</a>
       </div>
       <div class="nav-icon">
-        <a href="/wishlist"><span class="material-symbols-outlined"> favorite </span>Wishlist</a>
+        <a href="/wishlist">Wishlist</a>
       </div>
       <div class="nav-icon">
-        <a href="/orders"><span class="material-symbols-outlined"> orders </span>Orders</a>
+        <a href="/orders">Orders</a>
       </div>
       <div id="user-dp" class="user-dp">
         <img src="/img/user-dp.png" alt="user-dp" />
@@ -27,14 +27,16 @@
     </div>
     <%} else{%>
     <div class="nav-right">
+      <div class="nav-icon">
+        <a href="/shop"> Visit Store</a>
+      </div>
       <div class="navbar-button-group">
         <a href="/login"
-          ><button class="navbar-button login-button">Login</button></a
+          ><button class="navbar-button login-button">Log In</button></a
         >
         <a href="/signup"
-          ><button class="navbar-button signup-button">Signup</button></a
+          ><button class="navbar-button signup-button">Sign Up</button></a
         >
-        
       </div>
     </div>
     <%}%>
@@ -71,6 +73,7 @@
     
     <div class="user-menu-item"><a href="/profile#referral" class="pulseBtn" id="referral-redirect">Refer a friend to get free ₹100 in your OtakuVerse Wallet</a></div>
     <div class="user-menu-item"><a href="/profile">Profile</a></div>
+    <div class="user-menu-item"><a href="/wallet">Wallet</a></div>
     <div class="user-menu-item"><a href="/logout">Logout</a></div>
   </div>
 </nav>

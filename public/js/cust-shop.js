@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   const burgerIcon1 = document.getElementById("burger-menu");
-  burgerIcon1.click();
+  if (burgerIcon1) {
+    burgerIcon1.click();
+  }
   queryProducts(); // Queries products and updates product list
   const searchButton = document.querySelector(".search-button");
   searchButton.addEventListener("click", () => {
@@ -34,7 +36,7 @@ function queryProducts() {
   const searchQuery = document.querySelector("#search").value.trim() || "";
   const sortOption = document.querySelector("#sort").value.trim() || "";
   const checkedCategories = document.querySelectorAll(
-    "input[name='category']:checked"
+    "input[name='category']:checked",
   );
   let categoryOptions = [];
   checkedCategories.forEach((checked) => {
@@ -64,9 +66,9 @@ function updateProductList(products) {
   const productCards = document.querySelector(".product-cards");
   productCards.innerHTML = "";
   products.forEach((product) => {
-    let productCard = document.createElement("a");
+    let productCard = document.createElement("div");
     const ovPrice = Math.ceil(
-      Number(product.price) * (1 - Number(product.discount) / 100)
+      Number(product.price) * (1 - Number(product.discount) / 100),
     );
     let totalStock = 0;
     let stockMessage = "";
@@ -83,29 +85,32 @@ function updateProductList(products) {
       stockMessage = "Currently unavailable";
     }
 
-    productCard.setAttribute("href", `/product/${product._id}`);
+    // productCard.setAttribute("href", `/product/${product._id}`);
     productCard.innerHTML = `<div class="product-card">
-                      <div class="product-image">
-                        <img
-                          src="${product.product_images[0]?.filepath}"
-                          alt="product-image"
-                        />
-                      </div>
-                      <div class="product-title">${product.product_name}</div>
-                      <div class="product-rating">
-                        <div class="star-rating">⭐⭐⭐⭐⭐</div>
-                        <div class="review-count">(3 reviews)</div>
-                      </div>
-                      <div class="product-pricing">
-                        <div class="ov-price">
-                          ₹${product.offer_price}
+                      <div class="product-info">
+                        <div class="product-image">
+                          <img
+                            src="${product.product_images[0]?.filepath}"
+                            alt="product-image"
+                          />
                         </div>
-                        <div class="original-price">₹${product.price}</div>
-                          
-                      </div>
-                      <div class="total-stock">
-                            ${stockMessage}
+                        <div class="product-title">${product.product_name}</div>
+                        <div class="product-pricing">
+                          <div class="ov-price">
+                            ₹${product.offer_price}
                           </div>
+                          <div class="original-price">₹${product.price}</div>
+                            
+                        </div>
+                        <div class="total-stock">
+                          ${stockMessage}
+                        </div>
+                      </div>
+                      <div>
+                        <a href="/product/${product._id}">
+                          <button class="view-details-button">View details</button>
+                        </a>
+                      </div>
                     </div>`;
     productCards.append(productCard);
   });

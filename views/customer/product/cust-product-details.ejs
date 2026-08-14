@@ -38,12 +38,12 @@
         <div class="line1">
           <div class="product-title"><%=product.product_name%></div>
           <div class="category"><%=product.category.category_name%></div>
-          <div class="product-rating">
+          <!-- <div class="product-rating">
             <div class="star-rating">Rating - <%=ratingAvg%></div>
             <div class="review-count">
               (<%=product.reviews.length%> reviews)
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="line2">
           <div class="product-pricing">
@@ -125,7 +125,7 @@
         <div class="product-details-content"><%=product.product_specs%></div>
       </div>
     </section>
-    <section class="reviews-section">
+    <!-- <section class="reviews-section">
       <div class="title-row">
         <div class="category-title">
           Customer reviews (<%=reviews.length%> reviews)
@@ -140,10 +140,10 @@
         </div>
         <%})%>
       </div>
-    </section>
+    </section> -->
 
     <section class="recommended-section">
-      <%if(locals.recommendedData){%>
+      <%if(locals.recommendedData && locals.recommendedData.length>0){%>
       <div class="category-wise">
         <div class="title-row">
           <div class="category-title">Recommended products</div>
@@ -160,10 +160,10 @@
                 />
               </div>
               <div class="product-title"><%=product.product_name%></div>
-              <div class="product-rating">
+              <!-- <div class="product-rating">
                 <div class="star-rating">⭐⭐⭐⭐⭐</div>
                 <div class="review-count">(3 reviews)</div>
-              </div>
+              </div> -->
               <div class="product-pricing">
                 <div class="ov-price">
                   ₹<%=product.offer_price%>

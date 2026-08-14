@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 async function getCategoryList() {
   const categoryList = await Category.find(
     { is_deleted: false, is_enabled: true },
-    { category_name: 1 }
+    { category_name: 1, category_desc: 1 },
   );
   return categoryList;
 }
@@ -32,7 +32,7 @@ const getPage = async (req, res) => {
         displayData.push(temp);
       }
     }
-    // console.log(displayData);
+    displayData.sort((a, b) => b.productList.length - a.productList.length);
     if (req.session.user) {
       const customer = await Customer.findById(req.session.user);
       return res.render("customer/home/cust-home", {
@@ -73,14 +73,14 @@ const getProfile = async (req, res) => {
     let isGoogle = false;
     if (req.session.user) {
       const customer = await Customer.findById(req.session.user).populate(
-        "customer_addresses"
+        "customer_addresses",
       );
       if (!customer.customer_password) {
         isGoogle = true;
       }
       const categoryList = await Category.find(
         { is_deleted: false, is_enabled: true },
-        { category_name: 1 }
+        { category_name: 1 },
       );
       return res.render("customer/home/cust-profile", {
         customerData: customer,
@@ -124,7 +124,7 @@ const addAddress = async (req, res) => {
       await address.save();
       await Customer.updateOne(
         { _id: id },
-        { $push: { customer_addresses: address._id } }
+        { $push: { customer_addresses: address._id } },
       );
       console.log("New address added successfully");
       // return res.redirect("/profile");
@@ -147,7 +147,7 @@ const deleteAddress = async (req, res) => {
     await Address.deleteOne({ _id: id });
     await Customer.updateOne(
       { _id: custID },
-      { $pull: { customer_addresses: id } }
+      { $pull: { customer_addresses: id } },
     );
     res.json({ success: true, message: "Address deletion successful." });
   } catch (error) {
@@ -177,7 +177,7 @@ const editAddress = async (req, res) => {
           state: state,
           pincode: pin,
         },
-      }
+      },
     );
     return res.json({ success: true, message: "Address edited successfully." });
   } catch (error) {
@@ -190,7 +190,7 @@ const changePasswordPage = async (req, res) => {
   try {
     const categoryList = await Category.find(
       { is_deleted: false, is_enabled: true },
-      { category_name: 1 }
+      { category_name: 1 },
     );
     res.render("customer/home/cust-change-password", { categoryList });
   } catch (error) {
@@ -215,14 +215,14 @@ const changePassword = async (req, res) => {
     const { currpassword, newpassword } = req.body;
     const customer = await Customer.findOne(
       { _id: id },
-      { customer_password: 1 }
+      { customer_password: 1 },
     );
 
     if (await bcrypt.compare(currpassword, customer.customer_password)) {
       const hashPassword = await securePassword(newpassword);
       await Customer.updateOne(
         { _id: id },
-        { $set: { customer_password: hashPassword } }
+        { $set: { customer_password: hashPassword } },
       );
       res.json({
         success: true,

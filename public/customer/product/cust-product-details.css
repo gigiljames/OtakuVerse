@@ -1,11 +1,19 @@
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
 .add-to-cart-button {
   background-color: #ffc53e;
-  border: 2px solid black;
+  /* border: 2px solid black; */
+}
+
+.add-to-cart-button:hover {
+  background-color: #ecb73a;
+}
+
+.add-to-cart-button:active {
+  background-color: #ffc53e;
 }
 
 .add-to-cart-button,
@@ -17,11 +25,21 @@ body {
   justify-content: center;
   gap: 10px;
   font-size: 18px;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
+  padding: 25px;
+  border: 1px solid black;
 }
 
 .add-to-wishlist-button {
+  background-color: white;
+}
+
+.add-to-wishlist-button:hover {
+  background-color: whitesmoke;
+}
+
+.add-to-wishlist-button:active {
   background-color: white;
 }
 
@@ -39,7 +57,7 @@ body {
 }
 
 .breadcrumbs {
-  padding: 0 15%;
+  padding: 10px 15%;
   color: grey;
 }
 
@@ -57,11 +75,13 @@ body {
 }
 
 .category {
-  color: #a7a7a7;
+  color: gray;
+  text-transform: capitalize;
 }
 
 .details-section {
   padding: 0 13%;
+  padding-bottom: 30px;
   display: flex;
   gap: 20px;
   margin: 30px 0;
@@ -85,14 +105,15 @@ body {
 }
 
 .disabled-variant .variant-card-box {
-  background-color: grey;
+  background-color: lightgray;
   cursor: default;
 }
 
 .image-collection {
-  width: 65%;
+  width: 60%;
   display: flex;
   gap: 20px;
+  position: relative;
 }
 
 .image-list {
@@ -117,6 +138,7 @@ body {
 
 .line2 {
   gap: 20px;
+  padding-bottom: 10px;
 }
 
 .line3 {
@@ -141,7 +163,7 @@ body {
 .product-desc,
 .product-details {
   width: 50%;
-  border: 1px solid black;
+  border: 1px solid gray;
   border-radius: 5px;
   padding: 20px 30px;
   display: flex;
@@ -152,11 +174,15 @@ body {
 .product-desc-title,
 .product-details-title {
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .selected-variant .variant-card-box {
-  border: 3px solid #5a9af4;
+  /* outline: 4px solid #7bc9e8; */
+  border: 1px solid #7bc9e8;
+  background-color: #7bc9e8;
+  color: white;
+  font-weight: 600;
 }
 
 .section-1 .product-title {
@@ -180,6 +206,9 @@ body {
 .quantity-input-container input {
   width: 50px;
   height: 25px;
+  border: 1px solid lightgray;
+  padding: 5px 10px;
+  border-radius: 3px;
 }
 
 .reviews-section {
@@ -231,15 +260,15 @@ body {
 }
 
 .variant-card-box {
-  border: 1px solid black;
+  border: 1px solid lightslategray;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .title-row {
   display: flex;
   justify-content: space-between;
-  padding: 30px 0;
+  padding-bottom: 30px;
 }
 
 /* Recommended section */
@@ -277,39 +306,43 @@ body {
 }
 
 .recommended-section .product-card {
-  width: 258px;
-  border: 1px solid black;
+  font-family: "Quicksand", sans-serif;
+  max-width: 300px;
+  border: 1px solid lightgray;
   border-radius: 5px;
-  padding: 10px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  justify-content: space-between;
+  gap: 10px;
   box-sizing: border-box;
+  height: 100%;
 }
 
 .recommended-section .product-card:hover {
-  transform: scale(1.015);
-  box-shadow: 0 0 4px 0px rgb(129, 129, 129);
+  transform: scale(1.01);
+  /* box-shadow: 0 0 4px 0px rgb(129, 129, 129); */
+  transition: all 200ms;
 }
 
 .recommended-section .product-image {
-  background-color: rgb(162, 162, 162);
-  height: 270px;
-  width: 238px;
-  border-radius: 5px;
+  background-color: rgb(233, 231, 231);
+  height: 280px;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
 .recommended-section .product-image img {
-  height: 270px;
-  width: 238px;
-  border-radius: 5px;
+  height: 280px;
 }
 
 .recommended-section .product-pricing {
   display: flex;
   justify-content: flex-start;
   gap: 10px;
-  line-height: 24px;
 }
 
 .recommended-section .product-rating {
@@ -321,7 +354,14 @@ body {
 
 .recommended-section .product-title {
   text-overflow: ellipsis;
-  font-size: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  /* white-space: nowrap; */
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .recommended-section .products-section {
@@ -346,6 +386,7 @@ body {
 .product-image-container img {
   width: 100%;
   height: 100%;
+  border-radius: 5px;
 }
 
 .zoom-result {
@@ -353,8 +394,9 @@ body {
   border: 1px solid #d4d4d4;
   width: 400px;
   height: 400px;
-  top: 110px;
-  right: 240px;
+  right: -260px;
+  /* top: 110px;
+  right: 240px; */
   overflow: hidden;
   display: none;
   z-index: 2;

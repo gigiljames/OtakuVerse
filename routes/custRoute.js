@@ -13,17 +13,17 @@ const router = express.Router();
 router.use(express.static("public"));
 
 // CONSTANT LOGIN (For Development)
-const constantLogin = async (req, res, next) => {
-  const Customer = require("../models/customerModel");
-  const customer = await Customer.findOne({
-    customer_email: "hrx@fakemail.com",
-  });
-  req.session.user = customer._id;
-  next();
-};
-router.use((req, res, next) => {
-  constantLogin(req, res, next);
-});
+// const constantLogin = async (req, res, next) => {
+//   const Customer = require("../models/customerModel");
+//   const customer = await Customer.findOne({
+//     customer_email: "hrx@fakemail.com",
+//   });
+//   req.session.user = customer._id;
+//   next();
+// };
+// router.use((req, res, next) => {
+//   constantLogin(req, res, next);
+// });
 
 // AUTHENTICATION MIDDLEWARE
 const authMiddleware = async (req, res, next) => {
@@ -32,7 +32,7 @@ const authMiddleware = async (req, res, next) => {
   } else {
     const customer = await Customer.findOne(
       { _id: req.session.user },
-      { account_status: 1 }
+      { account_status: 1 },
     );
     if (customer && customer.account_status === "banned") {
       if (req.xhr) {
@@ -80,12 +80,12 @@ router.post("/resend-otp", signup.resendOtp);
 //Google auth
 router.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/signup" }),
-  signup.verifyGoogleUser
+  signup.verifyGoogleUser,
 );
 
 //PRODUCTS
@@ -111,14 +111,14 @@ router.post("/retry-payment/:orderID", authMiddleware, order.retryPayment);
 router.patch(
   "/edit-payment-status/:orderID",
   authMiddleware,
-  order.editPaymentStatus
+  order.editPaymentStatus,
 );
 router.post("/place-order", authMiddleware, order.placeOrder);
 router.get("/orders", authMiddleware, order.ordersPage);
 router.delete(
   "/cancel-item/:orderID/:variantID",
   authMiddleware,
-  order.cancelItem
+  order.cancelItem,
 );
 router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
 router.get("/get-invoice/:orderID", authMiddleware, order.getInvoice);

@@ -28,7 +28,7 @@
   align-items: center;
   position: fixed;
   top: 0;
-  z-index: 6;
+  z-index: 51;
 }
 
 .add-form-outer .add-form-left {
@@ -95,7 +95,7 @@
   border-radius: 5px;
   box-sizing: border-box;
   resize: none;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
   padding: 10px;
 }
 

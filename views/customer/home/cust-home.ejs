@@ -6,11 +6,10 @@
     <%- include('../../partials/cust-navbar.ejs') %>
     <%-include("../../partials/alert.ejs")%>
     <div class="main">
-      <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
       <div class="main-right">
         <div class="main-right-inner">
           <section class="banner-section">
-            <div class="banner-outer">
+            <!-- <div class="banner-outer">
               <div class="banner-images-outer">
                 <div class="banner-images-inner">
                   <img src="" alt="banner-images" />
@@ -25,14 +24,52 @@
                   ever since the 1500s.” -Lorem Ipsum
                 </div>
               </div>
+            </div> -->
+            <!-- Slider main container -->
+            <div class="swiper">
+              <!-- Additional required wrapper -->
+              <div class="swiper-wrapper">
+                <!-- Slides -->
+                <div class="swiper-slide">
+                  <img class="swiper-image" src="img/home-banner-clothes.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                  <img class="swiper-image" src="img/home-banner-decor.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                  <img class="swiper-image" src="img/home-banner-manga.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                  <img class="swiper-image" src="img/home-banner-clothes-2.jpg" alt="">
+                </div>
+                <div class="swiper-slide">
+                  <img class="swiper-image" src="img/home-banner-shoes.jpg" alt="">
+                </div>
+              </div>
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+              <div class="swiper-scrollbar"></div>
+              
             </div>
+            <div class="banner-content">
+              <h1 class="banner-heading">Your Anime. Your Style. Your Universe.</h1>
+              <h3 class="banner-subheading">Step into OtakuVerse - your ultimate destination for anime-inspired apparel, home décor, footwear, and more.</h3>
+              <div class="banner-button-group">
+                <a href="/shop">
+                  <button class="visit-button">Visit Shop</button>
+                </a>
+                <button class="explore-button">Explore Categories</button>
+              </div>
+            </div>
+            <div class="vignette"></div>
           </section>
           <section class="products-section">
             <%if(locals.displayData){%> <%displayData.forEach((data,index)=>{%>
             <div class="category-wise">
               <div class="title-row">
                 <div class="category-title"><%=data.categoryInfo.category_name%></div>
-                <div class="see-more"><a href="">see more >></a></div>
+                <!-- <div class="category-desc"><%=data.categoryInfo.category_desc%></div> -->
+                <!-- <div class="see-more"><a href="">see more >></a></div> -->
               </div>
               <div class="product-cards">
                 <%data.productList.forEach((product, index)=>{%>
@@ -42,19 +79,20 @@
                     <%totalStock += variant.stock_quantity;%>
                   <%});%>
                 <%}%>
-                <a href="/product/<%=product._id%>">
+                
                   <div class="product-card">
-                    <div class="product-image">
+                    <div class="product-info">
+                      <div class="product-image">
                       <img
                         src="<%=product.product_images[0]?.filepath%>"
                         alt="product-image"
                       />
                     </div>
                     <div class="product-title"><%=product.product_name%></div>
-                    <div class="product-rating">
+                    <!-- <div class="product-rating">
                       <div class="star-rating">⭐⭐⭐⭐⭐</div>
                       <div class="review-count">(3 reviews)</div>
-                    </div>
+                    </div> -->
                     <div class="product-pricing">
                       <div class="ov-price">
                         ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
@@ -65,24 +103,29 @@
                           <%=totalStock%> Left!!
                         </div>
                       <%}else if(totalStock===0){%>
-                        <div class="total-stock">
+                        <div>
                           Out of stock!
                         </div>
                       <%}%>
                     </div>
+                    </div>
+                    <div>
+                      <a href="/product/<%=product._id%>">
+                        <button class="view-details-button">View details</button>
+                      </a>
+                    </div>
                   </div>
-                </a>
                 <%})%>
               </div>
             </div>
-            <hr />
+            <!-- <hr /> -->
             <%})%> <%}%>
           </section>
         </div>
       </div>
+      <%- include('../../partials/cust-footer.ejs') %>
     </div>
     
-    <%- include('../../partials/cust-footer.ejs') %>
     <script src="/js/cust-navbar.js"></script>
     <script src="/js/cust-home.js"></script>
   </body>

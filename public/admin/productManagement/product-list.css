@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
 .add-button {
@@ -121,7 +121,7 @@ body {
   box-sizing: border-box;
   resize: none;
   padding: 10px;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
   margin: 0;
 }
 

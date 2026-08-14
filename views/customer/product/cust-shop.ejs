@@ -7,7 +7,6 @@
   <%-include("../../partials/alert.ejs")%>
   <%-include("../../partials/cust-navbar.ejs")%>
   <div class="main">
-    <div class="main-left"><%-include("../../partials/cust-sidebar.ejs")%></div>
     <div class="main-right">
       <div class="main-right-inner">
         <div class="right-top">
@@ -32,7 +31,7 @@
                 <option value="popularity">Popularity </option>
                 <option value="ascprice">Price: low to high</option>
                 <option value="descprice">Price : high to low </option>
-                <option value="avgrating">Average ratings </option>
+                <!-- <option value="avgrating">Average ratings </option> -->
                 <option value="featured">Featured </option>
                 <option value="new">New arrivals </option>
                 <option value="ascname">aA - zZ </option>
@@ -40,7 +39,7 @@
               </select>
               <button class="sort-button">Sort</button>
             </div>
-            <hr>
+            <!-- <hr> -->
             <div class="filter-section">
               <div class="filter-title">Filter</div>
               <div class="filter-category">
@@ -68,7 +67,6 @@
                       <%totalStock += variant.stock_quantity;%>
                     <%});%>
                   <%}%>
-                  <a href="/product/<%=product._id%>">
                     <div class="product-card">
                       <div class="product-image">
                         <img
@@ -77,29 +75,19 @@
                         />
                       </div>
                       <div class="product-title"><%=product.product_name%></div>
-                      <div class="product-rating">
-                        <div class="star-rating">⭐⭐⭐⭐⭐</div>
-                        <div class="review-count">(3 reviews)</div>
-                      </div>
                       <div class="product-pricing">
                         <div class="ov-price">
                           ₹<%=Math.ceil(Number(product.price)*(1-(Number(product.discount))/100))%>
-                          
                         </div>
                         <div class="original-price">₹<%=product.price%></div>
-                        <!-- <%if(totalStock>0 && totalStock<10){%>
-                          <div class="total-stock">
-                            <%=totalStock%> Left!!
-                          </div>
-                        <%}else if(totalStock===0){%>
-                          <div class="total-stock">
-                            Out of stock!
-                          </div>
-                        <%}%> -->
                       </div>
                       <div class="total-stock"></div>
+                      <div>
+                        <a href="/product/<%=product._id%>">
+                          <button class="view-details-button">View details</button>
+                        </a>
+                      </div>
                     </div>
-                  </a>
                 </div>
               <%})%> <%}%>
           </div>

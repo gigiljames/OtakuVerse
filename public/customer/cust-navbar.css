@@ -1,30 +1,44 @@
 nav .burger-menu {
-  transform: scale(2);
+  transform: scale(1.5);
   cursor: pointer;
   display: flex;
   align-items: center;
 }
-/* 
+
+nav {
+  position: fixed;
+  top: 0;
+  z-index: 50 !important;
+  font-family: "Quicksand", sans-serif;
+}
+
 nav .nav-icon {
-  height: 100%;
-} */
+  font-size: 16px;
+}
 
 nav .nav-icon a {
-  transform: scale(1.25);
   display: flex;
   align-items: center;
   text-decoration: none;
-  font-size: 12px;
+  gap: 5px;
+  /* text-transform: uppercase; */
+  color: black;
+  font-weight: 600;
 }
+
+/* nav .nav-icon:hover {
+  text-decoration: underline;
+} */
 
 nav .nav-outer {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  height: 60px;
+  align-items: center;
+  height: 70px;
   background-color: rgb(123, 201, 232);
   position: relative;
-  padding: 0 20px;
+  padding: 0 5%;
   box-sizing: border-box;
 }
 
@@ -32,12 +46,12 @@ nav .nav-right,
 nav .nav-left {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
 }
 
 nav .logo {
   font-family: "Micro 5", sans-serif;
-  font-size: 40px;
+  font-size: 48px;
   background-image: linear-gradient(black, black);
   color: white;
   -webkit-text-stroke-width: 5px;
@@ -95,30 +109,38 @@ nav .menu-link-item a {
 }
 
 nav .navbar-button-group {
-  position: absolute;
+  /* position: absolute;
   top: 15px;
-  right: 30px;
+  right: 30px; */
   display: flex;
   gap: 15px;
 }
 
 nav .navbar-button-group .navbar-button {
-  height: 30px;
-  width: 70px;
+  /* height: 30px; */
   border-radius: 3px;
   cursor: pointer;
+  padding: 8px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: "Quicksand", sans-serif;
 }
 
 nav .login-button {
-  border: 1px solid white;
+  border: 0;
   background-color: rgb(123, 201, 232);
-  color: white;
+  /* color: rgba(255, 255, 255, 0.9); */
+  color: black;
 }
 
 nav .signup-button {
-  border: 0;
   color: #000000;
-  border: 1px solid rgb(0, 0, 0);
+  border: 2px solid rgb(0, 0, 0);
+  background-color: whitesmoke;
+}
+
+nav .signup-button:hover {
+  background-color: rgb(228, 226, 226);
 }
 
 nav hr {
@@ -129,10 +151,10 @@ nav hr {
 
 nav .user-menu {
   position: fixed;
-  right: 30px;
+  right: 60px;
   min-width: 150px;
   border-radius: 5px;
-  top: 53px;
+  top: 63px;
   display: none;
   flex-direction: column;
   justify-content: center;

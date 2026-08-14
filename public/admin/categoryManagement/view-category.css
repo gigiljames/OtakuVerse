@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
   /* height: 100vh; */
 }
 
@@ -131,7 +131,7 @@ body {
   border-radius: 5px;
   height: 125px;
   padding: 10px;
-  font-family: "Inter", sans-serif;
+  font-family: "Quicksand", sans-serif;
 }
 
 .label-row {
