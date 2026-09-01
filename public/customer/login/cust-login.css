@@ -89,18 +89,21 @@ body {
   -webkit-text-stroke-width: 20px;
   -webkit-text-stroke-color: transparent;
   background-clip: text;
-  padding-left: 20px;
+  padding-left: 70px;
+  padding-top: 25px;
 }
 
 .left-line2 {
-  font-size: 24px;
-  padding-left: 10px;
+  font-size: 30px;
+  padding-left: 55px;
   padding-right: 140px;
   font-family: "Pixelify sans", sans-serif;
+  color: white;
 }
 
 .left-outer {
   padding: 0% 5%;
+  padding-top: 40px;
   box-sizing: border-box;
 }
 
@@ -108,7 +111,10 @@ body {
   display: flex;
   align-items: center;
   width: 70%;
-  background-color: #7ea2cf;
+  /* background-color: #7ea2cf; */
+  background-image: url("../../img/login-banner.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .login-button {
