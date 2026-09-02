@@ -84,7 +84,8 @@ const viewProduct = async (req, res) => {
 const getShopPage = async (req, res) => {
   try {
     const categoryList = await getCategoryList();
-    return res.render("customer/product/cust-shop", { categoryList });
+    const isLoggedOut = !req.session.user;
+    return res.render("customer/product/cust-shop", { categoryList, isLoggedOut });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Shop Page");

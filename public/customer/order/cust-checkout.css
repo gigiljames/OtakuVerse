@@ -221,11 +221,13 @@ html {
 
 .main {
   display: flex;
+  min-height: 100vh;
 }
 
 .main-right {
   background-color: rgb(238, 238, 238);
   width: 100%;
+  padding: 0 10%;
 }
 
 .main-right .input-container input {

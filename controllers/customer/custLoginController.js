@@ -11,9 +11,10 @@ const getPage = async (req, res) => {
       if (status === "banned") {
         return res.render("customer/login/cust-login", {
           message: "User banned by admin.",
+          isLoggedOut: true,
         });
       }
-      return res.render("customer/login/cust-login");
+      return res.render("customer/login/cust-login", { isLoggedOut: true });
     }
   } catch (error) {
     console.log(error);

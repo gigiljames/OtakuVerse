@@ -10,7 +10,7 @@ const getPage = async (req, res) => {
   try {
     const { code } = req.query || "";
     req.session.code = code;
-    return res.render("customer/signup/cust-signup");
+    return res.render("customer/signup/cust-signup", { isLoggedOut: true });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Sign up");

@@ -28,6 +28,9 @@ app.use(passport.initialize());
 // app.use(morgan("short"));
 app.use(passport.session());
 app.use((req, res, next) => {
+  const rawDomain = process.env.DOMAIN || "https://otakuverse.shop";
+  const formattedDomain = rawDomain.startsWith("http") ? rawDomain : `https://${rawDomain}`;
+  res.locals.domain = formattedDomain.replace(/\/+$/, "");
   res.set("Cache-control", "no-store");
   next();
 });

@@ -49,6 +49,7 @@ nav .nav-outer {
 
 nav .nav-right {
   display: flex;
+  gap: 30px;
   align-items: center;
 }
 
@@ -240,9 +241,11 @@ nav .pulseBtn {
   0% {
     box-shadow: 0 0 0 0 rgba(252, 160, 54, 0.726);
   }
+
   70% {
     box-shadow: 0 0 0 5px rgba(206, 116, 6, 0.16);
   }
+
   100% {
     box-shadow: 0 0 0 15px rgba(88, 120, 243, 0);
   }

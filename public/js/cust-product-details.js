@@ -1,21 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
   const burgerIcon1 = document.getElementById("burger-menu");
-  burgerIcon1.click();
+  if (burgerIcon1) {
+    burgerIcon1.click();
+  }
 
   // IMAGE SELECTION HANDLER
 
   const imageTileList = document.getElementsByClassName("image-tile");
   const displayImage = document.getElementById("display-image");
-  let src = "";
-  if (imageTileList.length > 0) {
-    src = imageTileList[0].getAttribute("src");
+  if (displayImage && imageTileList.length > 0) {
+    const initialSrc = imageTileList[0].getAttribute("src");
+    if (initialSrc && !displayImage.getAttribute("src")) {
+      displayImage.setAttribute("src", initialSrc);
+    }
   }
-  displayImage.setAttribute("src", src);
+
   for (let i = 0; i < imageTileList.length; i++) {
     imageTileList[i].addEventListener("click", (event) => {
       const src = imageTileList[i].getAttribute("src");
-      displayImage.setAttribute("src", src);
-      // displayImage.setAttribute("data-magnify-src", src);
+      if (displayImage && src) {
+        displayImage.setAttribute("src", src);
+      }
     });
   }
 
@@ -41,7 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cartButton.addEventListener("click", () => {
       let flag = 0;
       const selectedVariant = document.querySelector(".selected-variant");
-      const qty = Number(document.getElementById("quantity").value.trim());
+      const qtyInput = document.getElementById("quantity");
+      const qty = qtyInput ? Number(qtyInput.value.trim()) : 1;
       if (isNaN(qty)) {
         flag = 1;
         alert("Enter a valid quantity.", "error");
@@ -53,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $.ajax({
           type: "POST",
           url: `/cart/${cartButton.dataset.productid}`,
-          data: { qty, variantID: selectedVariant.dataset.id },
+          data: { qty, variantID: selectedVariant ? selectedVariant.dataset.id : "" },
           success: function (response) {
             if (response.success) {
               if (response.message) {
@@ -82,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       $.ajax({
         type: "POST",
         url: `/wishlist/${wishlistButton.dataset.productid}`,
-        data: { variantID: selectedVariant.dataset.id },
+        data: { variantID: selectedVariant ? selectedVariant.dataset.id : "" },
         success: function (response) {
           if (response.success) {
             if (response.message) {
@@ -102,28 +108,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  //IMAGE ZOOM
+  // IMAGE ZOOM
 
   const image = document.getElementById("display-image");
   const zoomResult = document.getElementById("zoom-result");
 
-  image.addEventListener("mousemove", (event) => {
-    const rect = image.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+  if (image && zoomResult) {
+    image.addEventListener("mousemove", (event) => {
+      const rect = image.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
 
-    const xPercent = (x / rect.width) * 100;
-    const yPercent = (y / rect.height) * 100;
+      const xPercent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+      const yPercent = Math.max(0, Math.min(100, (y / rect.height) * 100));
 
-    zoomResult.style.backgroundImage = `url(${image.src})`;
-    zoomResult.style.backgroundSize = `${image.width * 2}px ${
-      image.height * 2
-    }px`;
-    zoomResult.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
-    zoomResult.style.display = "block";
-  });
+      zoomResult.style.backgroundImage = `url("${image.src}")`;
+      zoomResult.style.backgroundSize = `${rect.width * 2.5}px ${rect.height * 2.5}px`;
+      zoomResult.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
+      zoomResult.style.display = "block";
+    });
 
-  image.addEventListener("mouseleave", () => {
-    zoomResult.style.display = "none";
-  });
+    image.addEventListener("mouseleave", () => {
+      zoomResult.style.display = "none";
+    });
+  }
 });
