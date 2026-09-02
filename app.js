@@ -37,7 +37,7 @@ app.use(methodOverride("_method"));
 
 //put in separate file, urls also
 mongoose
-  .connect("mongodb://127.0.0.1:27017/OtakuVerse")
+  .connect(process.env.MONGODB_URL)
   .then((message) => {
     // console.log(message);
     app.listen(process.env.PORT, () => {
