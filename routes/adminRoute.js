@@ -65,11 +65,11 @@ router.delete(
   authMiddleware,
   categoryManagement.deleteCategory,
 );
-router.delete(
-  "/delete-catbanner/:catId/:imgId",
-  authMiddleware,
-  categoryManagement.deleteCatBanner,
-);
+// router.delete(
+//   "/delete-catbanner/:catId/:imgId",
+//   authMiddleware,
+//   categoryManagement.deleteCatBanner,
+// );
 
 // CUSTOMER MANAGEMENT
 router.get("/customer-management", authMiddleware, customerManagement.getPage);
@@ -178,17 +178,17 @@ router.get("/return-requests", authMiddleware, returnRequest.getPage);
 router.get(
   "/get-request-info/:requestID",
   authMiddleware,
-  returnRequest.getRequestData
+  returnRequest.getRequestData,
 );
 router.patch(
   "/edit-return-status/:requestID",
   authMiddleware,
-  returnRequest.editRequestStatus
+  returnRequest.editRequestStatus,
 );
 router.post(
   "/return-refund/:requestID",
   authMiddleware,
-  returnRequest.returnRefund
+  returnRequest.returnRefund,
 );
 
 module.exports = router;
