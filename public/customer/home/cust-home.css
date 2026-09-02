@@ -21,7 +21,7 @@ body {
 .main-right-inner {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  /* gap: 30px; */
   /* padding: 40px 100px 40px 60px; */
   box-sizing: border-box;
 }
@@ -107,6 +107,13 @@ body {
   color: whitesmoke;
 }
 
+.banner-images-inner img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
 .category-title {
   font-size: 26px;
   font-weight: 800;
@@ -123,6 +130,10 @@ body {
   margin-bottom: 40px;
   display: flex;
   flex-direction: column;
+}
+
+hr {
+  border: 0.5px solid rgb(225, 225, 225);
 }
 
 .title-row {

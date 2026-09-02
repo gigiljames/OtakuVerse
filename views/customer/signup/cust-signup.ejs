@@ -4,6 +4,11 @@
   </head>
   <body>
     <%-include("../../partials/alert.ejs")%>
+    <%if(locals.message){%> 
+      <script>
+        alert("<%=message%>","error");
+      </script>
+    <%}%>
     <div class="main">
       <div class="left-section">
         <div class="left-outer">
@@ -75,7 +80,6 @@
                 />
               </div>
               <div id="repassword-error" class="error-container">
-                <%if(locals.message){%> <%=message%> <%}%>
               </div>
               <%if(locals.code){%>
               <input type="text" name="code" style="display: none;" value="<%=code%>">

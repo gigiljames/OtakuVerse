@@ -2,11 +2,40 @@ const Customer = require("../../models/customerModel");
 
 const getPage = async (req, res) => {
   try {
-    const { offset } = req.query;
+    // Search & sort
+    const search = req.query.search || "";
+    const sort = req.query.sort || "";
+    // Pagination
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
     const limit = 10;
-    const customerCount = await Customer.find().countDocuments();
-    res.render("admin/customerManagement/customer-list", {
-      customerCount: Math.ceil(customerCount / limit),
+    const customerCount = await Customer.find({
+      account_status: { $ne: "deleted" },
+      $or: [
+        { customer_name: { $regex: search, $options: "i" } },
+        { customer_email: { $regex: search, $options: "i" } },
+      ],
+    }).countDocuments();
+    const numberOfPages = Math.ceil(customerCount / limit);
+    // Query
+    const customerList = await Customer.find(
+      {
+        account_status: { $ne: "deleted" },
+        $or: [
+          { customer_name: { $regex: search, $options: "i" } },
+          { customer_email: { $regex: search, $options: "i" } },
+        ],
+      },
+      { customer_name: 1, customer_email: 1, account_status: 1 }
+    )
+      .skip(limit * (offset - 1))
+      .limit(limit);
+    return res.render("admin/customerManagement/customer-list", {
+      customerList,
+      numberOfPages,
+      currentURL: `/admin/customer-management/?search=${search}&sort=${sort}&`,
       offset,
     });
   } catch (error) {
@@ -32,7 +61,7 @@ const getCustomers = async (req, res) => {
     )
       .skip(limit * (offset - 1))
       .limit(limit);
-    res.json({
+    return res.json({
       success: true,
       customerList,
       offset,
@@ -44,7 +73,7 @@ const getCustomers = async (req, res) => {
 };
 
 const viewCustomer = async (req, res) => {
-  res.render("admin/customerManagement/view-customer");
+  return res.render("admin/customerManagement/view-customer");
 };
 
 function generateReferralCode(length = 16) {

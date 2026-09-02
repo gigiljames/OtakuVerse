@@ -58,7 +58,7 @@ function queryProducts() {
         }
       }
     },
-    error: function (error) {},
+    error: function (error) { },
   });
 }
 
@@ -72,17 +72,33 @@ function updateProductList(products) {
     );
     let totalStock = 0;
     let stockMessage = "";
+    let stockTextClass = "";
     if (product.variants.length > 0) {
       product.variants.forEach((variant) => {
         totalStock += variant.stock_quantity;
+        console.log(variant.stock_quantity);
       });
+
       if (totalStock > 0 && totalStock < 10) {
         stockMessage = `${totalStock} Left!!`;
+        stockTextClass = "orangeText";
       } else if (totalStock === 0) {
-        stockMessage = "Out of stock.";
+        stockMessage = "Out of stock";
+        stockTextClass = "redText";
       }
     } else {
       stockMessage = "Currently unavailable";
+      stockTextClass = "redText";
+    }
+    let totalStockElement = "";
+    if (stockMessage) {
+      totalStockElement = `<div class="total-stock ${stockTextClass}">
+                            ${stockMessage}
+                          </div>`;
+    }
+    let imageUrl = "https://placehold.co/270x306";
+    if (product.product_images[0]?.filepath) {
+      imageUrl = product.product_images[0].filepath;
     }
 
     // productCard.setAttribute("href", `/product/${product._id}`);

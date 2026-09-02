@@ -1,75 +1,84 @@
 <%- include("../../partials/cust-template.ejs")%>
-<link href="/customer/home/cust-wallet.css" rel="stylesheet"/>
-<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
-<title>OtakuVerse Wallet</title>
-</head>
-<body>
-  <%-include("../../partials/alert.ejs")%>
-  <%-include("../../partials/cust-navbar.ejs")%>
-  <div class="main">
-    <div class="main-left">
-      <%-include("../../partials/cust-sidebar.ejs")%>
-    </div>
-    <div class="main-right">
-      <div class="main-right-inner">
-        <div class="main-title-row">
-          <div class="main-title">OtakuVerse Wallet</div>
-        </div>
-        <div class="balance-container">
-          <div class="balance-title">
-            Wallet balance
+  <link href="/customer/home/cust-wallet.css" rel="stylesheet" />
+  <link href="/customer/cust-sidebar.css" rel="stylesheet" />
+  <title>OtakuVerse Wallet</title>
+  </head>
+
+  <body>
+    <%-include(".. /../partials/alert.ejs")%>
+      <%-include(".. /../partials/cust-navbar.ejs")%>
+        <div class="main">
+          <div class="main-left">
+            <%-include(".. /../partials/cust-sidebar.ejs")%>
           </div>
-          <div class="balance">
-            ₹<%=wallet?.balance%>
+          <div class="main-right">
+            <div class="main-right-inner">
+              <div class="main-title-row">
+                <div class="main-title">OtakuVerse Wallet</div>
+              </div>
+              <div class="balance-container">
+                <div class="balance-title">
+                  Wallet balance
+                </div>
+                <div class="balance">
+                  ₹<%=wallet?.balance%>
+                </div>
+              </div>
+              <div>
+                <h2 class="subtitle">Transaction History</h2>
+                <table class="transaction-list">
+                  <thead>
+                    <th>Amount</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Transaction type</th>
+                  </thead>
+                  <tbody>
+                    <%transactionHistory.forEach((transaction)=>{%>
+                      <%const options={ timeZone: "Asia/Kolkata" , day: "2-digit" , month: "2-digit" , year: "numeric"
+                        };%>
+                        <%const indianDate=new Intl.DateTimeFormat("en-IN", options).format(transaction.time);%>
+                          <%const timeOptions={ timeZone: "Asia/Kolkata" , hour: "2-digit" , minute: "2-digit" ,
+                            second: "2-digit" , hour12: true };%>
+                            <%const indianTime=new Intl.DateTimeFormat("en-IN", timeOptions).format(transaction.time);%>
+                              <tr>
+                                <td class="amount">₹<%=transaction.amount%>
+                                </td>
+                                <td class="message">
+                                  <%=transaction.message%>
+                                </td>
+                                <td>
+                                  <%=indianDate%>
+                                </td>
+                                <td>
+                                  <%=indianTime%>
+                                </td>
+                                <td>
+                                  <% if (transaction.transactionType==="credit" ) { %>
+                                    <div class="transaction-type credit-row">
+                                      <span class="material-symbols-outlined">
+                                        north
+                                      </span>
+                                    </div>
+                                    <% } else if (transaction.transactionType==="debit" ) { %>
+                                      <div class="transaction-type debit-row">
+                                        <span class="material-symbols-outlined">
+                                          south
+                                        </span>
+                                      </div>
+                                      <%}%>
+                                </td>
+                              </tr>
+                              <%})%>
+                  </tbody>
+                </table>
+                <%- include("../../partials/pagination.ejs")%>
+              </div>
+            </div>
           </div>
         </div>
-         
-        
-        <div>
-          <h2 class="subtitle">Transaction History</h2>
-          <table class="transaction-list">
-            <thead>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Transaction type</th>
-            </thead>
-            <tbody>
-              <%wallet.transaction_history.forEach((transaction)=>{%>
-                <%const options = { timeZone: "Asia/Kolkata", day: "2-digit", month: "2-digit", year: "numeric" };%>
-                <%const indianDate = new Intl.DateTimeFormat("en-IN", options).format(transaction.time);%>
-                <%const timeOptions = { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true };%>
-                <%const indianTime = new Intl.DateTimeFormat("en-IN", timeOptions).format(transaction.time);%>
-                <tr 
-                 >
-                  
-                  
-                  <td class="amount">₹<%=transaction.amount%></td>
-                  <td><%=indianDate%></td>
-                  <td><%=indianTime%></td>
-                  <td>
-                    <% if (transaction.transactionType==="credit") { %>
-                      <div class="transaction-type credit-row">
-                        <span class="material-symbols-outlined">
-                          north
-                          </span>
-                      </div>
-                    <% } else if (transaction.transactionType==="debit") { %>
-                      <div class="transaction-type debit-row">
-                        <span class="material-symbols-outlined">
-                          south
-                          </span>
-                      </div>
-                    <%}%>
-                  </td>
-                </tr>
-              <%})%>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <%-include("../../partials/cust-footer.ejs")%>
-</body>
-</html>
+        <%-include(".. /../partials/cust-footer.ejs")%>
+  </body>
+
+  </html>

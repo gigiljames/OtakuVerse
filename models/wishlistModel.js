@@ -12,12 +12,10 @@ const wishlistSchema = new Schema({
     {
       product_id: {
         type: Schema.Types.ObjectId,
-        // required: true,
         ref: "Product",
       },
       variant_id: {
         type: Schema.Types.ObjectId,
-        // required: true,
         ref: "ProductVariant",
       },
     },

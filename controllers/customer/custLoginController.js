@@ -66,13 +66,13 @@ const sendOTP = async (req, res) => {
     );
 
     if (!customer) {
-      res.json({
+      return res.json({
         success: false,
         message:
           "The email you have entered is not associated with an account.",
       });
     } else if (!customer.customer_password) {
-      res.json({
+      return res.json({
         success: false,
         message:
           "It looks like you signed up using Google. Please use the 'Sign in with Google' option to log in.",
@@ -104,9 +104,9 @@ const sendOTP = async (req, res) => {
 const enterOTP = async (req, res) => {
   try {
     if (req.session.forgotPasswordEmail) {
-      res.render("customer/login/cust-forgotpassword-otp");
+      return res.render("customer/login/cust-forgotpassword-otp");
     } else {
-      res.redirect("/forgotpassword");
+      return res.redirect("/forgotpassword");
     }
   } catch (error) {
     console.log(error);
@@ -159,12 +159,12 @@ const resendOTP = async (req, res) => {
     const emailSent = await sendVerificationEmail(email, otp);
     if (emailSent) {
       console.log("Resend OTP: ", otp);
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "OTP resend successfully",
       });
     } else {
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: "Failed to resend OTP. Please try again",
       });
@@ -178,7 +178,7 @@ const resendOTP = async (req, res) => {
 const resetPasswordPage = async (req, res) => {
   try {
     if (!req.session.forgotPasswordEmail) {
-      res.redirect("/forgotpassword");
+      return res.redirect("/forgotpassword");
     }
     return res.render("customer/login/cust-resetpassword");
   } catch (error) {
@@ -200,7 +200,7 @@ const securePassword = async (password) => {
 const resetPassword = async (req, res) => {
   try {
     if (!req.session.forgotPasswordEmail) {
-      res.json({ redirectUrl: "/forgotpassword" });
+      return res.json({ redirectUrl: "/forgotpassword" });
     } else {
       const { password } = req.body;
       const hashPassword = await securePassword(password);
@@ -208,7 +208,7 @@ const resetPassword = async (req, res) => {
         { customer_email: req.session.forgotPasswordEmail },
         { $set: { customer_password: hashPassword } }
       );
-      res.json({
+      return res.json({
         success: true,
         message: "Password reset successfully.",
         redirectUrl: "/login",

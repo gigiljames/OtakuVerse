@@ -61,7 +61,6 @@ const addCategory = async (req, res) => {
 
 const editCategory = async (req, res) => {
   try {
-    console.log(req.body.images);
     const { catID } = req.params;
     const category = await Category.findById(catID);
     if (category.category_name === "uncategorized") {
@@ -70,10 +69,6 @@ const editCategory = async (req, res) => {
         message: "This category cannot be edited.",
       });
     }
-    const imageDocs = req.files.map((file) => ({
-      filename: file.filename,
-      filepath: file.path.slice(6), // removes "public" from path
-    }));
     const id = req.params.catID;
     const { name, desc, offer } = req.body;
     const categoryExists = await Category.findOne({
@@ -84,11 +79,10 @@ const editCategory = async (req, res) => {
     if (categoryExists) {
       return res.json({ success: false, message: "Category already exists." });
     }
-    const editConfirmation = await Category.updateOne(
+    await Category.updateOne(
       { _id: id },
       {
         $set: { category_name: name, category_desc: desc, offer: offer },
-        $push: { banner_images: { $each: imageDocs } },
       }
     );
     return res.json({
@@ -131,10 +125,7 @@ const deleteCategory = async (req, res) => {
         { $set: { is_deleted: true } }
       );
     }
-    const deleteConfirmation = await Category.updateOne(
-      { _id: id },
-      { $set: { is_deleted: true } }
-    );
+    await Category.updateOne({ _id: id }, { $set: { is_deleted: true } });
     return res.json({
       success: true,
       message: "Category deleted successfully.",
@@ -150,45 +141,10 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-const deleteCatBanner = async (req, res) => {
-  try {
-    const { catId, imgId } = req.params;
-    const imagePath = await Category.findOne(
-      { "banner_images._id": imgId },
-      { "banner_images.filepath": 1 }
-    );
-    const deleteConfirmation = await Category.updateOne(
-      { _id: catId },
-      { $pull: { banner_images: { _id: imgId } } }
-    );
-    const filePath = imagePath.banner_images[0].filepath;
-    fs.unlink("public" + filePath, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("Image deleted from directory successfully.");
-      }
-    });
-    console.log("Banner image deleted successfully");
-    return res.json({
-      success: true,
-      message: "Banner image deleted successfully.",
-    });
-  } catch (error) {
-    console.log(error);
-    console.log("ERROR : Delete Category Banner");
-    return res.json({
-      success: false,
-      message: "An error occured while deleting banner image.",
-    });
-  }
-};
-
 module.exports = {
   getPage,
   viewCategory,
   addCategory,
   editCategory,
   deleteCategory,
-  deleteCatBanner,
 };

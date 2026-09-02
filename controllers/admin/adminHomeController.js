@@ -1,14 +1,12 @@
 const Order = require("../../models/orderModel");
 const Customer = require("../../models/customerModel");
-const PDFDocument = require("pdfkit");
-const fs = require("fs");
 
 const getPage = async (req, res) => {
   try {
     if (req.session.admin) {
-      res.render("admin/home/admin-home");
+      return res.render("admin/home/admin-home");
     } else {
-      res.redirect("/admin");
+      return res.redirect("/admin");
     }
   } catch (error) {
     console.log(error);
@@ -185,19 +183,20 @@ const getCustomRangeData = async (req, res) => {
         };
       }
       if (value.total_amount) {
-        processedData[key].total_amount = value.total_amount;
+        processedData[key].total_amount = value.total_amount.toFixed(2);
       }
       if (value.total_discount) {
-        processedData[key].total_discount = value.total_discount;
+        processedData[key].total_discount = value.total_discount.toFixed(2);
       }
       if (value.total_sales) {
-        processedData[key].total_sales = value.total_sales;
+        processedData[key].total_sales = value.total_sales.toFixed(2);
       }
       if (value.total_new_users) {
-        processedData[key].total_new_users = value.total_new_users;
+        processedData[key].total_new_users = value.total_new_users.toFixed(2);
       }
       if (value.total_coupon_discount) {
-        processedData[key].total_coupon_discount = value.total_coupon_discount;
+        processedData[key].total_coupon_discount =
+          value.total_coupon_discount.toFixed(2);
       }
     });
     // console.log(processedData);
@@ -321,10 +320,10 @@ const getSalesData = async (req, res) => {
         };
       }
       if (value.total_amount) {
-        processedData[key].total_amount = value.total_amount;
+        processedData[key].total_amount = value.total_amount.toFixed(2);
       }
       if (value.total_discount) {
-        processedData[key].total_discount = value.total_discount;
+        processedData[key].total_discount = value.total_discount.toFixed(2);
       }
       if (value.total_sales) {
         processedData[key].total_sales = value.total_sales;
@@ -333,7 +332,8 @@ const getSalesData = async (req, res) => {
         processedData[key].total_new_users = value.total_new_users;
       }
       if (value.total_coupon_discount) {
-        processedData[key].total_coupon_discount = value.total_coupon_discount;
+        processedData[key].total_coupon_discount =
+          value.total_coupon_discount.toFixed(2);
       }
     });
     // console.log(processedData);
@@ -378,7 +378,7 @@ const getTopProducts = async (req, res) => {
       { $limit: count },
     ]);
     // console.log(list);
-    res.json({ success: true, list });
+    return res.json({ success: true, list });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Top 10 Products");
@@ -389,7 +389,7 @@ const getTopCategories = async (req, res) => {
   try {
     const count = 10;
     const list = await Order.aggregate([
-      { $unwind: "$order_items" }, // Deconstructs the order_items array
+      { $unwind: "$order_items" },
       {
         $lookup: {
           from: "products",
@@ -398,35 +398,35 @@ const getTopCategories = async (req, res) => {
           as: "productDetails",
         },
       },
-      { $unwind: "$productDetails" }, // Unwind the productDetails array
+      { $unwind: "$productDetails" },
       {
         $group: {
-          _id: "$productDetails.category", // Group by the category ID
-          count: { $sum: 1 }, // Count occurrences
+          _id: "$productDetails.category",
+          count: { $sum: 1 },
         },
       },
-      { $sort: { count: -1 } }, // Sort by count in descending order
-      { $limit: count }, // Limit the results to the top `count` categories
+      { $sort: { count: -1 } },
+      { $limit: count },
       {
         $lookup: {
-          from: "categories", // Replace "categories" with your actual collection name
-          localField: "_id", // The category ID from the group stage
-          foreignField: "_id", // The category ID in the Category collection
+          from: "categories",
+          localField: "_id",
+          foreignField: "_id",
           as: "categoryDetails",
         },
       },
-      { $unwind: "$categoryDetails" }, // Unwind the categoryDetails array
+      { $unwind: "$categoryDetails" },
       {
         $project: {
-          _id: 0, // Exclude the original _id field
-          category_id: "$_id", // Include the category ID
-          category_name: "$categoryDetails.category_name", // Include the category name
-          count: 1, // Include the count
+          _id: 0,
+          category_id: "$_id",
+          category_name: "$categoryDetails.category_name",
+          count: 1,
         },
       },
     ]);
     // console.log(list);
-    res.json({ success: true, list });
+    return res.json({ success: true, list });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Get Top 10 Categories");

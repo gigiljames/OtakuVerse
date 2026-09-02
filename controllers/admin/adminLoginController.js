@@ -4,9 +4,9 @@ const bcrypt = require("bcrypt");
 const getPage = async (req, res) => {
   try {
     if (req.session.admin) {
-      res.redirect("/admin/home");
+      return res.redirect("/admin/home");
     } else {
-      res.render("admin/login/admin-login");
+      return res.render("admin/login/admin-login");
     }
   } catch (error) {
     console.log(error);

@@ -28,6 +28,10 @@ router.use(express.static("public"));
 // AUTHENTICATION MIDDLEWARE
 const authMiddleware = async (req, res, next) => {
   if (!req.session.user) {
+    if (req.xhr) {
+      // distinguishing btw ajax and normal req
+      return res.json({ success: false, redirectUrl: "/login" });
+    }
     return res.redirect("/login");
   } else {
     const customer = await Customer.findOne(
@@ -36,7 +40,6 @@ const authMiddleware = async (req, res, next) => {
     );
     if (customer && customer.account_status === "banned") {
       if (req.xhr) {
-        // distinguishing btw ajax and normal req
         return res.json({ success: false, redirectUrl: "/logout" });
       }
       return res.redirect("/logout");
@@ -121,6 +124,11 @@ router.delete(
   order.cancelItem,
 );
 router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
+router.post(
+  "/return-request/:orderID/:variantID",
+  authMiddleware,
+  order.returnItem
+);
 router.get("/get-invoice/:orderID", authMiddleware, order.getInvoice);
 //Wishlist
 router.get("/wishlist", authMiddleware, cart.wishlistPage);

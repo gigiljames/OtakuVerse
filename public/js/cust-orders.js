@@ -4,16 +4,12 @@ const orderCards = document.querySelectorAll(".order-card");
 
 document.addEventListener("DOMContentLoaded", () => {
   orderCards.forEach((orderCard) => {
-    const returnButton = orderCard.querySelector("return-button");
-    if (returnButton) {
-      returnButton.addEventListener("click", (event) => {
-        handleReturn();
-      });
-    }
     const returnItemButtons = orderCard.querySelectorAll(".return-one-item");
     returnItemButtons.forEach((button) => {
       button.addEventListener("click", (event) => {
-        handleReturn();
+        const orderID = button.dataset.orderid;
+        const variantID = button.dataset.variantid;
+        handleReturn(orderID, variantID);
       });
     });
     const button = orderCard.querySelector(".cancel-button");
@@ -108,13 +104,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-function handleReturn() {
+function handleReturn(orderID, variantID) {
   const addForm = document.getElementById("add-form");
   const addFormOuter = document.getElementsByClassName("add-form-outer")[0];
   addFormOuter.style.display = "flex";
   const closeButton = document.getElementsByClassName("close-button")[0];
   closeButton.addEventListener("click", (event) => {
     addFormOuter.style.display = "none";
+  });
+  addForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    addFormOuter.style.display = "none";
+    const reason = addForm.querySelector("#reason").value;
+    $.ajax({
+      url: `/return-request/${orderID}/${variantID}`,
+      type: "POST",
+      data: { reason },
+      success: function (response) {
+        if (response.success) {
+          alert(
+            response.message,
+            "success",
+            () => {
+              window.location.reload();
+            },
+            2000
+          );
+        }
+      },
+      error: function (response) {},
+    });
   });
 }
 

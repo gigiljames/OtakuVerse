@@ -19,7 +19,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (period === "range") {
       const start = custRangeInputs.querySelector("#start").value;
       const end = custRangeInputs.querySelector("#end").value;
-      getCustomRangeData(start, end);
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      const currDate = new Date();
+      let flag = 1;
+      if (startDate > endDate || startDate > currDate || endDate > currDate) {
+        flag = 0;
+        alert("Enter a valid date range", "error");
+      }
+      if (flag === 1) {
+        getCustomRangeData(start, end);
+      }
     } else {
       getSalesData(period);
     }

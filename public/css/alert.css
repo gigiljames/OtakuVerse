@@ -35,6 +35,11 @@
   color: red;
 }
 
+.alert-warning {
+  background-color: rgb(241, 199, 120);
+  color: rgb(255, 123, 0);
+}
+
 .alert-icon {
   font-size: 34px;
 }

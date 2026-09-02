@@ -1,3 +1,8 @@
+nav {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+
 nav .burger-menu {
   transform: scale(1.5);
   cursor: pointer;
@@ -42,7 +47,11 @@ nav .nav-outer {
   box-sizing: border-box;
 }
 
-nav .nav-right,
+nav .nav-right {
+  display: flex;
+  align-items: center;
+}
+
 nav .nav-left {
   display: flex;
   align-items: center;
@@ -82,6 +91,7 @@ nav .user-dp {
   border-radius: 50%;
   height: 40px;
   width: 40px;
+  margin-left: 10px;
 }
 
 nav .user-dp img {

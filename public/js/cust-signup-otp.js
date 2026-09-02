@@ -29,7 +29,7 @@ const startTimer = (durationInSeconds) => {
 };
 
 // Start the initial timer
-startTimer(5);
+startTimer(30);
 
 // Enable the resend button
 const enableResendButton = () => {
@@ -44,7 +44,7 @@ resendBtn.addEventListener("click", (event) => {
   resendBtn.disabled = true;
   resendBtn.classList.remove("enabled");
   document.getElementById("timer-text").innerText = "Resend OTP in ";
-  startTimer(60);
+  startTimer(30);
   $.ajax({
     type: "POST",
     url: "/resend-otp",

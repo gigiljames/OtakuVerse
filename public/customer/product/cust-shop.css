@@ -86,6 +86,9 @@ body {
   margin-right: 20px;
   position: sticky;
   top: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
   /* background-color: #858585; */
 }
 
@@ -128,6 +131,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  box-sizing: border-box;
+  position: relative;
+  height: 100%;
 }
 
 .product-card:hover {

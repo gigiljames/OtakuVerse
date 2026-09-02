@@ -1,0 +1,27 @@
+<% if (numberOfPages>0) { %>
+  <div class="pagination-container">
+    <div class="pagination-buttons">
+      <% let prev = offset-1 %>
+      <% if (prev<=0) { %>
+        <% prev = 1 %>
+      <% } %>
+      <a href="<%=currentURL%>offset=<%= prev %>">
+        <button>&lt; Previous</button>
+      </a>
+      <% for( let index = 1; index <= numberOfPages; index++ ) { %>
+          <a href="<%=currentURL%>offset=<%= index %>">
+            <button <% if (index===offset) { %>
+              id="pagination-selected"
+            <% } %>><%= index %></button>
+          </a>
+      <% } %>
+      <% let next = offset+1 %>
+      <% if (next>numberOfPages) { %>
+        <% next = numberOfPages %>
+      <% } %>
+      <a href="<%=currentURL%>offset=<%= next %>">
+        <button>Next &gt;</button>
+      </a>
+    </div>
+  </div>
+<% } %>

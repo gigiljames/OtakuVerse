@@ -32,8 +32,10 @@ const transactionSchema = new Schema(
       enum: ["pending", "completed", "failed"],
       default: "completed",
     },
-    description: {
+    message: {
       type: String,
+      required: true,
+      default: "NIL",
     },
   },
   { timestamps: true }

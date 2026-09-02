@@ -14,7 +14,7 @@ const customerSchema = new Schema(
     },
     google_id: {
       type: String,
-      unique: true,
+      // unique: true,
     },
     customer_password: {
       type: String,

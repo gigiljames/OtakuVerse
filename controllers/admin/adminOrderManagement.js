@@ -1,20 +1,30 @@
 const Order = require("../../models/orderModel");
 const Wallet = require("../../models/walletModel");
 const ProductVariant = require("../../models/productVariantModel");
+const restrictOrderCancellation = require("../../helpers/restrictOrderCancellation");
 
 const getPage = async (req, res) => {
   try {
-    const { offset } = req.query;
+    // Search & sort
+    const search = req.query.search || "";
+    const sort = req.query.sort || "";
+    // Pagination
+    let offset = parseInt(req.query.offset) || 1;
+    if (offset < 1) {
+      offset = 1;
+    }
     const limit = 10;
     const orderCount = await Order.find().countDocuments();
+    const numberOfPages = Math.ceil(orderCount / limit);
     const orders = await Order.find()
       .sort({ createdAt: -1 })
       .skip(limit * (offset - 1))
       .limit(limit)
       .populate("customer_id", "customer_name");
-    res.render("admin/orderManagement/order-list", {
+    return res.render("admin/orderManagement/order-list", {
       orders,
-      pageCount: Math.ceil(orderCount / limit),
+      numberOfPages,
+      currentURL: `/admin/order-management/?search=${search}&sort=${sort}&`,
       offset,
     });
   } catch (error) {
@@ -40,7 +50,7 @@ const cancelOrder = async (req, res) => {
       {
         $set: {
           "order_items.$[].product_status": "cancelled",
-          is_cancelled: true,
+          is_cancellable: false,
         },
       }
     );
@@ -54,6 +64,7 @@ const cancelOrder = async (req, res) => {
       const transaction = {
         amount: amount,
         transactionType: "credit",
+        message: "Refund on cancelled order",
       };
       await Wallet.updateOne(
         { customer_id: order.customer_id },
@@ -68,7 +79,7 @@ const cancelOrder = async (req, res) => {
       { _id: orderID },
       { $inc: { refunded_amount: amount } }
     );
-    res.json({
+    return res.json({
       success: true,
       message: "Order has been cancelled successfully.",
     });
@@ -117,8 +128,9 @@ const cancelItem = async (req, res) => {
           Math.round(price * (1 - order.coupon_applied.value / 100) * 100) /
           100;
       } else {
+        const actualAmount = order.amount + order.coupon_applied.value;
         let couponPercentage =
-          (order.amount / order.coupon_applied.value) * 100;
+          (order.coupon_applied.value * 100) / actualAmount;
         price = Math.round(price * (1 - couponPercentage / 100) * 100) / 100;
       }
     }
@@ -127,6 +139,7 @@ const cancelItem = async (req, res) => {
     const transaction = {
       amount: price,
       transactionType: "credit",
+      message: "Refund on cancelled item",
     };
     await Wallet.updateOne(
       { customer_id: order.customer_id },
@@ -145,23 +158,8 @@ const cancelItem = async (req, res) => {
       { _id: variantID },
       { $inc: { stock_quantity: item.quantity } }
     );
-    //if all individuals items are cancelled set is_cancelled = true
-    const notCancelled = await Order.aggregate([
-      { $match: { _id: orderID } },
-      { $unwind: "$order_items" },
-      { $match: { "order_items.product_status": { $ne: "cancelled" } } },
-      { $limit: 1 },
-    ]);
-    if (notCancelled.length === 0) {
-      await Order.updateOne(
-        { _id: orderID },
-        {
-          $set: {
-            is_cancelled: true,
-          },
-        }
-      );
-    }
+    restrictOrderCancellation(orderID);
+
     return res.json({
       success: true,
       message: "Item has been cancelled successfully.",
@@ -171,18 +169,6 @@ const cancelItem = async (req, res) => {
     console.log("ERROR : Cancel Item");
   }
 };
-
-// const editStatus = async (req, res) => {
-//   try {
-//     const { orderID } = req.params;
-//     const { status } = req.body;
-//     await Order.updateOne({ _id: orderID }, { $set: { order_status: status } });
-//     res.json({ success: true, message: "Order status updated successfully." });
-//   } catch (error) {
-//     console.log(error);
-//     console.log("ERROR : Edit Status");
-//   }
-// };
 
 const editItemStatus = async (req, res) => {
   try {
@@ -195,7 +181,11 @@ const editItemStatus = async (req, res) => {
       },
       { $set: { "order_items.$.product_status": status } }
     );
-    res.json({ success: true, message: "Item status updated successfully." });
+    restrictOrderCancellation(orderID);
+    return res.json({
+      success: true,
+      message: "Item status updated successfully.",
+    });
   } catch (error) {
     console.log(error);
     console.log("ERROR : Edit Item Status");

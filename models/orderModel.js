@@ -3,28 +3,11 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema(
   {
-    // order_status: {
-    //   type: String,
-    //   enum: [
-    //     "processing",
-    //     "shipping",
-    //     "out for delivery",
-    //     "delivered",
-    //     "cancelled",
-    //   ],
-    //   default: "processing",
-    //   required: true,
-    // },
-    is_cancelled: {
+    is_cancellable: {
       type: Boolean,
       required: true,
-      default: false,
+      default: true,
     },
-    // is_delivered: {
-    //   type: Boolean,
-    //   required: true,
-    //   default: false,
-    // },
     customer_id: {
       type: Schema.Types.ObjectId,
       ref: "Customer",
@@ -44,10 +27,6 @@ const orderSchema = new Schema(
       required: true,
       default: "pending",
     },
-    // payment_id: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Payment",
-    // },
     amount: {
       type: Number,
       required: true,
@@ -150,7 +129,9 @@ const orderSchema = new Schema(
             "cancelled",
             "waiting for return approval",
             "return approved",
+            "return rejected",
             "returned",
+            "refunded",
           ],
           default: "processing",
           required: true,

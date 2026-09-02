@@ -17,6 +17,9 @@ const alert = (
   } else if (state === "error") {
     alertBox.classList.add("alert-error");
     alertIcon.innerText = "error";
+  } else if (state === "warning") {
+    alertBox.classList.add("alert-warning");
+    alertIcon.innerText = "warning";
   }
   const alertMessage = alertBox.querySelector(".alert-message");
   alertMessage.innerText = message;

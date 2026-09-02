@@ -36,6 +36,11 @@ const walletSchema = new Schema(
           required: true,
           default: Date.now,
         },
+        message: {
+          type: String,
+          required: true,
+          default: "NIL",
+        },
       },
     ],
   },

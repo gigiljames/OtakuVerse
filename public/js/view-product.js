@@ -12,6 +12,36 @@ addButton.addEventListener("click", (event) => {
   addFormOuter.style.display = "flex";
 });
 
+//DELETE PRODUCT
+const deleteProductButton = document.querySelector(".delete-button");
+deleteProductButton.addEventListener("click", async () => {
+  if (
+    await yes({
+      message: "Are you sure you want to delete this product?",
+      yesButtonColour: "red",
+    })
+  ) {
+    const productID = deleteProductButton.dataset.productid;
+    $.ajax({
+      url: `/admin/delete-product/${productID}`,
+      type: "DELETE",
+      success: function (response) {
+        if (response.success) {
+          alert(
+            response.message,
+            "success",
+            () => {
+              window.location.href = response.redirectUrl;
+            },
+            3000
+          );
+        }
+      },
+      error: function (response) {},
+    });
+  }
+});
+
 //ADD FORM VALIDATION
 const addForm = document.getElementById("add-form");
 const sizeInput = document.getElementById("size-input");
@@ -27,6 +57,7 @@ const showError = (element, message) => {
 
 // Form submission event listener
 addForm.addEventListener("submit", (event) => {
+  event.preventDefault();
   clearErrors();
   let isValid = true;
   if (!sizeInput.value.trim()) {
@@ -45,9 +76,31 @@ addForm.addEventListener("submit", (event) => {
     showError(stockError, "Invalid input");
     isValid = false;
   }
-
-  if (!isValid) {
-    event.preventDefault();
+  const formData = {
+    size: sizeInput.value,
+    colour: colourInput.value,
+    stock: stockInput.value,
+  };
+  if (isValid) {
+    const productID = addForm.dataset.productid;
+    $.ajax({
+      url: `/admin/add-variant/${productID}`,
+      type: "POST",
+      data: formData,
+      success: function (response) {
+        if (response.success) {
+          alert(
+            response.message,
+            "success",
+            () => {
+              window.location.reload();
+            },
+            3000
+          );
+        }
+      },
+      error: function (reponse) {},
+    });
   }
 });
 
@@ -62,6 +115,7 @@ const specsError = document.getElementById("specs-error");
 const errorContainers = document.getElementsByClassName("error-container");
 
 editForm.addEventListener("submit", (event) => {
+  event.preventDefault();
   clearErrors();
   let flag = 0;
   const name = document.getElementById("name-input").value.trim();
@@ -69,6 +123,8 @@ editForm.addEventListener("submit", (event) => {
   const desc = document.getElementById("desc-input").value.trim();
   const discount = document.getElementById("discount-input").value.trim();
   const specs = document.getElementById("specs-input").value.trim();
+  const category = document.getElementById("category-input").value;
+  const visibility = document.getElementById("visibility-input").value;
   if (!name) {
     flag = 1;
     nameError.innerText = "*This field is required";
@@ -97,8 +153,26 @@ editForm.addEventListener("submit", (event) => {
     flag = 1;
     specsError.innerText = "*This field is required";
   }
-  if (flag === 1) {
-    event.preventDefault();
+  if (flag === 0) {
+    const productID = editForm.dataset.productid;
+    $.ajax({
+      url: `/admin/edit-product/${productID}`,
+      type: "PATCH",
+      data: { name, price, desc, category, discount, visibility, specs },
+      success: function (response) {
+        if (response.success) {
+          alert(
+            response.message,
+            "success",
+            () => {
+              window.location.reload();
+            },
+            3000
+          );
+        }
+      },
+      error: function (error) {},
+    });
   }
 });
 
@@ -251,13 +325,13 @@ uploadButton.addEventListener("click", function () {
   });
 });
 
-const variantCards = document.querySelectorAll(".variant-cards");
+const variantCards = document.querySelectorAll(".variant-card");
 
 variantCards.forEach((variantCard) => {
   const stockUpdateError = variantCard.querySelector(".stock-update-error");
-
   const editButton = variantCard.querySelector(".edit-stock-button");
   const saveButton = variantCard.querySelector(".save-stock-button");
+  const deleteButton = variantCard.querySelector(".delete-variant-button");
   editButton.addEventListener("click", () => {
     const stockInput = variantCard.querySelector(".stock-update-input");
     const stockData = variantCard.querySelector(".stock-data");
@@ -300,6 +374,34 @@ variantCards.forEach((variantCard) => {
           }
         },
         error: function (error) {},
+      });
+    }
+  });
+  deleteButton.addEventListener("click", async () => {
+    const productID = deleteButton.dataset.productid;
+    const variantID = deleteButton.dataset.variantid;
+    if (
+      await yes({
+        message: "Are you sure you want to delete this variant?",
+        yesButtonColour: "red",
+      })
+    ) {
+      $.ajax({
+        url: `/admin/delete-variant/${productID}/${variantID}`,
+        type: "DELETE",
+        success: function (response) {
+          if (response.success) {
+            alert(
+              response.message,
+              "success",
+              () => {
+                window.location.reload();
+              },
+              3000
+            );
+          }
+        },
+        error: function (response) {},
       });
     }
   });

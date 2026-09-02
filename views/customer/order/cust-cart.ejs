@@ -1,98 +1,98 @@
-<%-include("../../partials/cust-template.ejs")%>
-<link href="/customer/order/cust-cart.css" rel="stylesheet"/>
-<link href="/customer/cust-sidebar.css" rel="stylesheet"/>
-<title>OtakuVerse Cart</title>
-</head>
-<body>
-  <%-include("../../partials/alert.ejs")%>
-  <%-include("../../partials/cust-navbar.ejs")%>
-  <div class="main">
-    <div class="main-right">
-      <div class="main-right-inner">
-        <div class="title-row">
-          <div class="main-title">Shopping Cart</div>
-        </div>
-        <div class="cart-container">
-          <div class="items-list">
-            <table>
-              <thead>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Total price</th>
-              </thead>
-              <tbody>
-                <%items.forEach((item)=>{%>
-                  <tr class="item-card">
-                      <%let product = item.product_id%>
-                      <%let variant = item.variant_id%>
-                      <td>
-                        <div class="item-container">
-                          <img class="product_image" src="<%=product.product_images[0]?.filepath%>" alt="product_image">
-                          <div class="item-info">
-                            <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
-                            <div class="price-container">
-                              <div class="product-ov-price">₹<%=product.offer_price%></div>
-                              <div class="product-og-price">₹<%=product.price%></div>
-                            </div>
-                            <div class="variant-container">
-                              <div class="variant-colour">Colour: <%=variant.colour%></div>
-                              <div class="variant-size">Size: <%=variant.size%></div>
-                            </div>
-                            <button class="remove-button" data-id="<%=item._id%>">
-                              Remove
-                            </button> 
-                          </div>
-                          
-                        </div>
-                        
-                        
-                        
-                        <%if(variant.stock_quantity===0){%>
-                          <div class="out-of-stock">Out of stock</div>
-                        <%}%>
-                      </td>
-                      <td>
-                        <div class="quantity-container">
-                          <button class="dec-button quantity-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>" >
-                            <span class="material-symbols-outlined">
-                              remove
-                              </span>
-                          </button>
-                          <input class="quantity " value="<%=item.quantity%>" disabled/>
-                          <button class="inc-button quantity-button" data-productid="<%=item.product_id._id%>" data-variantid="<%=item.variant_id._id%>">
-                            <span class="material-symbols-outlined">
-                              add
-                              </span>
-                          </button>
-                          
-                          
-                        </div>
-                      </td>
-                      <td>
-                        <div class="product-total-price">
-                          <%=(product.offer_price * item.quantity).toFixed(2)%>
-                          
-                        </div>
-                        
-                      </td>
-                    
-                  </tr>
-                <%})%>
-              </tbody>
-              
-            </table>
-          </div>
-          <div class="bill-section">
-            <div class="bill">
+<%-include(".. /../partials/cust-template.ejs")%>
+  <link href="/customer/order/cust-cart.css" rel="stylesheet" />
+  <link href="/customer/cust-sidebar.css" rel="stylesheet" />
+  <title>OtakuVerse Cart</title>
+  </head>
+
+  <body>
+    <%-include(".. /../partials/alert.ejs")%>
+      <%-include(".. /../partials/cust-navbar.ejs")%>
+        <div class="main">
+          <div class="main-right">
+            <div class="main-right-inner">
+              <div class="title-row">
+                <div class="main-title">Shopping Cart</div>
+              </div>
+              <div class="cart-container">
+                <div class="items-list">
+                  <table>
+                    <thead>
+                      <th>Product</th>
+                      <th>Qty</th>
+                      <th>Total price</th>
+                    </thead>
+                    <tbody>
+                      <%items.forEach((item)=>{%>
+                        <tr class="item-card">
+                          <%let product=item.product_id%>
+                            <%let variant=item.variant_id%>
+                              <td>
+                                <div class="item-container">
+                                  <%if(variant.stock_quantity===0){%>
+                                    <div class="out-of-stock">Out of stock</div>
+                                    <%}%>
+                                      <img class="product_image" src="<%=product.product_images[0]?.filepath%>"
+                                        alt="product_image">
+                                      <div class="item-info">
+                                        <div class="product-name"><a href="/product/<%=product._id%>">
+                                            <%=product.product_name%>
+                                          </a></div>
+                                        <div class="price-container">
+                                          <div class="product-ov-price">₹<%=product.offer_price%>
+                                          </div>
+                                          <div class="product-og-price">₹<%=product.price%>
+                                          </div>
+                                        </div>
+                                        <div class="variant-container">
+                                          <div class="variant-colour">Colour: <%=variant.colour%>
+                                          </div>
+                                          <div class="variant-size">Size: <%=variant.size%>
+                                          </div>
+                                        </div>
+                                        <button class="remove-button" data-id="<%=item._id%>">
+                                          Remove
+                                        </button>
+                                      </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="quantity-container">
+                                  <button class="dec-button quantity-button" data-productid="<%=item.product_id._id%>"
+                                    data-variantid="<%=item.variant_id._id%>">
+                                    <span class="material-symbols-outlined">
+                                      remove
+                                    </span>
+                                  </button>
+                                  <input class="quantity " value="<%=item.quantity%>" disabled />
+                                  <button class="inc-button quantity-button" data-productid="<%=item.product_id._id%>"
+                                    data-variantid="<%=item.variant_id._id%>">
+                                    <span class="material-symbols-outlined">
+                                      add
+                                    </span>
+                                  </button>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="product-total-price">
+                                  <%=(product.offer_price * item.quantity).toFixed(2)%>
+                                </div>
+                              </td>
+                        </tr>
+                        <%})%>
+                    </tbody>
+                  </table>
+                  <%- include("../../partials/pagination.ejs")%>
+                </div>
+                <div class="bill-section">
+                  <div class="bill">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-    </div>
-  </div>
-  
-  <script src="/js/cust-cart.js"></script>
-  <%-include("../../partials/cust-footer.ejs")%>
-</body>
-</html>
+        <script src="/js/cust-cart.js"></script>
+        <%-include(".. /../partials/cust-footer.ejs")%>
+  </body>
+
+  </html>
