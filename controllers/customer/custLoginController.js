@@ -1,6 +1,13 @@
 const Customer = require("../../models/customerModel");
 const bcrypt = require("bcrypt");
-const nodemailer = require("nodemailer");
+const FormData = require("form-data");
+const Mailgun = require("mailgun.js");
+
+const mailgun = new Mailgun(FormData);
+const mg = mailgun.client({
+  username: "api",
+  key: process.env.MAILGUN_API_KEY || "",
+});
 
 const getPage = async (req, res) => {
   try {
@@ -32,33 +39,25 @@ function generateOtp() {
 
 async function sendVerificationEmail(email, otp) {
   try {
-    if (!process.env.NODEMAILER_EMAIL || !process.env.NODEMAILER_PASSWORD) {
-      console.log(`[Dev Mode] NODEMAILER credentials not set in .env. OTP for ${email} is: ${otp}`);
+    if (!process.env.MAILGUN_API_KEY || !process.env.MAILGUN_DOMAIN) {
+      console.log(
+        `[Dev Mode] MAILGUN credentials not set in .env. OTP for ${email} is: ${otp}`
+      );
       return true;
     }
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      port: 587,
-      secure: false,
-      requireTLS: true,
-      auth: {
-        user: process.env.NODEMAILER_EMAIL,
-        pass: process.env.NODEMAILER_PASSWORD,
-      },
-      connectionTimeout: 5000,
-      greetingTimeout: 5000,
-      socketTimeout: 5000,
-    });
-    const info = await transporter.sendMail({
-      from: process.env.NODEMAILER_EMAIL,
-      to: email,
+    const data = await mg.messages.create(process.env.MAILGUN_DOMAIN, {
+      from:
+        process.env.MAILGUN_SENDER ||
+        `OtakuVerse <postmaster@${process.env.MAILGUN_DOMAIN}>`,
+      to: [email],
       subject: "Verify your OtakuVerse account",
       text: `Your OTP is ${otp}`,
       html: `<b>Your OTP: ${otp}</b>`,
     });
-    return info.accepted && info.accepted.length > 0;
+    console.log("Mailgun OTP email sent successfully:", data.id || data.status);
+    return true;
   } catch (error) {
-    console.log("ERROR : sendVerificationEmail function", error.message);
+    console.log("ERROR : sendVerificationEmail (Mailgun)", error.message);
     console.log(`[Fallback Mode] OTP for ${email} is: ${otp}`);
     return true;
   }
