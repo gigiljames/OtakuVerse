@@ -291,7 +291,7 @@ const removeOneFromCart = async (req, res) => {
     const { productID } = req.params;
     const { variantID } = req.body;
     const cartItemExists = await Cart.findOne(
-      { "cart_items.variant_id": variantID },
+      { customer_id: custID, "cart_items.variant_id": variantID },
       { cart_items: { $elemMatch: { variant_id: variantID } } }
     );
     if (cartItemExists) {
