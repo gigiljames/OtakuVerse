@@ -72,7 +72,7 @@
                 <label for="category-input">Category</label>
                 <select id="category-input" name="category">
                   <% categoryList.forEach((category) => { %>
-                  <%if(category.category_name===productDetails.category.category_name){%>
+                  <%if(productDetails.category && category.category_name===productDetails.category.category_name){%>
                   <option value="<%= category._id %>" selected>
                     <%= category.category_name %>
                   </option>

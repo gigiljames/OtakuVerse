@@ -41,13 +41,16 @@ const getBill = function (cart) {
     total_quantity: 0,
     coupon_discount: 0,
   };
+  if (!cart || !cart.cart_items) return bill;
   cart.cart_items.forEach((item) => {
-    if (item.variant_id.stock_quantity !== 0) {
+    if (item.variant_id && item.variant_id.stock_quantity !== 0 && item.product_id) {
       const product = item.product_id;
-      bill.subtotal += product.price * item.quantity;
-      bill.grand_total += product.offer_price * item.quantity;
+      const offerPrice = product.offer_price || product.price || 0;
+      const appliedDiscount = product.applied_discount || 0;
+      bill.subtotal += (product.price || 0) * item.quantity;
+      bill.grand_total += Number(offerPrice) * item.quantity;
       bill.discount -=
-        product.price * item.quantity * (product.applied_discount / 100);
+        (product.price || 0) * item.quantity * (appliedDiscount / 100);
       bill.total_quantity += item.quantity;
     }
   });
@@ -70,7 +73,7 @@ const getBill = function (cart) {
     }
   }
   bill.you_save = bill.total - bill.grand_total;
-  bill.you_save_percent = (bill.you_save * 100) / bill.total;
+  bill.you_save_percent = bill.total ? (bill.you_save * 100) / bill.total : 0;
   bill.grand_total = bill.grand_total.toFixed(2);
   bill.you_save = bill.you_save.toFixed(2);
   bill.you_save_percent = bill.you_save_percent.toFixed(2);
@@ -282,6 +285,9 @@ const createOrder = async (req, res) => {
     const custID = req.session.user;
     const { addressID } = req.body;
     const addressFromDB = await Address.findById(addressID);
+    if (!addressFromDB) {
+      return res.json({ success: false, message: "Selected address not found." });
+    }
     let address = {
       recipient_name: addressFromDB.recipient_name,
       apartment: addressFromDB.apartment,
@@ -297,6 +303,10 @@ const createOrder = async (req, res) => {
         "cart_items.product_id",
         "price discount product_name product_images category is_enabled"
       );
+
+    if (!cart || !cart.cart_items) {
+      return res.json({ success: false, message: "Cart is empty.", redirectUrl: "/cart" });
+    }
 
     //Finding deleted products or variants from items included in cart
     cart.cart_items.forEach((item) => {
@@ -320,19 +330,27 @@ const createOrder = async (req, res) => {
         "product_name price discount product_images category"
       )
       .populate("cart_items.variant_id");
+    if (!cart) {
+      return res.json({ success: false, message: "Cart is empty.", redirectUrl: "/cart" });
+    }
     await cart.populate("cart_items.product_id.category", "offer");
     await cart.populate("coupon_id");
     const plainCart = cart.toObject();
-    plainCart.cart_items.forEach((product) => {
-      product = product.product_id;
-      let highestOffer =
-        product.discount > product.category.offer
-          ? product.discount
-          : product.category.offer;
-      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
-      product.offer_price = offerPrice;
-      product.applied_discount = highestOffer;
-    });
+    if (plainCart.cart_items) {
+      plainCart.cart_items.forEach((product) => {
+        if (product && product.product_id) {
+          product = product.product_id;
+          const catOffer = product.category?.offer || 0;
+          let highestOffer =
+            product.discount > catOffer
+              ? product.discount
+              : catOffer;
+          let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+          product.offer_price = offerPrice;
+          product.applied_discount = highestOffer;
+        }
+      });
+    }
     const bill = getBill(plainCart);
     const amount = bill.grand_total;
     const cartWithQty = await Cart.findOne(
@@ -459,6 +477,7 @@ const retryPayment = async (req, res) => {
     const { orderID } = req.params;
     const order = await Order.findById(orderID);
     if (
+      order &&
       order.payment_type === "razorpay" &&
       order.payment_status === "failed" &&
       order.razorpay_order_id
@@ -505,6 +524,9 @@ const placeOrder = async (req, res) => {
     const { addressID } = req.body;
     const paymentMethod = req.query.method;
     const addressFromDB = await Address.findById(addressID);
+    if (!addressFromDB) {
+      return res.json({ success: false, message: "Selected address not found." });
+    }
     let address = {
       recipient_name: addressFromDB.recipient_name,
       apartment: addressFromDB.apartment,
@@ -520,6 +542,10 @@ const placeOrder = async (req, res) => {
         "cart_items.product_id",
         "price discount product_name product_images category is_enabled"
       );
+
+    if (!cart || !cart.cart_items) {
+      return res.json({ success: false, message: "Cart is empty.", redirectUrl: "/cart" });
+    }
 
     //Finding deleted products or variants from items included in cart
     cart.cart_items.forEach((item) => {
@@ -541,16 +567,21 @@ const placeOrder = async (req, res) => {
     await cart.populate("coupon_id");
 
     const plainCart = cart.toObject();
-    plainCart.cart_items.forEach((product) => {
-      product = product.product_id;
-      let highestOffer =
-        product.discount > product.category.offer
-          ? product.discount
-          : product.category.offer;
-      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
-      product.offer_price = offerPrice;
-      product.applied_discount = highestOffer;
-    });
+    if (plainCart.cart_items) {
+      plainCart.cart_items.forEach((product) => {
+        if (product && product.product_id) {
+          product = product.product_id;
+          const catOffer = product.category?.offer || 0;
+          let highestOffer =
+            product.discount > catOffer
+              ? product.discount
+              : catOffer;
+          let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+          product.offer_price = offerPrice;
+          product.applied_discount = highestOffer;
+        }
+      });
+    }
     const bill = getBill(plainCart);
     const amount = bill.grand_total;
     //Checking wallet balance
@@ -734,6 +765,12 @@ const cancelItem = async (req, res) => {
         customer_id: 1,
       }
     );
+    if (!order || !order.order_items || order.order_items.length === 0) {
+      return res.json({
+        success: false,
+        message: "Order or item not found.",
+      });
+    }
     const item = order.order_items[0];
     //checking if already cancelled
     if (item.product_status === "cancelled") {

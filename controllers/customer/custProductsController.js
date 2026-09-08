@@ -17,6 +17,10 @@ const viewProduct = async (req, res) => {
       .populate("category", "category_name offer")
       .populate("variants");
 
+    if (!product) {
+      return res.send("Product doesn't exist");
+    }
+
     const reviews = await ProductReview.find({ product_id: id }).populate(
       "customer_id",
       "customer_name"
@@ -31,10 +35,11 @@ const viewProduct = async (req, res) => {
       product.toObject()
     );
     plainRecommendedList.forEach((product) => {
+      const catOffer = product.category?.offer || 0;
       let highestOffer =
-        product.discount > product.category.offer
+        product.discount > catOffer
           ? product.discount
-          : product.category.offer;
+          : catOffer;
       let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
       product.offer_price = offerPrice;
     });
@@ -46,35 +51,33 @@ const viewProduct = async (req, res) => {
     if (isNaN(ratingAvg)) {
       ratingAvg = "Unrated";
     }
-    if (product) {
-      const plainProduct = product.toObject();
-      let highestOffer =
-        plainProduct.discount > plainProduct.category.offer
-          ? plainProduct.discount
-          : plainProduct.category.offer;
-      let offerPrice = (plainProduct.price * (1 - highestOffer / 100)).toFixed(
-        2
-      );
-      plainProduct.offer_price = offerPrice;
-      plainProduct.applied_discount = highestOffer;
-      if (req.session.user) {
-        return res.render("customer/product/cust-product-details", {
-          product: plainProduct,
-          ratingAvg,
-          reviews,
-          recommendedData: plainRecommendedList,
-        });
-      } else {
-        return res.render("customer/product/cust-product-details", {
-          product: plainProduct,
-          ratingAvg,
-          reviews,
-          recommendedData: plainRecommendedList,
-          isLoggedOut: true,
-        });
-      }
+    const plainProduct = product.toObject();
+    const catOffer = plainProduct.category?.offer || 0;
+    let highestOffer =
+      plainProduct.discount > catOffer
+        ? plainProduct.discount
+        : catOffer;
+    let offerPrice = (plainProduct.price * (1 - highestOffer / 100)).toFixed(
+      2
+    );
+    plainProduct.offer_price = offerPrice;
+    plainProduct.applied_discount = highestOffer;
+    if (req.session.user) {
+      return res.render("customer/product/cust-product-details", {
+        product: plainProduct,
+        ratingAvg,
+        reviews,
+        recommendedData: plainRecommendedList,
+      });
+    } else {
+      return res.render("customer/product/cust-product-details", {
+        product: plainProduct,
+        ratingAvg,
+        reviews,
+        recommendedData: plainRecommendedList,
+        isLoggedOut: true,
+      });
     }
-    return res.send("Product doesn't exist");
   } catch (error) {
     console.log(error);
     console.log("ERROR : View Product");
@@ -143,10 +146,11 @@ const getProducts = async (req, res) => {
       .populate("variants", "stock_quantity");
     const plainProductList = productList.map((product) => product.toObject());
     plainProductList.forEach((product) => {
+      const catOffer = product.category?.offer || 0;
       let highestOffer =
-        product.discount > product.category.offer
+        product.discount > catOffer
           ? product.discount
-          : product.category.offer;
+          : catOffer;
       let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
       product.offer_price = offerPrice;
     });

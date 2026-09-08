@@ -37,7 +37,7 @@
                       </a></td>
                       <td><%= productList[i]._id %></td>
                       <td><%= productList[i].product_name %></td>
-                      <td><%= productList[i].category.category_name %></td>
+                      <td><%= productList[i].category?.category_name || 'Uncategorized' %></td>
                       <td id="visibility-<%=productList[i]._id%>"><% if (productList[i].is_enabled) { %>
                             Visible
                           <% } else { %>

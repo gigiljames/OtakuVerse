@@ -17,7 +17,7 @@
                   <li><a href="/">Home</a></li>
                   /
                   <li><a href="">
-                      <%=product.category.category_name%>
+                      <%=product.category?.category_name || 'Uncategorized'%>
                     </a></li>
                   /
                   <li><a href="">
@@ -45,7 +45,7 @@
                       <%=product.product_name%>
                     </div>
                     <div class="category">
-                      <%=product.category.category_name%>
+                      <%=product.category?.category_name || 'Uncategorized'%>
                     </div>
                   </div>
                   <div class="line2">
@@ -139,7 +139,7 @@
                   <%reviews.forEach((review)=>{%>
                     <div class="review-card">
                       <div class="reviewer-name">
-                        <%=review.customer_id.customer_name%>
+                        <%=review.customer_id?.customer_name || 'Anonymous'%>
                       </div>
                       <div class="review-rating">Rating: <%=review.rating%></div>
                       <div class="review-body">

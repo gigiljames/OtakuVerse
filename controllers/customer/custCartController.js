@@ -30,21 +30,23 @@ const getBill = function (cart) {
     you_save_percent: 0,
     total_quantity: 0,
   };
+  if (!cart || !cart.cart_items) return bill;
   cart.cart_items.forEach((item) => {
-    // console.log(item);
-    if (item.variant_id.stock_quantity !== 0) {
+    if (item.variant_id && item.variant_id.stock_quantity !== 0 && item.product_id) {
       const product = item.product_id;
-      bill.subtotal += product.price * item.quantity;
-      bill.grand_total += product.offer_price * item.quantity;
+      const appliedDiscount = product.applied_discount || 0;
+      const offerPrice = product.offer_price || product.price || 0;
+      bill.subtotal += (product.price || 0) * item.quantity;
+      bill.grand_total += Number(offerPrice) * item.quantity;
       bill.discount -=
-        product.price * item.quantity * (product.applied_discount / 100);
+        (product.price || 0) * item.quantity * (appliedDiscount / 100);
       bill.total_quantity += item.quantity;
     }
   });
   bill.total = bill.subtotal + bill.delivery_charges;
   bill.grand_total += bill.delivery_charges + bill.free_delivery;
   bill.you_save = bill.total - bill.grand_total;
-  bill.you_save_percent = (bill.you_save * 100) / bill.total;
+  bill.you_save_percent = bill.total ? (bill.you_save * 100) / bill.total : 0;
   bill.subtotal = bill.subtotal.toFixed(2);
   bill.discount = bill.discount.toFixed(2);
   bill.total = bill.total.toFixed(2);
@@ -69,10 +71,13 @@ const cartPage = async (req, res) => {
         "product_name price discount product_images category is_enabled"
       )
       .populate("cart_items.variant_id");
-    // console.log(cart);
+    if (!cart) {
+      cart = new Cart({ customer_id: custID, cart_items: [] });
+      await cart.save();
+    }
     //Finding deleted products or variants from items included in cart and removing them
     const deletedItems = [];
-    if (cart.cart_items.length > 0) {
+    if (cart.cart_items && cart.cart_items.length > 0) {
       cart.cart_items.forEach((item) => {
         if (
           item.variant_id === null ||
@@ -100,19 +105,28 @@ const cartPage = async (req, res) => {
         "product_name price discount product_images category"
       )
       .populate("cart_items.variant_id");
+    if (!cart) {
+      cart = new Cart({ customer_id: custID, cart_items: [] });
+      await cart.save();
+    }
     await cart.populate("cart_items.product_id.category", "offer");
 
     const plainCart = cart.toObject();
-    plainCart.cart_items.forEach((product) => {
-      product = product.product_id;
-      let highestOffer =
-        product.discount > product.category.offer
-          ? product.discount
-          : product.category.offer;
-      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
-      product.offer_price = offerPrice;
-      product.applied_discount = highestOffer;
-    });
+    if (plainCart.cart_items) {
+      plainCart.cart_items.forEach((product) => {
+        if (product && product.product_id) {
+          product = product.product_id;
+          const catOffer = product.category?.offer || 0;
+          let highestOffer =
+            product.discount > catOffer
+              ? product.discount
+              : catOffer;
+          let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+          product.offer_price = offerPrice;
+          product.applied_discount = highestOffer;
+        }
+      });
+    }
 
     if (cart) {
       const cartWithQty = await Cart.findOne(
@@ -150,24 +164,32 @@ const cartPage = async (req, res) => {
 const refreshBill = async (req, res) => {
   try {
     const custID = req.session.user;
-    const cart = await Cart.findOne({ customer_id: custID })
+    let cart = await Cart.findOne({ customer_id: custID })
       .populate(
         "cart_items.product_id",
         "product_name price discount product_images category"
       )
       .populate("cart_items.variant_id");
+    if (!cart) {
+      return res.json({ success: true, bill: getBill(null) });
+    }
     await cart.populate("cart_items.product_id.category", "offer");
     const plainCart = cart.toObject();
-    plainCart.cart_items.forEach((product) => {
-      product = product.product_id;
-      let highestOffer =
-        product.discount > product.category.offer
-          ? product.discount
-          : product.category.offer;
-      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
-      product.offer_price = offerPrice;
-      product.applied_discount = highestOffer;
-    });
+    if (plainCart.cart_items) {
+      plainCart.cart_items.forEach((product) => {
+        if (product && product.product_id) {
+          product = product.product_id;
+          const catOffer = product.category?.offer || 0;
+          let highestOffer =
+            product.discount > catOffer
+              ? product.discount
+              : catOffer;
+          let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+          product.offer_price = offerPrice;
+          product.applied_discount = highestOffer;
+        }
+      });
+    }
     const bill = getBill(plainCart);
     return res.json({ success: true, bill });
   } catch (error) {
@@ -353,11 +375,12 @@ const wishlistPage = async (req, res) => {
       .populate("wishlist_items.product_id")
       .populate("wishlist_items.variant_id");
     if (!wishlist) {
-      await Wishlist.insertMany([{ customer_id: custID }]);
+      wishlist = new Wishlist({ customer_id: custID, wishlist_items: [] });
+      await wishlist.save();
     }
     //Finding deleted products or variants from items included in cart and removing them
     const deletedItems = [];
-    if (wishlist.wishlist_items.length > 0) {
+    if (wishlist.wishlist_items && wishlist.wishlist_items.length > 0) {
       wishlist.wishlist_items.forEach((item) => {
         if (item.variant_id === null || item.product_id === null) {
           deletedItems.push(item._id);
@@ -378,18 +401,27 @@ const wishlistPage = async (req, res) => {
       .populate("wishlist_items.product_id")
       .populate("wishlist_items.variant_id");
 
+    if (!wishlist) {
+      wishlist = new Wishlist({ customer_id: custID, wishlist_items: [] });
+      await wishlist.save();
+    }
     await wishlist.populate("wishlist_items.product_id.category", "offer");
     const plainWishlist = wishlist.toObject();
-    plainWishlist.wishlist_items.forEach((product) => {
-      product = product.product_id;
-      let highestOffer =
-        product.discount > product.category.offer
-          ? product.discount
-          : product.category.offer;
-      let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
-      product.offer_price = offerPrice;
-      product.applied_discount = highestOffer;
-    });
+    if (plainWishlist.wishlist_items) {
+      plainWishlist.wishlist_items.forEach((product) => {
+        if (product && product.product_id) {
+          product = product.product_id;
+          const catOffer = product.category?.offer || 0;
+          let highestOffer =
+            product.discount > catOffer
+              ? product.discount
+              : catOffer;
+          let offerPrice = (product.price * (1 - highestOffer / 100)).toFixed(2);
+          product.offer_price = offerPrice;
+          product.applied_discount = highestOffer;
+        }
+      });
+    }
     if (wishlist) {
       const startPoint = (offset - 1) * limit;
       const reverseWishlistItems = plainWishlist.wishlist_items.reverse();

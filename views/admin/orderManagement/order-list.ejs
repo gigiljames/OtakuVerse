@@ -38,7 +38,7 @@
                     <div class="customer-name info-item">
                       <div class="label">Customer name</div>
                       <div class="data">
-                        <%= order.customer_id.customer_name %>
+                        <%= order.customer_id?.customer_name || 'N/A' %>
                       </div>
                     </div>
                     <%const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];%>
@@ -46,7 +46,8 @@
                     <div class="order-date info-item">
                       <div class="label">Order date</div>
                       <div class="data">
-                        <%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%>
+                        <% const orderDate = new Date(order.createdAt); %>
+                        <%= orderDate.getDate()+" "+months[orderDate.getMonth()]+" "+orderDate.getFullYear() %>
                       </div>
                     </div>
                   </td>
@@ -109,7 +110,7 @@
                         Amount
                       </div>
                       <div class="data">
-                        <%= order.amount.toFixed(2) %>
+                        <%= (order.amount || 0).toFixed(2) %>
                       </div>
                     </div>
                     <div class="payment-status info-item">

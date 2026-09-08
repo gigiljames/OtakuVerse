@@ -37,6 +37,9 @@ const cancelOrder = async (req, res) => {
   try {
     const { orderID } = req.params;
     const order = await Order.findById(orderID);
+    if (!order) {
+      return res.json({ success: false, message: "Order not found." });
+    }
     //re-stock
     order.order_items.forEach(async (item) => {
       await ProductVariant.updateOne(
@@ -104,6 +107,9 @@ const cancelItem = async (req, res) => {
         customer_id: 1,
       }
     );
+    if (!order || !order.order_items || order.order_items.length === 0) {
+      return res.json({ success: false, message: "Order or item not found." });
+    }
     const item = order.order_items[0];
     //checking if already cancelled
     if (item.product_status === "cancelled") {

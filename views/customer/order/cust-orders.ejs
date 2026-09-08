@@ -19,7 +19,10 @@
                 <div class="top-row">
                   <div class="order-date top-row-item">
                     <div class="top-row-title">Ordered on</div>
-                    <div class="top-row-data"><%=order.createdAt.getDate()+" "+months[order.createdAt.getMonth()]+" "+order.createdAt.getFullYear()%></div>
+                    <div class="top-row-data">
+                      <% const orderDate = new Date(order.createdAt); %>
+                      <%= orderDate.getDate()+" "+months[orderDate.getMonth()]+" "+orderDate.getFullYear() %>
+                    </div>
                   </div>
                   <div class="payment-method top-row-item">
                     <div class="top-row-title">Payment method</div>
@@ -47,8 +50,9 @@
                     <div class="top-row-title">Delivery on</div>
                     <div class="top-row-data">
                       <% let deliveryDate = "Cancelled" %>
-                      <% if (order.delivery_date!==null) { %>
-                        <% deliveryDate = order.delivery_date.getDate()+" "+months[order.delivery_date.getMonth()]+" "+order.delivery_date.getFullYear() %>
+                      <% if (order.delivery_date) { %>
+                        <% const delDate = new Date(order.delivery_date); %>
+                        <% deliveryDate = delDate.getDate()+" "+months[delDate.getMonth()]+" "+delDate.getFullYear() %>
                       <% } %>
                       <%= deliveryDate%>
                     </div>
@@ -65,7 +69,7 @@
                     <%let items = order.order_items%>
                                     <%items.forEach((item)=>{%>
                     <div class="item-card item-<%=item.variant_id%>">
-                      <img src="<%=item.product_images[0].filepath%>" class="product-image">
+                      <img src="<%=item.product_images?.[0]?.filepath || ''%>" class="product-image">
                       <div class="item-info">
                         <a class="product-name" href="/product/<%=item.product_id%>"><%=item.product_name%></a>
                         <div class="variant-container">

@@ -115,7 +115,7 @@ function updateRequestModal(requestModal, order, reason, request) {
                 <div class="bottom-row">
                   <div class="item-container">
                     <img src="${
-                      item.product_images[0].filepath
+                      item.product_images?.[0]?.filepath || ''
                     }" class="product-image">
                     <div class="item-info">
                       <div class="product-name">

@@ -25,7 +25,7 @@
                     <%let variant = item.variant_id%>
                     <td>
                       <div class="item-container">
-                        <img class="product_image" src="<%=product.product_images[0].filepath%>" alt="product_image">
+                        <img class="product_image" src="<%=product.product_images?.[0]?.filepath || ''%>" alt="product_image">
                         <div class="item-info">
                           <div class="product-name"><a href="/product/<%=product._id%>"><%=product.product_name%></a></div>
                           <div class="variant-colour">Colour: <%=variant.colour%></div>
