@@ -309,3 +309,64 @@ td {
   border: 1px solid black;
   height: 30px;
 }
+
+.period-summary-container {
+  width: 100%;
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
+.period-summary-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 12px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.period-summary-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.summary-card {
+  flex: 1;
+  min-width: 130px;
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e2e8f0;
+}
+
+.summary-card .card-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.summary-card .card-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.summary-card.sales-card { border-top: 4px solid rgb(56, 207, 56); }
+.summary-card.amount-card { border-top: 4px solid rgb(61, 129, 217); }
+.summary-card.discount-card { border-top: 4px solid rgb(255, 200, 0); }
+.summary-card.coupon-card { border-top: 4px solid rgb(255, 119, 0); }
+.summary-card.users-card { border-top: 4px solid rgb(239, 103, 187); }
+

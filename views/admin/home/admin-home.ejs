@@ -40,7 +40,7 @@
               <div class="operations-row-inner">
                 <div class="operations-1">
                   <select id="report-period">
-                    <option value="daily">Daily</option>
+                    <option value="daily" selected>Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
@@ -61,6 +61,31 @@
             <div class="div" id="salesReport">
               <div class="report-title">SALES REPORT</div>
               <div class="report-subtitle"></div>
+              <div class="period-summary-container">
+                <div class="period-summary-title">Summary for Selected Period</div>
+                <div class="period-summary-cards">
+                  <div class="summary-card sales-card">
+                    <span class="card-label">Total Sales</span>
+                    <span class="card-value" id="period-total-sales">0</span>
+                  </div>
+                  <div class="summary-card amount-card">
+                    <span class="card-label">Total Amount</span>
+                    <span class="card-value" id="period-total-amount">₹ 0.00</span>
+                  </div>
+                  <div class="summary-card discount-card">
+                    <span class="card-label">Total Discount</span>
+                    <span class="card-value" id="period-total-discount">₹ 0.00</span>
+                  </div>
+                  <div class="summary-card coupon-card">
+                    <span class="card-label">Total Coupon Discount</span>
+                    <span class="card-value" id="period-total-coupon-discount">₹ 0.00</span>
+                  </div>
+                  <div class="summary-card users-card">
+                    <span class="card-label">Total New Users</span>
+                    <span class="card-value" id="period-total-new-users">0</span>
+                  </div>
+                </div>
+              </div>
               <div class="chart-section">
                 <canvas id="salesChart"></canvas>
                 <canvas id="amountChart"></canvas>

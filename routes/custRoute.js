@@ -26,20 +26,66 @@ router.use(express.static("public"));
 // });
 
 // AUTHENTICATION MIDDLEWARE
+const isAuthPath = (pathStr) => {
+  if (!pathStr) return true;
+  const lower = pathStr.toLowerCase();
+  return (
+    lower.startsWith("/login") ||
+    lower.startsWith("/signup") ||
+    lower.startsWith("/logout") ||
+    lower.startsWith("/forgotpassword") ||
+    lower.startsWith("/resetpassword") ||
+    lower.startsWith("/auth/google") ||
+    lower.startsWith("/verify-otp") ||
+    lower.startsWith("/resend-otp")
+  );
+};
+
 const authMiddleware = async (req, res, next) => {
   if (!req.session.user) {
-    if (req.xhr) {
-      // distinguishing btw ajax and normal req
-      return res.json({ success: false, redirectUrl: "/login" });
+    const isAjax =
+      req.xhr ||
+      req.headers["x-requested-with"] === "XMLHttpRequest" ||
+      (req.headers.accept && req.headers.accept.includes("application/json"));
+
+    if (isAjax) {
+      const referer = req.header("Referer");
+      let returnUrl = "/";
+      if (referer) {
+        try {
+          const refererUrl = new URL(referer, `http://${req.headers.host}`);
+          const pathAndSearch = refererUrl.pathname + refererUrl.search;
+          if (!isAuthPath(pathAndSearch)) {
+            returnUrl = pathAndSearch;
+          }
+        } catch (e) {
+          returnUrl = "/";
+        }
+      }
+      req.session.returnTo = returnUrl;
+      return res.json({
+        success: false,
+        redirectUrl: "/login",
+        previousPage: returnUrl,
+      });
+    } else {
+      const targetUrl = req.originalUrl || req.url;
+      if (!isAuthPath(targetUrl)) {
+        req.session.returnTo = targetUrl;
+      }
+      return res.redirect("/login");
     }
-    return res.redirect("/login");
   } else {
     const customer = await Customer.findOne(
       { _id: req.session.user },
-      { account_status: 1 },
+      { account_status: 1 }
     );
     if (customer && customer.account_status === "banned") {
-      if (req.xhr) {
+      const isAjax =
+        req.xhr ||
+        req.headers["x-requested-with"] === "XMLHttpRequest" ||
+        (req.headers.accept && req.headers.accept.includes("application/json"));
+      if (isAjax) {
         return res.json({ success: false, redirectUrl: "/logout" });
       }
       return res.redirect("/logout");
@@ -81,10 +127,28 @@ router.post("/signup", signup.verify);
 router.post("/verify-otp", signup.verifyOtp);
 router.post("/resend-otp", signup.resendOtp);
 //Google auth
-router.get(
-  "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
+router.get("/auth/google", (req, res, next) => {
+  let returnTo = req.session.returnTo;
+  if (!returnTo && req.header("Referer")) {
+    try {
+      const refererUrl = new URL(
+        req.header("Referer"),
+        `http://${req.headers.host}`
+      );
+      const pathAndSearch = refererUrl.pathname + refererUrl.search;
+      if (!isAuthPath(pathAndSearch)) {
+        returnTo = pathAndSearch;
+      }
+    } catch (e) {}
+  }
+  returnTo = returnTo || "/";
+  const state = Buffer.from(JSON.stringify({ returnTo })).toString("base64");
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    state: state,
+  })(req, res, next);
+});
+
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/signup" }),
@@ -127,7 +191,7 @@ router.delete("/cancel-order/:orderID", authMiddleware, order.cancelOrder);
 router.post(
   "/return-request/:orderID/:variantID",
   authMiddleware,
-  order.returnItem
+  order.returnItem,
 );
 router.get("/get-invoice/:orderID", authMiddleware, order.getInvoice);
 //Wishlist

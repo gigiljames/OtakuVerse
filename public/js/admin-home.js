@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const custRangeInputs = document.querySelector(".custom-range-inputs");
   const salesReport = document.querySelector("#salesReport");
   const goButton = document.getElementById("go-button");
+
+  // Load graphs with "daily" selected by default
+  if (periodInput) {
+    periodInput.value = "daily";
+  }
+  if (salesReport) {
+    salesReport.style.display = "flex";
+  }
+  getSalesData("daily");
+
   periodInput.addEventListener("change", () => {
     if (periodInput.value === "range") {
       custRangeInputs.style.display = "flex";
@@ -43,6 +53,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
   document.getElementById("downloadPDF").addEventListener("click", downloadPDF);
 });
+
 
 function refreshTopTenProducts() {
   const topProductsList = document.querySelector(".top-products-list");
@@ -102,14 +113,44 @@ const downloadPDF = () => {
 };
 
 const downloadExcel = (salesReportData) => {
-  // Convert the data to a worksheet
-  const ws = XLSX.utils.json_to_sheet(salesReportData);
-  // Create a new workbook
+  if (!salesReportData || !salesReportData.length) return;
+  const dataForExcel = salesReportData.map((item) => ({
+    Date: item.date,
+    "Total Sales": item.total_sales,
+    "Total Amount": item.total_amount,
+    "Total Discount": item.total_discount,
+    "Total Coupon Discount": item.total_coupon_discount,
+    "Total New Users": item.total_new_users,
+  }));
+
+  let totalSales = 0,
+    totalAmount = 0,
+    totalDiscount = 0,
+    totalCouponDiscount = 0,
+    totalNewUsers = 0;
+  salesReportData.forEach((item) => {
+    totalSales += Number(item.total_sales || 0);
+    totalAmount += parseFloat(item.total_amount || 0);
+    totalDiscount += parseFloat(item.total_discount || 0);
+    totalCouponDiscount += parseFloat(item.total_coupon_discount || 0);
+    totalNewUsers += Number(item.total_new_users || 0);
+  });
+
+  dataForExcel.push({
+    Date: "SUMMARY TOTAL",
+    "Total Sales": totalSales,
+    "Total Amount": totalAmount.toFixed(2),
+    "Total Discount": totalDiscount.toFixed(2),
+    "Total Coupon Discount": totalCouponDiscount.toFixed(2),
+    "Total New Users": totalNewUsers,
+  });
+
+  const ws = XLSX.utils.json_to_sheet(dataForExcel);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Sales Report");
-  // Download the Excel file
   XLSX.writeFile(wb, "sales_report.xlsx");
 };
+
 
 let salesDataGlobal;
 document.getElementById("downloadExcel").addEventListener("click", () => {
@@ -283,27 +324,58 @@ function updateCharts(salesData) {
 function updateReport(salesData, period = "Overall") {
   const reportSubtitle = document.querySelector(".report-subtitle");
   reportSubtitle.innerText = `Time period: ${period}`;
+
+  let totalSales = 0;
+  let totalAmount = 0;
+  let totalDiscount = 0;
+  let totalCouponDiscount = 0;
+  let totalNewUsers = 0;
+
+  if (Array.isArray(salesData)) {
+    salesData.forEach((item) => {
+      totalSales += Number(item.total_sales || 0);
+      totalAmount += parseFloat(item.total_amount || 0);
+      totalDiscount += parseFloat(item.total_discount || 0);
+      totalCouponDiscount += parseFloat(item.total_coupon_discount || 0);
+      totalNewUsers += Number(item.total_new_users || 0);
+    });
+  }
+
+  const periodSalesEl = document.getElementById("period-total-sales");
+  const periodAmountEl = document.getElementById("period-total-amount");
+  const periodDiscountEl = document.getElementById("period-total-discount");
+  const periodCouponEl = document.getElementById("period-total-coupon-discount");
+  const periodUsersEl = document.getElementById("period-total-new-users");
+
+  if (periodSalesEl) periodSalesEl.innerText = totalSales;
+  if (periodAmountEl) periodAmountEl.innerText = "₹ " + totalAmount.toFixed(2);
+  if (periodDiscountEl) periodDiscountEl.innerText = "₹ " + totalDiscount.toFixed(2);
+  if (periodCouponEl) periodCouponEl.innerText = "₹ " + totalCouponDiscount.toFixed(2);
+  if (periodUsersEl) periodUsersEl.innerText = totalNewUsers;
+
   const tbody = document.querySelector("tbody");
   tbody.innerHTML = "";
-  if (salesData.length === 0) {
+  if (!salesData || salesData.length === 0) {
     const row = document.createElement("tr");
     row.innerHTML = `
           <td colspan="6">No activity during this period.</td>`;
     tbody.appendChild(row);
-  }
-  for (value of salesData) {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-          <td>${value.date}</td>
-          <td>${value.total_sales}</td>
-          <td>${value.total_amount}</td>
-          <td>${value.total_discount}</td>
-          <td>${value.total_coupon_discount}</td>
-          <td>${value.total_new_users}</td>`;
+  } else {
+    for (let value of salesData) {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+            <td>${value.date}</td>
+            <td>${value.total_sales}</td>
+            <td>${value.total_amount}</td>
+            <td>${value.total_discount}</td>
+            <td>${value.total_coupon_discount}</td>
+            <td>${value.total_new_users}</td>`;
 
-    tbody.appendChild(row);
+      tbody.appendChild(row);
+    }
   }
 }
+
 
 function updateCards(salesData) {
   const amountCardValue = document.querySelector(".amount-container .amount");

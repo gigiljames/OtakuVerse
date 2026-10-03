@@ -164,7 +164,9 @@ const verifyOtp = async (req, res) => {
 
       console.log("Customer signed in successfully.");
       req.session.user = customer._id;
-      return res.json({ success: true, redirectUrl: "/login" });
+      const redirectUrl = req.session.returnTo || "/";
+      delete req.session.returnTo;
+      return res.json({ success: true, redirectUrl: redirectUrl });
     } else {
       return res
         .status(400)
@@ -204,6 +206,21 @@ const resendOtp = async (req, res) => {
   }
 };
 
+const isAuthPath = (pathStr) => {
+  if (!pathStr) return true;
+  const lower = pathStr.toLowerCase();
+  return (
+    lower.startsWith("/login") ||
+    lower.startsWith("/signup") ||
+    lower.startsWith("/logout") ||
+    lower.startsWith("/forgotpassword") ||
+    lower.startsWith("/resetpassword") ||
+    lower.startsWith("/auth/google") ||
+    lower.startsWith("/verify-otp") ||
+    lower.startsWith("/resend-otp")
+  );
+};
+
 const verifyGoogleUser = async (req, res) => {
   const customer = await Customer.findOne(
     { google_id: req.user.google_id },
@@ -213,9 +230,25 @@ const verifyGoogleUser = async (req, res) => {
     return res.redirect("/login?status=banned");
   } else {
     req.session.user = req.user._id;
-    return res.redirect("/");
+    let redirectUrl = req.session.returnTo;
+
+    if (req.query.state) {
+      try {
+        const decoded = JSON.parse(
+          Buffer.from(req.query.state, "base64").toString("utf-8")
+        );
+        if (decoded && decoded.returnTo && !isAuthPath(decoded.returnTo)) {
+          redirectUrl = decoded.returnTo;
+        }
+      } catch (e) {}
+    }
+
+    redirectUrl = redirectUrl || "/";
+    delete req.session.returnTo;
+    return res.redirect(redirectUrl);
   }
 };
+
 
 module.exports = {
   getPage,

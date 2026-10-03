@@ -28,7 +28,7 @@ loginForm.addEventListener("submit", (event) => {
             response.message,
             "success",
             () => {
-              window.location.href = "/";
+              window.location.href = response.redirectUrl || "/";
             },
             1500
           );

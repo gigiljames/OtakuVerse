@@ -9,12 +9,45 @@ const mg = mailgun.client({
   key: process.env.MAILGUN_API_KEY || "",
 });
 
+const isAuthPath = (pathStr) => {
+  if (!pathStr) return true;
+  const lower = pathStr.toLowerCase();
+  return (
+    lower.startsWith("/login") ||
+    lower.startsWith("/signup") ||
+    lower.startsWith("/logout") ||
+    lower.startsWith("/forgotpassword") ||
+    lower.startsWith("/resetpassword") ||
+    lower.startsWith("/auth/google") ||
+    lower.startsWith("/verify-otp") ||
+    lower.startsWith("/resend-otp")
+  );
+};
+
 const getPage = async (req, res) => {
   try {
     if (req.session.user) {
-      return res.redirect("/");
+      const redirectUrl = req.session.returnTo || "/";
+      delete req.session.returnTo;
+      return res.redirect(redirectUrl);
     } else {
-      const { status } = req.query;
+      const { status, returnTo } = req.query;
+
+      if (returnTo && !isAuthPath(returnTo)) {
+        req.session.returnTo = returnTo;
+      } else if (!req.session.returnTo && req.header("Referer")) {
+        try {
+          const refererUrl = new URL(
+            req.header("Referer"),
+            `http://${req.headers.host}`
+          );
+          const pathAndSearch = refererUrl.pathname + refererUrl.search;
+          if (!isAuthPath(pathAndSearch)) {
+            req.session.returnTo = pathAndSearch;
+          }
+        } catch (e) {}
+      }
+
       if (status === "banned") {
         return res.render("customer/login/cust-login", {
           message: "User banned by admin.",
@@ -264,7 +297,14 @@ const verify = async (req, res) => {
     }
 
     req.session.user = customerExists._id;
-    return res.json({ success: true, message: "Logged in successfully." });
+    const redirectUrl = req.session.returnTo || "/";
+    delete req.session.returnTo;
+    return res.json({
+      success: true,
+      message: "Logged in successfully.",
+      redirectUrl: redirectUrl,
+    });
+
   } catch (error) {
     console.log(error);
     console.log("ERROR : Customer Login Verify");
