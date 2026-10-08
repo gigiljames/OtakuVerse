@@ -1,56 +1,100 @@
 <%- include('../../partials/admin-template.ejs') %>
     <title>Category Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/categoryManagement/category-list.css" />
   </head>
   <body>
     <%- include('../../partials/alert.ejs') %>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <div class="title-row">
-            <div class="title">Category Management</div>
-            <button class="add-button">Add Category</button>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Categories</h1>
+            <button class="add-button">
+              <span class="material-symbols-outlined">add</span>
+              Add Category
+            </button>
           </div>
-          <div class="category-list">
-            <% if(categoryList.length===0){ %>
-              <div>Nothing to show here.</div>
-            <%}%>
-            <% for(let i=0;i<categoryList.length;i++){ %>
-              <a href="/admin/category/<%= categoryList[i]._id %>"><div class="category-button"><%= categoryList[i].category_name %></div></a>
-            <% } %>
-          </div>
+
+          <!-- Category grid -->
+          <% if (categoryList.length === 0) { %>
+            <div class="empty-state">
+              <span class="material-symbols-outlined empty-icon">category</span>
+              <p>No categories yet. Add one to get started.</p>
+            </div>
+          <% } else { %>
+            <div class="category-grid">
+              <% for (let i = 0; i < categoryList.length; i++) { %>
+                <a href="/admin/category/<%= categoryList[i]._id %>" class="category-card">
+                  <span class="material-symbols-outlined category-icon">folder</span>
+                  <span class="category-name"><%= categoryList[i].category_name %></span>
+                  <span class="material-symbols-outlined category-arrow">chevron_right</span>
+                </a>
+              <% } %>
+            </div>
+          <% } %>
+
         </div>
+      </main>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal-overlay" id="add-form-outer">
+      <div class="modal-inner modal-inner--narrow">
+        <div class="modal-header">
+          <div class="modal-title">Add Category</div>
+          <button class="close-button" aria-label="Close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="add-form" method="POST">
+          <div class="input-container">
+            <label for="cat-name">Category name</label>
+            <input id="cat-name" type="text" name="name" placeholder="e.g. Apparel, Figures…" autocomplete="off" />
+          </div>
+          <div id="name-error" class="error-container"></div>
+
+          <div class="input-container">
+            <label for="cat-offer">Category offer (%)</label>
+            <input id="cat-offer" type="text" name="offer" value="0" placeholder="e.g. 10" autocomplete="off" />
+          </div>
+          <div id="offer-error" class="error-container"></div>
+
+          <div class="input-container">
+            <label for="cat-desc">Category description</label>
+            <textarea id="cat-desc" name="desc" placeholder="Describe this category…"></textarea>
+          </div>
+          <div id="desc-error" class="error-container"></div>
+
+          <input class="submit-button" type="submit" value="Add Category" />
+        </form>
       </div>
     </div>
-    <div class="add-form-outer">
-      <span class="material-symbols-outlined close-button"> close </span>
-      <div class="add-form-inner">
-      <div class="form-title">Add Category</div>
-      <form id="add-form" method="POST">
-        <div class="input-container">
-          <label for="cat-name">Category Name</label>
-          <input id="cat-name" type="text" name="name" />
-        </div>
-        <div id="name-error" class="error-container"></div>
-        <div class="input-container">
-          <label for="cat-offer">Category Offer (%)</label>
-          <input id="cat-offer" type="text" name="offer" value="0"/>
-        </div>
-        <div id="offer-error" class="error-container"></div>
-        <div class="input-container">
-          <label for="cat-desc">Category Description</label>
-          <textarea id="cat-desc" name="desc"></textarea>
-        </div>
-        <div id="desc-error" class="error-container"></div>
-        <input class="submit-button" type="submit" value="SUBMIT" />
-      </form>
-      </div>
-    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
+    </script>
     <script src="/js/category-list.js"></script>
   </body>
 </html>

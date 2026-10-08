@@ -3,154 +3,203 @@
     <link rel="stylesheet" href="/admin/productManagement/product-list.css" />
   </head>
   <body>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <%-include("../../partials/alert.ejs")%>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <div class="title-row">
-            <div class="title">Product Management</div>
-            <button class="add-button">Add Product</button>
-          </div>
-          <div class="customer-list">
-              <table>
-                <tr id="table-headers">
-                  <th></th>
-                  <th>Product ID</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Visibility</th>
-                  <th></th>
-                </tr>
-                <% if(productList.length===0){ %>
-                  <tr><td colspan="6">Nothing to show here.</td></tr>
-                <%}else{%>
-                  <% for(let i=0;i<productList.length;i++){ %>
-                    <tr>
-                      <td><a href="/admin/view-product/<%= productList[i]._id %>">
-                        <span class="material-symbols-outlined">
-                          open_in_new
-                          </span>
-                      </a></td>
-                      <td><%= productList[i]._id %></td>
-                      <td><%= productList[i].product_name %></td>
-                      <td><%= productList[i].category?.category_name || 'Uncategorized' %></td>
-                      <td id="visibility-<%=productList[i]._id%>"><% if (productList[i].is_enabled) { %>
-                            Visible
-                          <% } else { %>
-                            Blocked
-                      <% } %></td>
-                      <%if(productList[i].is_enabled){%>
-                        <td>
-                          <button class="visibility-button"
-                          id="button-<%=productList[i]._id%>"
-                          data-visible="true"  onclick="handleVisibility('<%=productList[i]._id%>')">Disable</button>
-                        </td>
-                      <%}else{%>
-                        <td>
-                          <button class="visibility-button"
-                          id="button-<%=productList[i]._id%>"  data-visible="false"  onclick="handleVisibility('<%=productList[i]._id%>')">Enable</button>
-                        </td>
-                      <%}%>
-                    </tr>
-                  <%}%>
-                  <tr>
-                    <td colspan="6" class="pagination-links">
-                      <%if(offset>1){%>
-                        <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(offset)-parseInt(1) %>">&lt;Previous</a>
-                      <%}else{%>
-                        <a href="" class="prev-next-buttons">&lt;Previous</a>
-                      <%}%>
-                      <%for(let i=1;i<=pageCount;i++){%>
-                        <%if(i==offset){%>
-                          <a class="selected-offset" href="/admin/product-management?offset=<%= i %>"><%= i %></a>
-                        <%}else{%>
-                          <a  href="/admin/product-management?offset=<%= i %>"><%= i %></a>
-                        <%}%>
-                        
-                      <%}%>
-                      <%if(offset<pageCount){%>
-                        <a class="prev-next-buttons" href="/admin/product-management?offset=<%= parseInt(1)+parseInt(offset) %>">Next&gt;</a>
-                      <%}else{%>
-                        <a href="" class="prev-next-buttons ">Next&gt;</a>
-                      <%}%>
-                    </td>
-                  </tr> 
-                <%}%>
-              </table>
-          </div>
-        </div>
-      </div>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
     </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Products</h1>
+            <button class="add-button">
+              <span class="material-symbols-outlined">add</span>
+              Add Product
+            </button>
+          </div>
+
+          <!-- Table card -->
+          <div class="table-card">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Visibility</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (productList.length === 0) { %>
+                    <tr>
+                      <td colspan="5" class="empty-row">No products found.</td>
+                    </tr>
+                  <% } else { %>
+                    <% for (let i = 0; i < productList.length; i++) { %>
+                      <tr class="product-row" data-href="/admin/view-product/<%= productList[i]._id %>">
+                        <td class="id-col"><%= productList[i]._id %></td>
+                        <td><%= productList[i].product_name %></td>
+                        <td><%= productList[i].category?.category_name || 'Uncategorized' %></td>
+                        <td id="visibility-<%= productList[i]._id %>">
+                          <% if (productList[i].is_enabled) { %>
+                            <span class="status-badge status-visible">Visible</span>
+                          <% } else { %>
+                            <span class="status-badge status-blocked">Blocked</span>
+                          <% } %>
+                        </td>
+                        <td class="action-col">
+                          <% if (productList[i].is_enabled) { %>
+                            <button
+                              class="visibility-button"
+                              id="button-<%= productList[i]._id %>"
+                              data-visible="true"
+                              onclick="handleVisibility(event, '<%= productList[i]._id %>')">
+                              Disable
+                            </button>
+                          <% } else { %>
+                            <button
+                              class="visibility-button"
+                              id="button-<%= productList[i]._id %>"
+                              data-visible="false"
+                              onclick="handleVisibility(event, '<%= productList[i]._id %>')">
+                              Enable
+                            </button>
+                          <% } %>
+                        </td>
+                      </tr>
+                    <% } %>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-wrapper">
+              <!-- Inline pagination (uses pageCount + offset locals) -->
+              <% if (pageCount > 0) { %>
+                <div class="pagination-container">
+                  <div class="pagination-buttons">
+                    <a href="/admin/product-management?offset=<%= Math.max(1, parseInt(offset) - 1) %>">
+                      <button>&lt; Previous</button>
+                    </a>
+                    <% for (let i = 1; i <= pageCount; i++) { %>
+                      <a href="/admin/product-management?offset=<%= i %>">
+                        <button <%= i == offset ? 'id="pagination-selected"' : '' %>><%= i %></button>
+                      </a>
+                    <% } %>
+                    <a href="/admin/product-management?offset=<%= Math.min(pageCount, parseInt(offset) + 1) %>">
+                      <button>Next &gt;</button>
+                    </a>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Product Modal -->
     <div class="add-form-outer">
-      <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
-        <div class="form-title">Add Product</div>
+        <div class="modal-header">
+          <div class="form-title">Add Product</div>
+          <button class="close-button" aria-label="Close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
         <form id="add-form" method="POST" action="/admin/add-product">
-          <div class="add-form-left">
-            <div class="input-container">
-              <label for="name-input">Product name</label>
-              <input id="name-input" class="login-input" type="text" name="name"/>
-            </div>
-            <div id="name-error" class="error-container"></div>
-        
-            <div class="input-container">
-              <label for="price-input">Price (In Rupees)</label>
-              <input
-                id="price-input"
-                type="text"
-                name="price"
-              />
-            </div>
-            <div id="price-error" class="error-container"></div>
-            
-            <div class="input-container">
-              <label for="visibility-input">Visibility</label>
-              <select id="visibility-input" name="visibility">
+          <div class="form-grid">
+            <div class="form-col">
+              <div class="input-container">
+                <label for="name-input">Product name</label>
+                <input id="name-input" type="text" name="name" placeholder="e.g. Attack on Titan Hoodie" autocomplete="off" />
+              </div>
+              <div id="name-error" class="error-container"></div>
+
+              <div class="input-container">
+                <label for="price-input">Price (₹)</label>
+                <input id="price-input" type="text" name="price" placeholder="e.g. 999" autocomplete="off" />
+              </div>
+              <div id="price-error" class="error-container"></div>
+
+              <div class="input-container">
+                <label for="visibility-input">Visibility</label>
+                <select id="visibility-input" name="visibility">
                   <option value="true">Enabled</option>
                   <option value="false">Disabled</option>
-              </select>
+                </select>
+              </div>
+              <div id="visibility-error" class="error-container"></div>
+
+              <div class="input-container">
+                <label for="specs-input">Product specifications</label>
+                <textarea id="specs-input" name="specs" placeholder="List key specifications, one per line…"></textarea>
+              </div>
+              <div id="specs-error" class="error-container"></div>
             </div>
-            <div id="visibility-error" class="error-container"></div>
-            <div class="input-container">
-              <label for="specs-input">Product Specifications</label>
-              <textarea id="specs-input" name="specs"></textarea>
-              
+
+            <div class="form-col">
+              <div class="input-container">
+                <label for="category-input">Category</label>
+                <select id="category-input" name="category">
+                  <% categoryList.forEach(category => { %>
+                    <option value="<%= category._id %>"><%= category.category_name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div id="category-error" class="error-container"></div>
+
+              <div class="input-container">
+                <label for="discount-input">Discount (%)</label>
+                <input id="discount-input" type="text" name="discount" placeholder="e.g. 10" autocomplete="off" />
+              </div>
+              <div id="discount-error" class="error-container"></div>
+
+              <div class="input-container">
+                <label for="desc-input">Product description</label>
+                <textarea id="desc-input" name="desc" placeholder="Describe the product…"></textarea>
+              </div>
+              <div id="desc-error" class="error-container"></div>
+
+              <input class="submit-button" type="submit" value="Add Product" />
             </div>
-            <div id="specs-error" class="error-container"></div>
-          </div>
-          <div class="add-form-right">
-            <div class="input-container">
-              <label for="category-input">Category</label>
-              <select id="category-input" name="category">
-                <% categoryList.forEach(category => { %>
-                  <option value="<%= category._id %>"><%= category.category_name %></option>
-                <% }); %>
-              </select>
-            </div>
-            <div id="category-error" class="error-container"></div>
-            <div class="input-container">
-              <label for="discount-input">Discount (%)</label>
-              <input
-                id="discount-input"
-                type="text"
-                name="discount"
-              />
-            </div>
-            <div id="discount-error" class="error-container"></div>
-            <div class="input-container">
-              <label for="desc-input">Product description</label>
-              <textarea id="desc-input" name="desc"></textarea>
-            </div>
-            <div id="desc-error" class="error-container"></div>
-            <input class="submit-button" type="submit" value="SUBMIT" />
           </div>
         </form>
       </div>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+        // Clickable rows — navigate unless the click was on the action button
+        document.querySelectorAll(".product-row").forEach(row => {
+          row.addEventListener("click", (e) => {
+            if (!e.target.closest(".action-col")) {
+              window.location.href = row.dataset.href;
+            }
+          });
+        });
+      });
+    </script>
     <script src="/js/product-list.js"></script>
   </body>
 </html>

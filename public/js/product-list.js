@@ -89,7 +89,8 @@ function clearErrors() {
   }
 }
 
-function handleVisibility(productID) {
+function handleVisibility(event, productID) {
+  event.stopPropagation(); // prevent row click navigation
   const button = document.querySelector(`#button-${productID}`);
   const visible = button.dataset.visible;
   if (visible === "true") {
@@ -101,10 +102,13 @@ function handleVisibility(productID) {
           alert(response.message, "success");
           button.innerText = "Enable";
           button.dataset.visible = "false";
-          const visibilityData = document.querySelector(
-            `#visibility-${productID}`
-          );
-          visibilityData.innerText = "Blocked";
+          const visibilityCell = document.querySelector(`#visibility-${productID}`);
+          const badge = visibilityCell.querySelector(".status-badge");
+          if (badge) {
+            badge.innerText = "Blocked";
+            badge.classList.remove("status-visible");
+            badge.classList.add("status-blocked");
+          }
         }
       },
     });
@@ -117,10 +121,13 @@ function handleVisibility(productID) {
           alert(response.message, "success");
           button.innerText = "Disable";
           button.dataset.visible = "true";
-          const visibilityData = document.querySelector(
-            `#visibility-${productID}`
-          );
-          visibilityData.innerText = "Visible";
+          const visibilityCell = document.querySelector(`#visibility-${productID}`);
+          const badge = visibilityCell.querySelector(".status-badge");
+          if (badge) {
+            badge.innerText = "Visible";
+            badge.classList.remove("status-blocked");
+            badge.classList.add("status-visible");
+          }
         }
       },
     });

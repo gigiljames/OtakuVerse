@@ -1,8 +1,8 @@
-const addCategoryForm = document.getElementsByClassName("add-form-outer")[0];
+const addCategoryForm = document.getElementById("add-form-outer");
 
 //ADD FORM BUTTONS
 
-const closeButton = document.getElementsByClassName("close-button")[0];
+const closeButton = document.querySelector(".close-button");
 const addButton = document.getElementsByClassName("add-button")[0];
 
 closeButton.addEventListener("click", (event) => {
@@ -10,6 +10,9 @@ closeButton.addEventListener("click", (event) => {
 });
 addButton.addEventListener("click", (event) => {
   addCategoryForm.style.display = "flex";
+});
+addCategoryForm.addEventListener("click", (event) => {
+  if (event.target === addCategoryForm) addCategoryForm.style.display = "none";
 });
 
 //ADD FORM VALIDATION

@@ -4,92 +4,132 @@
   </head>
   <body>
     <%- include('../../partials/alert.ejs') %>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <div class="title-row">
-            <div class="title">Customer Management</div>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Customers</h1>
             <div class="search-bar">
-              <input type="text" id="search" placeholder="Search" />
-              <button class="search-button">
+              <input type="text" id="search" placeholder="Search by name or email&hellip;" autocomplete="off" />
+              <button class="search-button" aria-label="Search">
                 <span class="material-symbols-outlined">search</span>
               </button>
-              <button class="clear-button">
+              <button class="clear-button" aria-label="Clear search">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
-            <button class="add-button">Add Customer</button>
+            <button class="add-button">
+              <span class="material-symbols-outlined">person_add</span>
+              Add Customer
+            </button>
           </div>
-          <div class="customer-list">
+
+          <!-- Table -->
+          <div class="table-card">
+            <div class="table-wrapper">
               <table>
                 <thead>
-                  <tr id="table-headers">
+                  <tr>
                     <th>Customer ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Account status</th>
-                    <th></th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% customerList.forEach(customer => { %>
                     <tr>
                       <td><%= customer._id %></td>
-                      <td><%=customer.customer_name%></td>
-                      <td><%=customer.customer_email%></td>
-                      <td id="status-<%=customer._id%>"><%=customer.account_status%></td>
-                      <%if(customer.account_status==="active"){%>
+                      <td><%= customer.customer_name %></td>
+                      <td><%= customer.customer_email %></td>
+                      <td id="status-<%= customer._id %>">
+                        <span class="status-badge <%= customer.account_status === 'active' ? 'status-active' : 'status-banned' %>">
+                          <%= customer.account_status %>
+                        </span>
+                      </td>
+                      <% if (customer.account_status === "active") { %>
                         <td>
-                          <button class="visibility-button"
-                          id="button-<%=customer._id%>"
-                          data-status="active"  onclick="handleStatus('<%=customer._id%>')">Block</button>
+                          <button
+                            class="visibility-button"
+                            id="button-<%= customer._id %>"
+                            data-status="active"
+                            onclick="handleStatus('<%= customer._id %>')">
+                            Block
+                          </button>
                         </td>
-                      <%}else if (customer.account_status==="banned"){%>
+                      <% } else if (customer.account_status === "banned") { %>
                         <td>
-                          <button class="visibility-button"
-                          id="button-<%=customer._id%>"  data-status="banned"  onclick="handleStatus('<%=customer._id%>')">Unblock</button>
+                          <button
+                            class="visibility-button"
+                            id="button-<%= customer._id %>"
+                            data-status="banned"
+                            onclick="handleStatus('<%= customer._id %>')">
+                            Unblock
+                          </button>
                         </td>
-                      <%}%>
+                      <% } %>
                     </tr>
                   <% }) %>
                 </tbody>
               </table>
+            </div>
+            <div class="pagination-wrapper">
               <%- include("../../partials/pagination.ejs") %>
+            </div>
           </div>
+
         </div>
-      </div>
+      </main>
     </div>
+
+    <!-- Add Customer Modal -->
     <div class="add-form-outer">
-      <span class="material-symbols-outlined close-button"> close </span>
       <div class="add-form-inner">
-        <div class="form-title">Add Customer</div>
+        <div class="modal-header">
+          <div class="form-title">Add Customer</div>
+          <button class="close-button" aria-label="Close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
         <form id="add-form" method="POST">
           <div class="input-container">
             <label for="fullname-input">Full name</label>
-            <input id="fullname-input" class="login-input" type="text" name="name"/>
+            <input id="fullname-input" type="text" name="name" placeholder="e.g. John Doe" autocomplete="off" />
           </div>
           <div id="fullname-error" class="error-container"></div>
+
           <div class="input-container">
             <label for="email-input">Email</label>
-            <input id="email-input" type="text" name="email"/>
+            <input id="email-input" type="text" name="email" placeholder="e.g. john@email.com" autocomplete="off" />
           </div>
           <div id="email-error" class="error-container"></div>
+
           <div class="input-container">
             <label for="password-input">Password</label>
             <div class="password-wrapper">
-              <input
-                id="password-input"
-                type="password"
-                name="password"
-              />
+              <input id="password-input" type="password" name="password" placeholder="Create a password" />
               <span class="material-symbols-outlined toggle-password" aria-label="Show password">visibility_off</span>
             </div>
           </div>
           <div id="password-error" class="error-container"></div>
+
           <div class="input-container">
             <label for="status-input">Account status</label>
             <select id="status-input" name="status">
@@ -98,10 +138,22 @@
             </select>
           </div>
           <div id="repassword-error" class="error-container"></div>
-          <input class="submit-button" type="submit" value="SUBMIT" />
+
+          <input class="submit-button" type="submit" value="Add Customer" />
         </form>
       </div>
     </div>
+
+    <script>
+      // Wire up mobile menu button to the sidebar toggle
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
+    </script>
     <script src="/js/customer-list.js"></script>
   </body>
 </html>

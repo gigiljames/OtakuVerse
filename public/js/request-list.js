@@ -79,7 +79,9 @@ function updateRequestModal(requestModal, order, reason, request) {
   } else if (returnStatus === "returned" && !request.is_refunded) {
     requestFunction = `Amount refunded`;
   }
-  let html = `<span class="material-symbols-outlined close-button"> close </span>
+  let html = `<button class="close-button" aria-label="Close">
+    <span class="material-symbols-outlined">close</span>
+  </button>
   <div class="customer-info">
           <div class="info">
             <h3>Customer Details</h3>
@@ -159,6 +161,7 @@ function updateRequestModal(requestModal, order, reason, request) {
   const closeButton = requestModal.querySelector(".close-button");
   closeButton.addEventListener("click", (event) => {
     requestModal.style.display = "none";
+    requestModal.style.alignItems = "flex-start";
   });
   const approveButton = requestModal.querySelector(".approve-button");
   const rejectButton = requestModal.querySelector(".reject-button");

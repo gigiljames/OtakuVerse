@@ -33,6 +33,22 @@ const getPage = async (req, res) => {
   }
 };
 
+const viewOrder = async (req, res) => {
+  try {
+    const { orderID } = req.params;
+    const order = await Order.findById(orderID)
+      .populate("customer_id", "customer_name customer_email");
+    if (!order) {
+      return res.redirect("/admin/order-management");
+    }
+    return res.render("admin/orderManagement/view-order", { order });
+  } catch (error) {
+    console.log(error);
+    console.log("ERROR : View Order");
+    return res.redirect("/admin/order-management");
+  }
+};
+
 const cancelOrder = async (req, res) => {
   try {
     const { orderID } = req.params;
@@ -200,6 +216,7 @@ const editItemStatus = async (req, res) => {
 
 module.exports = {
   getPage,
+  viewOrder,
   cancelOrder,
   cancelItem,
   editItemStatus,

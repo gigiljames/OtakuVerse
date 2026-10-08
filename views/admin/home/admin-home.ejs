@@ -1,45 +1,81 @@
 <%- include('../../partials/admin-template.ejs') %>
-    <title>Admin Home</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/admin/home/admin-home.css" />
   </head>
   <body>
-    <%-include("../../partials/alert.ejs")%>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="overall-row">
-      
-          <div class="sales-container">
-            <div class="sales-title">Overall Sales</div>
-            <div class="sales"></div>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
           </div>
-          <div class="amount-container">
-            <div class="amount-title">Overall Amount</div>
-            <div class="amount"></div>
+
+          <!-- Overall stat cards -->
+          <div class="stat-grid">
+            <div class="stat-card stat-sales">
+              <span class="material-symbols-outlined stat-icon">shopping_cart</span>
+              <div class="stat-body">
+                <div class="stat-label">Overall Sales</div>
+                <div class="stat-value sales">—</div>
+              </div>
+            </div>
+            <div class="stat-card stat-amount">
+              <span class="material-symbols-outlined stat-icon">payments</span>
+              <div class="stat-body">
+                <div class="stat-label">Overall Revenue</div>
+                <div class="stat-value amount">—</div>
+              </div>
+            </div>
+            <div class="stat-card stat-discount">
+              <span class="material-symbols-outlined stat-icon">sell</span>
+              <div class="stat-body">
+                <div class="stat-label">Overall Discount</div>
+                <div class="stat-value discount">—</div>
+              </div>
+            </div>
+            <div class="stat-card stat-coupon">
+              <span class="material-symbols-outlined stat-icon">local_offer</span>
+              <div class="stat-body">
+                <div class="stat-label">Coupon Discount</div>
+                <div class="stat-value coupon-discount">—</div>
+              </div>
+            </div>
+            <div class="stat-card stat-users">
+              <span class="material-symbols-outlined stat-icon">group</span>
+              <div class="stat-body">
+                <div class="stat-label">Overall Users</div>
+                <div class="stat-value new-users">—</div>
+              </div>
+            </div>
           </div>
-          <div class="discount-container">
-            <div class="discount-title">Overall Discount</div>
-            <div class="discount"></div>
-          </div>
-          <div class="coupon-discount-container">
-            <div class="coupon-discount-title">Overall Coupon Discount</div>
-            <div class="coupon-discount"></div>
-          </div>
-          <div class="new-users-container">
-            <div class="new-users-title">Overall Users</div>
-            <div class="new-users"></div>
-          </div>
-        </div>
-        <div class="main-right-body">
-          <div class="report-section">
-            <div class="subtitle">GENERATE SALES REPORT</div>
-            <div class="operations-row">
-              <div class="operations-row-inner">
-                <div class="operations-1">
-                  <select id="report-period">
+
+          <!-- Main body: report + rankings -->
+          <div class="dashboard-body">
+
+            <!-- Report section -->
+            <div class="report-section">
+
+              <!-- Controls -->
+              <div class="report-controls">
+                <div class="controls-left">
+                  <select id="report-period" class="period-select">
                     <option value="daily" selected>Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
@@ -47,85 +83,132 @@
                     <option value="range">Custom range</option>
                   </select>
                   <div class="custom-range-inputs">
-                    <input id="start" type="date"/>
-                    <input id="end" type="date"/>
+                    <input id="start" type="date" />
+                    <input id="end" type="date" />
                   </div>
-                  <button id="go-button">Go</button>
+                  <button id="go-button">
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                    Go
+                  </button>
                 </div>
-                <div class="operations-2">
-                  <button id="downloadPDF">PDF Download</button>
-                  <button id="downloadExcel">Excel Download</button>
+                <div class="controls-right">
+                  <button id="downloadPDF" class="btn-pdf">
+                    <span class="material-symbols-outlined">picture_as_pdf</span>
+                    PDF
+                  </button>
+                  <button id="downloadExcel" class="btn-excel">
+                    <span class="material-symbols-outlined">table_view</span>
+                    Excel
+                  </button>
                 </div>
               </div>
-            </div>
-            <div class="div" id="salesReport">
-              <div class="report-title">SALES REPORT</div>
-              <div class="report-subtitle"></div>
-              <div class="period-summary-container">
-                <div class="period-summary-title">Summary for Selected Period</div>
-                <div class="period-summary-cards">
+
+              <!-- Report output -->
+              <div id="salesReport">
+                <div class="report-header">
+                  <div class="report-title">Sales Report</div>
+                  <div class="report-subtitle"></div>
+                </div>
+
+                <!-- Period summary cards -->
+                <div class="summary-grid">
                   <div class="summary-card sales-card">
-                    <span class="card-label">Total Sales</span>
-                    <span class="card-value" id="period-total-sales">0</span>
+                    <span class="summary-label">Total Sales</span>
+                    <span class="summary-value" id="period-total-sales">0</span>
                   </div>
                   <div class="summary-card amount-card">
-                    <span class="card-label">Total Amount</span>
-                    <span class="card-value" id="period-total-amount">₹ 0.00</span>
+                    <span class="summary-label">Total Amount</span>
+                    <span class="summary-value" id="period-total-amount">₹ 0.00</span>
                   </div>
                   <div class="summary-card discount-card">
-                    <span class="card-label">Total Discount</span>
-                    <span class="card-value" id="period-total-discount">₹ 0.00</span>
+                    <span class="summary-label">Total Discount</span>
+                    <span class="summary-value" id="period-total-discount">₹ 0.00</span>
                   </div>
                   <div class="summary-card coupon-card">
-                    <span class="card-label">Total Coupon Discount</span>
-                    <span class="card-value" id="period-total-coupon-discount">₹ 0.00</span>
+                    <span class="summary-label">Coupon Discount</span>
+                    <span class="summary-value" id="period-total-coupon-discount">₹ 0.00</span>
                   </div>
                   <div class="summary-card users-card">
-                    <span class="card-label">Total New Users</span>
-                    <span class="card-value" id="period-total-new-users">0</span>
+                    <span class="summary-label">New Users</span>
+                    <span class="summary-value" id="period-total-new-users">0</span>
                   </div>
                 </div>
+
+                <!-- Charts -->
+                <div class="chart-grid">
+                  <div class="chart-card">
+                    <div class="chart-label">Sales</div>
+                    <canvas id="salesChart"></canvas>
+                  </div>
+                  <div class="chart-card">
+                    <div class="chart-label">Revenue (₹)</div>
+                    <canvas id="amountChart"></canvas>
+                  </div>
+                  <div class="chart-card">
+                    <div class="chart-label">Discount (₹)</div>
+                    <canvas id="discountChart"></canvas>
+                  </div>
+                  <div class="chart-card">
+                    <div class="chart-label">Coupon Discount (₹)</div>
+                    <canvas id="couponChart"></canvas>
+                  </div>
+                </div>
+
+                <!-- Data table -->
+                <div class="report-table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Sales</th>
+                        <th>Amount (₹)</th>
+                        <th>Discount (₹)</th>
+                        <th>Coupon Disc. (₹)</th>
+                        <th>New Users</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
               </div>
-              <div class="chart-section">
-                <canvas id="salesChart"></canvas>
-                <canvas id="amountChart"></canvas>
-                <canvas id="discountChart"></canvas>
-                <canvas id="couponChart"></canvas>
+            </div>
+
+            <!-- Rankings sidebar -->
+            <div class="ranking-section">
+              <div class="ranking-card">
+                <div class="ranking-title">
+                  <span class="material-symbols-outlined">emoji_events</span>
+                  Top 10 Products
+                </div>
+                <ol class="ranking-list top-products-list"></ol>
               </div>
-              <table >
-                <thead>
-                  <th>Date</th>
-                  <th>Total Sales</th>
-                  <th>Total Amount</th>
-                  <th>Total Discount</th>
-                  <th>Total Coupon Discount</th>
-                  <th>Total New Users</th>
-                </thead>
-                <tbody>
-      
-                </tbody>
-              </table>
+              <div class="ranking-card">
+                <div class="ranking-title">
+                  <span class="material-symbols-outlined">category</span>
+                  Top 10 Categories
+                </div>
+                <ol class="ranking-list top-categories-list"></ol>
+              </div>
             </div>
-          </div>
-          <div class="ranking-section">
-            <div class="top-products-container ranking-container">
-              <h3>Top 10 Products</h3>
-              <ol class="top-products-list"></ol>
-            </div>
-            <div class="top-categories-container ranking-container">
-              <h3>Top 10 Categories</h3>
-              <ol class="top-categories-list"></ol>
-            </div>
+
           </div>
         </div>
-      
-        </div>
+      </main>
     </div>
-    <script src="/js/admin-home.js"></script>
+
     <script>
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('start').setAttribute('max', today);
-      document.getElementById('end').setAttribute('max', today);
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+        // Set max date on date pickers
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('start').setAttribute('max', today);
+        document.getElementById('end').setAttribute('max', today);
+      });
     </script>
+    <script src="/js/admin-home.js"></script>
   </body>
 </html>

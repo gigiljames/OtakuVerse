@@ -3,62 +3,108 @@
     <link rel="stylesheet" href="/admin/returnRequest/request-list.css" />
   </head>
   <body>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <%-include("../../partials/alert.ejs")%>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <div class="title-row">
-            <div class="title">Return Requests</div>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Return Requests</h1>
           </div>
-          <div class="customer-list">
+
+          <!-- Table card -->
+          <div class="table-card">
+            <div class="table-wrapper">
               <table>
                 <thead>
-                  <th>Customer ID</th>
-                  <th>Order ID</th>
-                  <th>Reason</th>
-                  <th>Return status</th>
-                  <th>Refund status</th>
-                  <th></th>
+                  <tr>
+                    <th>Customer ID</th>
+                    <th>Order ID</th>
+                    <th>Reason</th>
+                    <th>Return status</th>
+                    <th>Refund status</th>
+                    <th>Action</th>
+                  </tr>
                 </thead>
                 <tbody>
-                  <% if(requests.length===0){ %>
-                    <tr><td colspan="6">Nothing to show here.</td></tr>
-                  <%}else{%>
+                  <% if (requests.length === 0) { %>
+                    <tr>
+                      <td colspan="6" class="empty-row">No return requests found.</td>
+                    </tr>
+                  <% } else { %>
                     <% requests.forEach(request => { %>
                       <tr>
-                        <td><%= request.customer_id %></td>
-                        <td><%= request.order_id %></td>
-                        <td ><div class="reason-cell"><%= request.reason %></div></td>
-                        <td><%= request.return_status %></td>
+                        <td class="id-col"><%= request.customer_id %></td>
+                        <td class="id-col"><%= request.order_id %></td>
                         <td>
-                          <%if(request.is_refunded){%>
-                            Amount refunded
-                          <% } else if (!request.is_refunded && request.return_status==="returned") { %>
-                            Pending refund
-                          <% } else if (!request.is_refunded) { %>
-                            Not refunded
+                          <div class="reason-cell"><%= request.reason %></div>
+                        </td>
+                        <td>
+                          <span class="status-badge status-<%= request.return_status.replace(' ', '-') %>">
+                            <%= request.return_status %>
+                          </span>
+                        </td>
+                        <td>
+                          <% if (request.is_refunded) { %>
+                            <span class="status-badge status-refunded">Refunded</span>
+                          <% } else if (!request.is_refunded && request.return_status === "returned") { %>
+                            <span class="status-badge status-pending-refund">Pending refund</span>
+                          <% } else { %>
+                            <span class="status-badge status-not-refunded">Not refunded</span>
                           <% } %>
                         </td>
                         <td>
-                          <button class="view-button" data-orderid="<%= request.order_id %>" data-variantid="<%= request.variant_id %>" data-reqid="<%= request._id %>">View request</button>
+                          <button
+                            class="view-button"
+                            data-orderid="<%= request.order_id %>"
+                            data-variantid="<%= request.variant_id %>"
+                            data-reqid="<%= request._id %>">
+                            View
+                          </button>
                         </td>
                       </tr>
                     <% }) %>
-                  <%}%>
+                  <% } %>
                 </tbody>
               </table>
+            </div>
           </div>
+
         </div>
-      </div>
+      </main>
     </div>
+
+    <!-- Request detail modal -->
     <div class="request-modal">
       <div class="request-container">
+        <!-- Populated dynamically by request-list.js -->
       </div>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
+    </script>
     <script src="/js/request-list.js"></script>
   </body>
 </html>

@@ -1,144 +1,118 @@
 <%-include("../../partials/admin-template.ejs")%>
     <title>Order Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
     <link rel="stylesheet" href="/admin/orderManagement/order-list.css" />
   </head>
   <body>
-    <%-include("../../partials/alert.ejs")%>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <div class="title-row">
-            <div class="title">Orders</div>
-          </div>
-          <table border="1" cellspacing="0" cellpadding="10">
-            <thead>
-              <tr>
-                <th>Order Details</th>
-                <th>Products</th>
-                <th>Payment Details</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% orders.forEach(order => { %>
-                <tr class="order-<%=order._id%>">
-                  <!-- Order ID -->
-                  <td>
-                    <div class="order-id info-item">
-                      <div class="label">Order ID</div>
-                      <div class="data">
-                        <%= order._id %>
-                      </div>
-                    </div>
-                    <div class="customer-name info-item">
-                      <div class="label">Customer name</div>
-                      <div class="data">
-                        <%= order.customer_id?.customer_name || 'N/A' %>
-                      </div>
-                    </div>
-                    <%const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];%>
-                    <%const paymentMethod = {"cod":"Cash on delivery", "razorpay":"Razorpay","wallet":"OtakuVerse wallet"}%>
-                    <div class="order-date info-item">
-                      <div class="label">Order date</div>
-                      <div class="data">
-                        <% const orderDate = new Date(order.createdAt); %>
-                        <%= orderDate.getDate()+" "+months[orderDate.getMonth()]+" "+orderDate.getFullYear() %>
-                      </div>
-                    </div>
-                  </td>
-                  <!-- Product Names -->
-                  <td>
-                    <div class="item-cards">
-                      <% order.order_items.forEach(item => { %>
-                        <div class="item-card">
-                          <% if (item.product_images && item.product_images.length > 0) { %>
-                            <div class="product-image">
-                              <% item.product_images.forEach(image => { %>
-                                <img src="<%= image.filepath %>" alt="Product Image">
-                              <% }) %>
-                            </div>
-                          <% } else { %>
-                            <p>No Images Available</p>
-                          <% } %>
-                          <div class="product-info">
-                            <p class="product-name"><%= item.product_name %></p>
-                            <div class="variant-info">
-                              <div class="label">Size:</div> <p><%= item.size %></p> <div class="label">Colour:</div> <p><%= item.colour %></p>
-                            </div>
-                            <div class="quantity-info">
-                              <div class="label">Quantity:</div> <p><%= item.quantity %></p>
-                            </div>
-                            <div class="status-data">
-                              <div class="label">Status:</div>
-                              <div class="data"><div class="data-data"><%= item.product_status %></div>
-                              <%if(item.product_status!=="cancelled"){%>
-                                <div class="status-edit-container">
-                                  <select class="status-input">
-                                    <option value="processing">Processing</option>
-                                    <option value="shipping">Shipping</option>
-                                    <option value="out for delivery">Out for delivery</option>
-                                    <option value="delivered">Delivered</option>
-                                  </select>
-                                  <button class="edit-status-button" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">Edit status</button>
-                                  <button class="save-status-button">Save</button>
-                                </div>
-                              <%}%>
-                            </div>
-                            </div>
-                      
-                          </div>
-                          <div class="status-functions">
-                      
-                            <%if(item.product_status!=="cancelled" && order.order_items.length>1 && order.payment_status!=="failed"){%>
-                              <button class="cancel-one-item" data-orderid="<%=order._id%>" data-variantid="<%=item.variant_id%>" >Cancel this item</button>
-                            <%}%>
-                          </div>
-                        </div>
-                      <% }) %>
-                    </div>
-                  </td>
-        
-                  <!-- Amount -->
-                  <td>
-                    <div class="amount info-item">
-                      <div class="label">
-                        Amount
-                      </div>
-                      <div class="data">
-                        <%= (order.amount || 0).toFixed(2) %>
-                      </div>
-                    </div>
-                    <div class="payment-status info-item">
-                      <div class="label">
-                        Status
-                      </div>
-                      <div class="data">
-                        <%= order.payment_status %>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <%if(order.is_cancellable){ %>
-                    <button class="cancel-order-button" data-id="<%=order._id%>">Cancel Order</button>
-                    <%}%>
-                  </td>
-                </tr>
-                
-              <% }) %>
-              
-            </tbody>
-            
-          </table>
-          <%- include('../../partials/pagination.ejs') %>
-        </div>
-      </div>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
     </div>
-    
-    <script src="/js/order-list.js"></script>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title">Orders</h1>
+          </div>
+
+          <!-- Table card -->
+          <div class="table-card">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Items</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]; %>
+                  <% const paymentLabels = { cod: "Cash on delivery", razorpay: "Razorpay", wallet: "Wallet" }; %>
+                  <% if (orders.length === 0) { %>
+                    <tr>
+                      <td colspan="8" class="empty-row">No orders found.</td>
+                    </tr>
+                  <% } %>
+                  <% orders.forEach(order => { %>
+                    <%
+                      const orderDate = new Date(order.createdAt);
+                      const dateStr = orderDate.getDate() + " " + months[orderDate.getMonth()] + " " + orderDate.getFullYear();
+                      const allCancelled = order.order_items.every(i => i.product_status === "cancelled");
+                      const anyDelivered = order.order_items.some(i => i.product_status === "delivered");
+                      let rowStatus = "active";
+                      if (allCancelled) rowStatus = "cancelled";
+                      else if (anyDelivered) rowStatus = "delivered";
+                    %>
+                    <tr class="order-row" data-href="/admin/view-order/<%= order._id %>">
+                      <td class="id-col"><%= order._id %></td>
+                      <td><%= order.customer_id?.customer_name || 'N/A' %></td>
+                      <td class="nowrap"><%= dateStr %></td>
+                      <td class="center"><%= order.order_items.length %></td>
+                      <td class="nowrap">₹<%= (order.amount || 0).toFixed(2) %></td>
+                      <td>
+                        <span class="payment-badge payment-<%= order.payment_status %>">
+                          <%= order.payment_status %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="status-badge status-<%= rowStatus %>">
+                          <%= rowStatus %>
+                        </span>
+                      </td>
+                      <td class="view-col">
+                        <a href="/admin/view-order/<%= order._id %>" class="view-link" title="View order">
+                          <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-wrapper">
+              <%- include('../../partials/pagination.ejs') %>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Mobile sidebar
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+        // Clickable rows
+        document.querySelectorAll(".order-row").forEach(row => {
+          row.addEventListener("click", (e) => {
+            if (!e.target.closest("a")) {
+              window.location.href = row.dataset.href;
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

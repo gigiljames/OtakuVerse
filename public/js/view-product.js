@@ -298,6 +298,10 @@ uploadButton.addEventListener("click", function () {
     return;
   }
 
+  // Show loading state
+  uploadButton.disabled = true;
+  uploadButton.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> Uploading…';
+
   const formData = new FormData();
   formData.append("image", croppedFile); // Append the single cropped file
 
@@ -314,6 +318,9 @@ uploadButton.addEventListener("click", function () {
           window.location.reload();
         });
       } else {
+        // Restore button on failure
+        uploadButton.disabled = false;
+        uploadButton.innerHTML = '<span class="material-symbols-outlined">upload</span> Upload image';
         if (response.message) {
           alert(response.message, "error");
         }
@@ -321,6 +328,11 @@ uploadButton.addEventListener("click", function () {
           window.location.href = response.redirectUrl;
         }
       }
+    },
+    error: function () {
+      uploadButton.disabled = false;
+      uploadButton.innerHTML = '<span class="material-symbols-outlined">upload</span> Upload image';
+      alert("An error occurred while uploading.", "error");
     },
   });
 });
@@ -403,6 +415,26 @@ variantCards.forEach((variantCard) => {
         },
         error: function (response) {},
       });
+    }
+  });
+});
+
+// ── Delete image with confirmation ──────────────────────────────
+document.querySelectorAll(".delete-image-btn").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    if (
+      await yes({
+        message: "Are you sure you want to delete this image?",
+        yesButtonColour: "red",
+      })
+    ) {
+      const action = btn.dataset.action;
+      // POST the delete via a temporary form (method-override handles DELETE)
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = action;
+      document.body.appendChild(form);
+      form.submit();
     }
   });
 });

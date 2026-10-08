@@ -133,8 +133,14 @@ function handleStatus(custID) {
         if (response.success) {
           button.innerText = "Unblock";
           button.dataset.status = "banned";
-          const statusData = document.querySelector(`#status-${custID}`);
-          statusData.innerText = "banned";
+          const statusCell = document.querySelector(`#status-${custID}`);
+          const badge = statusCell.querySelector(".status-badge");
+          if (badge) {
+            badge.innerText = "banned";
+            badge.classList.remove("status-active");
+            badge.classList.add("status-banned");
+          }
+          alert(response.message || "Customer blocked.", "success");
         }
       },
     });
@@ -146,8 +152,14 @@ function handleStatus(custID) {
         if (response.success) {
           button.innerText = "Block";
           button.dataset.status = "active";
-          const statusData = document.querySelector(`#status-${custID}`);
-          statusData.innerText = "active";
+          const statusCell = document.querySelector(`#status-${custID}`);
+          const badge = statusCell.querySelector(".status-badge");
+          if (badge) {
+            badge.innerText = "active";
+            badge.classList.remove("status-banned");
+            badge.classList.add("status-active");
+          }
+          alert(response.message || "Customer unblocked.", "success");
         }
       },
     });

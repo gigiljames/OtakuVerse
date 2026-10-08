@@ -1,273 +1,200 @@
-function clearErrors(errorContainers) {
+function clearFormErrors(errorContainers) {
   for (let i = 0; i < errorContainers.length; i++) {
     errorContainers[i].innerText = "";
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  setupCouponFunctions();
-  //SEARCH
+  // ── Search ──────────────────────────────────────────────────────
   const searchButton = document.querySelector(".search-button");
+  const searchInput = document.getElementById("search");
+  const clearButton = document.querySelector(".clear-button");
+
   searchButton.addEventListener("click", () => {
     window.location.href = `/admin/coupon-management?offset=1&search=${searchInput.value}`;
   });
-  const searchInput = document.getElementById("search");
-  const clearButton = document.querySelector(".clear-button");
-  searchInput.addEventListener("input", () => {
-    if (searchInput.value.trim() !== "") {
-      clearButton.style.display = "block";
-    } else {
-      clearButton.style.display = "none";
+
+  searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      window.location.href = `/admin/coupon-management?offset=1&search=${searchInput.value}`;
     }
   });
+
+  searchInput.addEventListener("input", () => {
+    clearButton.style.display = searchInput.value.trim() !== "" ? "flex" : "none";
+  });
+
   clearButton.addEventListener("click", () => {
     searchInput.value = "";
     clearButton.style.display = "none";
     searchInput.focus();
   });
-  // const sortButton = document.querySelector(".sort-button");
-  // sortButton.addEventListener("click", () => {
-  // });
-  const addFormOuter = document.getElementsByClassName("add-form-outer")[0];
 
-  //ADD FORM BUTTONS
+  // ── Add Coupon Modal ─────────────────────────────────────────────
+  const addFormOuter = document.getElementById("add-form-outer");
+  const addCloseBtn = document.getElementById("add-close-btn");
+  const addButton = document.querySelector(".add-button");
 
-  const closeButton = document.getElementsByClassName("close-button")[0];
-  const addButton = document.getElementsByClassName("add-button")[0];
-
-  closeButton.addEventListener("click", (event) => {
-    addFormOuter.style.display = "none";
-  });
-  addButton.addEventListener("click", (event) => {
+  addButton.addEventListener("click", () => {
     addFormOuter.style.display = "flex";
   });
 
-  //ADD FORM VALIDATION
+  addCloseBtn.addEventListener("click", () => {
+    addFormOuter.style.display = "none";
+  });
 
+  addFormOuter.addEventListener("click", (e) => {
+    if (e.target === addFormOuter) addFormOuter.style.display = "none";
+  });
+
+  // ── Add Coupon Form Validation ───────────────────────────────────
   const addForm = document.getElementById("add-form");
-  const errorContainers = document.getElementsByClassName("error-container");
+  const addErrorContainers = addForm.querySelectorAll(".error-container");
 
   addForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    clearErrors(errorContainers);
-    const title = document.getElementById("title-input").value.trim();
+    clearFormErrors(addErrorContainers);
+
+    const title       = document.getElementById("title-input").value.trim();
     const description = document.getElementById("desc-input").value.trim();
-    const code = document
-      .getElementById("code-input")
-      .value.trim()
-      .toUpperCase();
-    const value = document.getElementById("value-input").value.trim();
-    const type = document.getElementById("type-input").value.trim();
-    const availability = document
-      .getElementById("availability-input")
-      .value.trim();
-    const minSpent = document.getElementById("minspent-input").value.trim();
-    const uses = document.getElementById("uses-input").value.trim();
+    const code        = document.getElementById("code-input").value.trim().toUpperCase();
+    const value       = document.getElementById("value-input").value.trim();
+    const type        = document.getElementById("type-input").value.trim();
+    const availability = document.getElementById("availability-input").value.trim();
+    const minSpent    = document.getElementById("minspent-input").value.trim();
+    const uses        = document.getElementById("uses-input").value.trim();
 
     let flag = 0;
-    if (!title) {
-      flag = 1;
-      document.getElementById("title-error").innerText = "Enter the title.";
-    }
-    if (!description) {
-      flag = 1;
-      document.getElementById("desc-error").innerText =
-        "Enter the description.";
-    }
-    if (!code) {
-      flag = 1;
-      document.getElementById("code-error").innerText = "Enter the code.";
-    }
-    if (!value || isNaN(value)) {
-      flag = 1;
-      document.getElementById("value-error").innerText =
-        "Enter a valid number.";
-    } else if (Number(value) <= 0) {
-      flag = 1;
-      document.getElementById("value-error").innerText =
-        "Value should be greater than 0.";
-    }
-    if (!type) {
-      flag = 1;
-      document.getElementById("type-error").innerText = "Select a type.";
-    }
-    if (!availability) {
-      flag = 1;
-      document.getElementById("availability-error").innerText =
-        "Select availability.";
-    }
-    if (!minSpent || isNaN(minSpent)) {
-      flag = 1;
-      document.getElementById("minspent-error").innerText =
-        "Enter a valid number.";
-    } else if (Number(minSpent) <= 0) {
-      flag = 1;
-      document.getElementById("minspent-error").innerText =
-        "Minimum spent should be greater than 0.";
-    }
-    if (!uses || isNaN(uses)) {
-      flag = 1;
-      document.getElementById("uses-error").innerText = "Enter a valid number.";
-    } else if (Number(uses) <= 0 || Number(uses) > 10) {
-      flag = 1;
-      document.getElementById("uses-error").innerText =
-        "Uses per person should be in the range 1-10.";
-    }
+    if (!title) { flag = 1; document.getElementById("title-error").innerText = "Enter the title."; }
+    if (!description) { flag = 1; document.getElementById("desc-error").innerText = "Enter the description."; }
+    if (!code) { flag = 1; document.getElementById("code-error").innerText = "Enter the code."; }
+    if (!value || isNaN(value) || Number(value) <= 0) { flag = 1; document.getElementById("value-error").innerText = "Enter a positive number."; }
+    if (!type) { flag = 1; document.getElementById("type-error").innerText = "Select a type."; }
+    if (!availability) { flag = 1; document.getElementById("availability-error").innerText = "Select availability."; }
+    if (!minSpent || isNaN(minSpent) || Number(minSpent) <= 0) { flag = 1; document.getElementById("minspent-error").innerText = "Enter a valid amount."; }
+    if (!uses || isNaN(uses) || Number(uses) <= 0 || Number(uses) > 10) { flag = 1; document.getElementById("uses-error").innerText = "Enter a number between 1 and 10."; }
+
     if (flag === 0) {
       $.ajax({
         url: "/admin/add-coupon",
         type: "POST",
-        data: {
-          title,
-          description,
-          code,
-          value,
-          type,
-          availability,
-          minSpent,
-          uses,
-        },
+        data: { title, description, code, value, type, availability, minSpent, uses },
         success: function (response) {
           if (response.success) {
             addFormOuter.style.display = "none";
-            alert(response.message, "success", () => {
-              window.location.reload();
-              // updateCouponList([response.coupon], "append");
-            });
+            alert(response.message, "success", () => { window.location.reload(); });
           } else {
-            if (response.message) {
-              alert(response.message, "error");
-            }
-            if (response.redirectUrl) {
-              window.location.href = response.redirectUrl;
-            }
+            if (response.message) alert(response.message, "error");
+            if (response.redirectUrl) window.location.href = response.redirectUrl;
           }
         },
-        error: function (error) {},
+        error: function () {},
       });
     }
   });
-});
 
-function setupCouponFunctions() {
-  const couponCards = document.querySelectorAll(".coupon-card");
-  couponCards.forEach((card) => {
-    const saveGroup = card.querySelector(".save-group");
-    const editGroup = card.querySelector(".edit-group");
-    const infoInputs = card.querySelectorAll(".info-input");
-    const infoDatas = card.querySelectorAll(".info-data");
-    const editButton = card.querySelector(".edit-button");
-    editButton.addEventListener("click", () => {
-      for (let i = 0; i < infoInputs.length; i++) {
-        if (infoDatas[i].classList.contains("type-data")) {
-          switch (infoDatas[i].innerText) {
-            case "Percentage":
-              infoInputs[i]
-                .querySelector(".percentage")
-                .setAttribute("selected", "selected");
-              break;
-            case "Flat":
-              infoInputs[i]
-                .querySelector(".flat")
-                .setAttribute("selected", "selected");
-              break;
-          }
+  // ── Edit Coupon Modal ────────────────────────────────────────────
+  const editFormOuter = document.getElementById("edit-form-outer");
+  const editCloseBtn  = document.getElementById("edit-close-btn");
+  let activeCouponId  = null;
+
+  editCloseBtn.addEventListener("click", () => {
+    editFormOuter.style.display = "none";
+  });
+
+  editFormOuter.addEventListener("click", (e) => {
+    if (e.target === editFormOuter) editFormOuter.style.display = "none";
+  });
+
+  document.querySelectorAll(".edit-button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      activeCouponId = btn.dataset.id;
+
+      // Populate edit modal from data attributes
+      document.getElementById("edit-title-input").value    = btn.dataset.title   || "";
+      document.getElementById("edit-desc-input").value     = btn.dataset.desc    || "";
+      document.getElementById("edit-code-input").value     = btn.dataset.code    || "";
+      document.getElementById("edit-value-input").value    = btn.dataset.value   || "";
+      document.getElementById("edit-minspent-input").value = btn.dataset.minspent || "";
+      document.getElementById("edit-uses-input").value     = btn.dataset.uses    || "";
+
+      const typeSelect = document.getElementById("edit-type-input");
+      typeSelect.value = btn.dataset.type; // "true" or "false"
+
+      // Clear any lingering errors
+      clearFormErrors(editFormOuter.querySelectorAll(".error-container"));
+
+      editFormOuter.style.display = "flex";
+    });
+  });
+
+  // ── Edit Coupon Form Submit ──────────────────────────────────────
+  const editForm = document.getElementById("edit-form");
+
+  editForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    clearFormErrors(editFormOuter.querySelectorAll(".error-container"));
+
+    const title    = document.getElementById("edit-title-input").value.trim();
+    const desc     = document.getElementById("edit-desc-input").value.trim();
+    const code     = document.getElementById("edit-code-input").value.trim().toUpperCase();
+    const value    = document.getElementById("edit-value-input").value.trim();
+    const type     = document.getElementById("edit-type-input").value;
+    const minSpent = document.getElementById("edit-minspent-input").value.trim();
+    const uses     = document.getElementById("edit-uses-input").value.trim();
+
+    const errors = [];
+    if (!title)  errors.push({ id: "edit-title-error",    msg: "Title is required." });
+    if (!desc)   errors.push({ id: "edit-desc-error",     msg: "Description is required." });
+    if (!code)   errors.push({ id: "edit-code-error",     msg: "Code is required." });
+    if (!value || isNaN(value) || Number(value) <= 0) errors.push({ id: "edit-value-error", msg: "Enter a positive number." });
+    if (!minSpent || isNaN(minSpent) || Number(minSpent) < 0) errors.push({ id: "edit-minspent-error", msg: "Enter a valid amount." });
+    if (!uses || isNaN(uses) || Number(uses) <= 0) errors.push({ id: "edit-uses-error", msg: "Enter a positive number." });
+
+    if (errors.length > 0) {
+      errors.forEach(({ id, msg }) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = msg;
+      });
+      return;
+    }
+
+    $.ajax({
+      url: `/admin/edit-coupon/${activeCouponId}`,
+      type: "PATCH",
+      data: { title, desc, code, value, type, minSpent, uses },
+      success: function (response) {
+        if (response.success) {
+          editFormOuter.style.display = "none";
+          alert(response.message, "success", () => { window.location.reload(); }, 1500);
         } else {
-          infoInputs[i].value = infoDatas[i].innerText;
+          alert(response.message, "error");
         }
-        infoDatas[i].style.display = "none";
-        infoInputs[i].style.display = "block";
-      }
-      saveGroup.style.visibility = "visible";
-      editGroup.style.visibility = "hidden";
+      },
+      error: function () {},
     });
-    const cancelButton = card.querySelector(".cancel-button");
-    cancelButton.addEventListener("click", () => {
-      infoDatas.forEach((data) => {
-        data.style.display = "block";
-      });
-      infoInputs.forEach((input) => {
-        input.style.display = "none";
-      });
-      saveGroup.style.visibility = "hidden";
-      editGroup.style.visibility = "visible";
-    });
-    const saveButton = card.querySelector(".save-button");
-    saveButton.addEventListener("click", () => {
-      // Extracting input values
-      const title = card.querySelector(".input-title").value.trim();
-      const desc = card.querySelector(".input-desc").value.trim();
-      const code = card.querySelector(".input-code").value.trim().toUpperCase();
-      const value = card.querySelector(".input-value").value.trim();
-      const type = card.querySelector(".input-type").value; //
-      const minSpent = card.querySelector(".input-min-spent").value.trim();
-      const uses = card.querySelector(".input-uses").value.trim();
+  });
 
-      // Validation object to collect errors
-      const validationErrors = [];
-
-      // Validation logic
-      if (!title) validationErrors.push("Title is required.");
-      if (!desc) validationErrors.push("Description is required.");
-      if (!code) validationErrors.push("Code is required.");
-      if (!value || isNaN(value) || Number(value) <= 0)
-        validationErrors.push("Value must be a positive number.");
-      if (type !== "true" && type !== "false")
-        validationErrors.push("Type must be either Percentage or Flat.");
-      if (!minSpent || isNaN(minSpent) || Number(minSpent) < 0)
-        validationErrors.push("Minimum spent must be a non-negative number.");
-      if (!uses || isNaN(uses) || Number(uses) <= 0)
-        validationErrors.push("Uses per person must be a positive number.");
-      if (validationErrors.length > 0) {
-        alert(validationErrors.join("\n"), "error", null, 6000);
-      } else {
-        const couponID = saveButton.dataset.id;
-        $.ajax({
-          url: `/admin/edit-coupon/${couponID}`,
-          type: "PATCH",
-          data: { title, desc, code, value, type, minSpent, uses },
-          success: function (response) {
-            if (response.success) {
-              alert(
-                response.message,
-                "success",
-                () => {
-                  window.location.reload();
-                },
-                1500
-              );
-            } else {
-              alert(response.message, "error");
-            }
-          },
-          error: function (error) {},
-        });
-      }
-    });
-    const deleteButton = card.querySelector(".delete-button");
-    deleteButton.addEventListener("click", async () => {
-      if (
-        await yes({
-          message: "Are you sure you want to delete this coupon?",
-          yesButtonColour: "red",
-        })
-      ) {
-        const couponID = deleteButton.dataset.id;
+  // ── Delete Coupon ────────────────────────────────────────────────
+  document.querySelectorAll(".delete-button").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      if (await yes({ message: "Are you sure you want to delete this coupon?", yesButtonColour: "red" })) {
+        const couponID = btn.dataset.id;
         $.ajax({
           url: `/admin/delete-coupon/${couponID}`,
           type: "DELETE",
           success: function (response) {
             if (response.success) {
               alert(response.message, "success", () => {
-                card.remove();
+                btn.closest(".coupon-card").remove();
               });
             } else {
               alert(response.message, "error");
             }
           },
-          error: function (error) {},
+          error: function () {},
         });
       }
     });
   });
-}
+});

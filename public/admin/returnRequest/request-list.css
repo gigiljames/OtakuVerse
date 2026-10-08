@@ -1,302 +1,545 @@
-body {
-  margin: 0;
-  font-family: "Inter", sans-serif;
-}
+/* =============================================
+   Return Requests — Page Styles
+   ============================================= */
 
-.add-button {
-  height: 40px;
-  width: 120px;
-  border: 0;
-  background-color: rgb(58, 225, 80);
-  border-radius: 5px;
-  margin-right: 20px;
-  cursor: pointer;
-}
-
-#add-form {
-  display: flex;
-  /* gap: 20px; */
-  /* flex-direction: column; */
-}
-
-.add-form-left {
-  display: flex;
-  flex-direction: column;
-}
-
-.bottom-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-}
-
-.request-modal {
-  height: 100vh;
-  width: 100vw;
-  background-color: rgba(0, 0, 0, 0.605);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  z-index: 6;
-}
-
-.add-form-inner {
-  background-color: white;
-  border-radius: 10px;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.close-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  color: black;
-  /* transform: scale(2); */
-  cursor: pointer;
-}
-
-.close-button:hover {
-  color: white;
-  background-color: rgb(46, 46, 46);
-  border-radius: 50%;
-}
-
-.customer-list {
-  padding: 0% 0% 2% 6%;
-  width: 100%;
+* {
   box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  font-family: "Inter", "Roboto", sans-serif;
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ---- Mobile top bar ---- */
+.mobile-topbar {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  height: 56px;
+  background-color: #0f172a;
+  position: sticky;
+  top: 0;
+  z-index: 98;
+  flex-shrink: 0;
+}
+
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.mobile-menu-btn:hover {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
+.mobile-logo {
+  font-family: "Micro 5", sans-serif;
+  font-size: 24px;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+}
+
+.sidebar-overlay.visible {
+  display: block;
+}
+
+/* ---- Layout ---- */
+.main-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-inner {
+  padding: 28px 32px;
+  flex: 1;
+}
+
+/* ---- Page header ---- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* ---- Table card ---- */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background-color: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s;
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+tbody td {
+  padding: 13px 16px;
+  font-size: 13px;
+  color: #334155;
+  vertical-align: middle;
+}
+
+.id-col {
+  font-family: "Roboto Mono", monospace;
+  font-size: 11px;
+  color: #94a3b8;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reason-cell {
+  max-height: 56px;
+  overflow-y: auto;
+  max-width: 200px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.empty-row {
+  text-align: center;
+  color: #94a3b8;
+  padding: 40px 16px !important;
+  font-size: 14px;
+}
+
+/* ---- Status badges ---- */
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-action-required,
+.status-pending {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.status-returned {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-refunded {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-pending-refund {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.status-not-refunded {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+/* ---- View button ---- */
+.view-button {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  background-color: #eff6ff;
+  color: #2563eb;
+  transition: background-color 0.2s;
+}
+
+.view-button:hover {
+  background-color: #dbeafe;
+}
+
+/* =============================================
+   Request Detail Modal
+   ============================================= */
+.request-modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 200;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.request-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 28px;
+  width: 100%;
+  max-width: 680px;
+  margin: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Close button — inside the modal */
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: color 0.2s, background-color 0.2s;
+  font-size: 20px; /* for span fallback */
+}
+
+.close-button:hover {
+  color: #1e293b;
+  background-color: #f1f5f9;
+}
+
+/* Section headings inside modal */
+.request-container h3 {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+/* ---- Customer info row ---- */
 .customer-info {
-  display: grid;
-  grid-template-columns: 5fr 3fr;
-  grid-auto-flow: row;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .customer-info .info {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
-.error-container {
-  height: 20px;
-  color: red;
+.customer-info .info .name,
+.customer-info .info .email {
   font-size: 14px;
+  color: #334155;
 }
 
-.form-title {
-  text-align: center;
-  font-size: 26px;
+/* ---- Return action buttons ---- */
+.return-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.approve-button,
+.reject-button,
+.returned-button,
+.refund-button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.approve-button {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.approve-button:hover {
+  background-color: #bbf7d0;
+}
+
+.reject-button {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.reject-button:hover {
+  background-color: #fecaca;
+}
+
+.returned-button {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.returned-button:hover {
+  background-color: #dbeafe;
+}
+
+.refund-button {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.refund-button:hover {
+  background-color: #dcfce7;
+}
+
+/* ---- Order card ---- */
+.order-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.top-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  padding: 14px 16px;
+  border: 1px solid #f1f5f9;
+}
+
+.top-row-title {
+  font-size: 10px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.top-row-data {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* ---- Item info row ---- */
+.bottom-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  align-items: start;
 }
 
 .item-container {
   display: flex;
-  gap: 20px;
+  gap: 14px;
+  align-items: flex-start;
 }
 
-.item-container .product_image {
-  width: 125px;
-  height: 125px;
-  border-radius: 5px;
+.item-container .product-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
   object-fit: cover;
+  border: 1px solid #e2e8f0;
+  flex-shrink: 0;
 }
 
 .item-info {
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  padding-top: 3px;
-  box-sizing: border-box;
-}
-
-.main {
-  display: flex;
-}
-
-.main-right {
-  background-color: white;
-  height: calc(100vh - 60px);
-  width: 100vw;
-  overflow: auto;
-}
-
-.order-card {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.pagination-links {
-  text-align: center;
-}
-
-.pagination-links a {
-  border: 1px solid black;
-  padding: 2px 4px;
-  border-radius: 2px;
-  min-width: 20px;
-  display: inline-block;
-  text-decoration: none;
-  color: rgb(89, 136, 228);
-}
-
-.pagination-links .selected-offset {
-  background-color: rgb(89, 136, 228);
-  color: white;
-}
-
-.password-instructions {
-  font-size: 11px;
-  width: 400px;
-  margin-bottom: 10px;
-  text-align: justify;
-  color: #c5c5c5;
-}
-
-.prev-next-buttons {
-  width: 80px;
+  gap: 6px;
 }
 
 .product-name {
-  font-weight: bold;
-  color: rgb(92, 179, 213);
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.product-ov-price {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333333;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.reason-cell {
-  /* text-overflow: ellipsis; */
-  max-height: 70px;
-  overflow-y: auto;
-}
-
-.reason-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 700px;
-}
-
-.request-container {
-  background-color: white;
-  border-radius: 10px;
-  padding: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
-  position: relative;
-  max-width: 700px;
-}
-
-.request-container h3 {
-  margin: 0;
-  /* margin-bottom: 10px; */
-}
-
-.request-container .product-image {
-  width: 125px;
-  height: 125px;
-  border-radius: 5px;
-  object-fit: cover;
-}
-
-.return-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.shipping-address {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.submit-button {
-  width: 400px;
-  height: 36px;
-  border-radius: 5px;
-  background-color: rgb(58, 225, 80);
-  border: 0;
-  color: white;
+  font-size: 15px;
   font-weight: 700;
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-table {
-  border: 1px solid rgb(167, 167, 167);
-  border-collapse: collapse;
-  border-radius: 7px;
-}
-
-th {
-  color: white;
-  background-color: rgb(36, 36, 36);
-}
-
-tr:nth-child(odd) {
-  background-color: rgb(218, 218, 218);
-}
-
-td,
-th {
-  border: 1px solid rgb(168, 168, 168);
-  padding: 7px;
-  max-width: 250px;
-}
-
-.title-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4% 25% 2% 6%;
-}
-
-.title {
-  font-size: 38px;
-  font-weight: 700;
-}
-
-.top-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-auto-flow: row;
-}
-
-.top-row-title {
-  text-transform: uppercase;
-  font-size: 12px;
-  font-weight: 700;
-  color: #9a9a9a;
+  color: #1e293b;
 }
 
 .variant-container {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .variant-colour,
 .variant-size,
 .quantity {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.product-ov-price {
   font-size: 14px;
-  color: #555555;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.shipping-address {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+  color: #475569;
+  padding-top: 4px;
+}
+
+.shipping-address .top-row-title {
+  margin-bottom: 6px;
+}
+
+/* ---- Reason section ---- */
+.reason-container {
+  background-color: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.reason-container h3 {
+  color: #92400e;
+  margin-bottom: 8px;
+}
+
+.reason {
+  font-size: 14px;
+  color: #78350f;
+  line-height: 1.6;
+}
+
+/* ---- Status text in modal ---- */
+.status-text {
+  font-size: 13px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+@media (max-width: 768px) {
+  .mobile-topbar {
+    display: flex;
+  }
+
+  .page-inner {
+    padding: 20px 16px;
+  }
+
+  .bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .top-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .shipping-address {
+    padding-top: 0;
+  }
+
+  /* Cap reason cell width */
+  .reason-cell {
+    max-width: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Hide Refund status — keep Customer ID, Order ID, Reason, Return status, Action */
+  thead th:nth-child(5),
+  tbody td:nth-child(5) {
+    display: none;
+  }
+
+  .request-container {
+    padding: 20px 16px;
+  }
 }

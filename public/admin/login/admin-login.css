@@ -1,160 +1,279 @@
-body {
-  margin: 0;
-  font-family: "Quicksand", sans-serif;
-}
+/* =============================================
+   Admin Login Page
+   ============================================= */
 
-.error-container {
-  height: 20px;
-  color: red;
-  font-size: 14px;
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border: 1px solid black;
-  border-radius: 10px;
-  /* height: 480px; */
-  width: 375px;
-  padding: 10% 10%;
+* {
   box-sizing: border-box;
 }
 
-.form-title {
-  text-align: center;
-  font-weight: 700;
-  font-size: 26px;
-  margin-bottom: 40px;
+body {
+  margin: 0;
+  font-family: "Inter", "Roboto", sans-serif;
+  background-color: #f1f5f9;
+  min-height: 100vh;
 }
 
-.forgot-password,
-.signup-redirect {
-  text-align: center;
+/* ---- Two-column layout ---- */
+.main {
+  display: flex;
+  min-height: 100vh;
 }
 
-.google-button {
+/* ---- Left branding panel ---- */
+.left-section {
+  flex: 0 0 58%;
+  background-color: #0f172a;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* subtle grid pattern — shared with mobile background */
+.left-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.left-outer {
+  padding: 48px 56px;
+  position: relative;
+  z-index: 1;
+}
+
+.left-line1 {
+  font-family: "Micro 5", sans-serif;
+  font-size: clamp(72px, 10vw, 160px);
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 24px;
+  letter-spacing: -2px;
+}
+
+.left-line2 {
+  font-family: "Pixelify Sans", sans-serif;
+  font-size: clamp(14px, 1.6vw, 22px);
+  color: #94a3b8;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* ---- Right form panel ---- */
+.right-section {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid black;
-  border-radius: 5px;
-  height: 36px;
-  gap: 10px;
-  text-decoration: none;
-  color: black;
+  padding: 40px 24px;
 }
 
-.google-icon {
-  height: 20px;
-}
-
-.or {
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.or-line {
-  /* height: 20px; */
+.right-outer {
   width: 100%;
-  border-bottom: 1px grey solid;
+  max-width: 400px;
 }
 
-.or-text {
-  margin: 0 7px;
-  color: grey;
-  font-size: 14px;
+/* ---- Form card ---- */
+.form-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Logo inside the card — hidden on desktop, shown on mobile/tablet */
+.form-logo {
+  display: none;
+  font-family: "Micro 5", sans-serif;
+  font-size: 52px;
+  color: #0f172a;
+  line-height: 1;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* ---- Inputs ---- */
+#login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .input-container {
   display: flex;
   flex-direction: column;
-}
-
-.input-container input {
-  font-size: 14px;
+  gap: 5px;
 }
 
 .input-container label {
-  color: #7e869e;
   font-size: 12px;
-}
-
-.left-line1 {
-  background-image: linear-gradient(black, black);
-  font-family: "Micro 5", sans-serif;
-  font-size: 178px;
-  color: white;
-  -webkit-text-stroke-width: 20px;
-  -webkit-text-stroke-color: transparent;
-  background-clip: text;
-  padding-left: 20px;
-}
-
-.left-line2 {
-  color: rgb(255, 255, 255);
-  font-size: 24px;
-  padding-left: 10px;
-  padding-right: 140px;
-  font-family: "Pixelify sans", sans-serif;
-}
-
-.left-outer {
-  padding: 0% 5%;
-  box-sizing: border-box;
-}
-
-.left-section {
-  display: flex;
-  align-items: center;
-  width: 70%;
-  background-color: #33363f;
-}
-
-.login-button {
-  font-size: 16px;
-  width: 100%;
-  height: 36px;
-  border-radius: 5px;
-  border: 0;
-  background-color: #33363f;
-  color: white;
-  margin-bottom: 10px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-#login-form {
-  display: flex;
-  flex-direction: column;
-  /* gap: 20px; */
-}
-
-.login-form-link {
-  color: #7ea2cf;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .login-input {
-  font-size: 18px;
-  padding: 10px;
-  height: 36px;
-  box-sizing: border-box;
-  border-radius: 5px;
-  border: 1px solid black;
+  width: 100%;
+  height: 42px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #1e293b;
+  background-color: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.main {
+.login-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background-color: #ffffff;
+}
+
+/* Password wrapper */
+.password-wrapper {
+  position: relative;
   display: flex;
-}
-
-.right-section {
-  width: 30%;
-}
-
-.right-outer {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+}
+
+.password-wrapper .login-input {
+  padding-right: 40px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 18px;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: #475569;
+}
+
+/* ---- Error ---- */
+.error-container {
+  min-height: 18px;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: -8px;
+}
+
+/* ---- Submit button ---- */
+.login-button {
+  width: 100%;
+  height: 44px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1e40af;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover  { background-color: #1d4ed8; }
+.login-button:active { background-color: #1e3a8a; }
+
+/* =============================================
+   Tablet — dark background, logo inside card
+   ============================================= */
+@media (max-width: 900px) {
+  body {
+    background-color: #0f172a;
+  }
+
+  /* Apply the same grid texture to the page background */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .left-section {
+    display: none;
+  }
+
+  .main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .right-section {
+    flex: 1;
+    background-color: transparent;
+    padding: 40px 24px;
+  }
+
+  /* Show the logo inside the card */
+  .form-logo {
+    display: block;
+  }
+
+  /* Card gets a slightly darker tone to lift off the background */
+  .form-container {
+    background-color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* =============================================
+   Mobile — tighter padding
+   ============================================= */
+@media (max-width: 480px) {
+  .right-section {
+    padding: 32px 16px;
+  }
+
+  .right-outer {
+    max-width: 100%;
+  }
+
+  .form-container {
+    padding: 32px 24px;
+    border-radius: 12px;
+  }
+
+  .form-title {
+    font-size: 22px;
+  }
+
+  .form-logo {
+    font-size: 44px;
+  }
 }

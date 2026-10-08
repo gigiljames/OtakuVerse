@@ -1,0 +1,219 @@
+<%-include("../../partials/admin-template.ejs")%>
+    <title>Order Details</title>
+    <link rel="stylesheet" href="/admin/orderManagement/view-order.css" />
+  </head>
+  <body>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <%
+            const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            const paymentLabels = { cod: "Cash on delivery", razorpay: "Razorpay", wallet: "OtakuVerse Wallet" };
+            const orderDate = new Date(order.createdAt);
+            const orderDateStr = orderDate.getDate() + " " + months[orderDate.getMonth()] + " " + orderDate.getFullYear();
+            let deliveryDateStr = "—";
+            if (order.delivery_date) {
+              const d = new Date(order.delivery_date);
+              deliveryDateStr = d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+            }
+          %>
+
+          <!-- Breadcrumb -->
+          <div class="breadcrumb">
+            <a href="/admin/order-management">Orders</a>
+            <span class="material-symbols-outlined">chevron_right</span>
+            <span class="id-mono"><%= order._id %></span>
+          </div>
+
+          <!-- Page header -->
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Order Details</h1>
+              <div class="order-id-sub"><%= order._id %></div>
+            </div>
+            <% if (order.is_cancellable) { %>
+              <button class="cancel-order-button" data-id="<%= order._id %>">
+                <span class="material-symbols-outlined">cancel</span>
+                Cancel Order
+              </button>
+            <% } %>
+          </div>
+
+          <!-- Top info grid -->
+          <div class="info-grid">
+
+            <div class="section-card">
+              <div class="section-title">Order Summary</div>
+              <div class="detail-rows">
+                <div class="detail-row">
+                  <span class="detail-label">Date</span>
+                  <span class="detail-value"><%= orderDateStr %></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Delivery date</span>
+                  <span class="detail-value"><%= deliveryDateStr %></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Amount</span>
+                  <span class="detail-value amount-value">₹<%= (order.amount || 0).toFixed(2) %></span>
+                </div>
+                <% if (order.refunded_amount > 0) { %>
+                <div class="detail-row">
+                  <span class="detail-label">Refunded</span>
+                  <span class="detail-value refund-value">₹<%= order.refunded_amount.toFixed(2) %></span>
+                </div>
+                <% } %>
+                <% if (order.coupon_applied?.code) { %>
+                <div class="detail-row">
+                  <span class="detail-label">Coupon</span>
+                  <span class="detail-value coupon-chip"><%= order.coupon_applied.code %></span>
+                </div>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Payment</div>
+              <div class="detail-rows">
+                <div class="detail-row">
+                  <span class="detail-label">Method</span>
+                  <span class="detail-value"><%= paymentLabels[order.payment_type] || order.payment_type %></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Status</span>
+                  <span class="detail-value">
+                    <span class="payment-badge payment-<%= order.payment_status %>">
+                      <%= order.payment_status %>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Customer</div>
+              <div class="detail-rows">
+                <div class="detail-row">
+                  <span class="detail-label">Name</span>
+                  <span class="detail-value"><%= order.customer_id?.customer_name || 'N/A' %></span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Email</span>
+                  <span class="detail-value"><%= order.customer_id?.customer_email || '—' %></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-title">Shipping Address</div>
+              <div class="address-block">
+                <div class="address-name"><%= order.address.recipient_name %></div>
+                <div><%= order.address.apartment %>, <%= order.address.street %></div>
+                <div><%= order.address.city %>, <%= order.address.state %> — <%= order.address.pincode %></div>
+                <div class="address-phone">
+                  <span class="material-symbols-outlined">call</span>
+                  <%= order.address.phone_number %>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Order items -->
+          <div class="section-card items-card">
+            <div class="section-title">Items (<%= order.order_items.length %>)</div>
+
+            <% order.order_items.forEach((item, idx) => { %>
+              <div class="item-row" id="item-<%= item.variant_id %>">
+                <!-- Image -->
+                <div class="item-image-wrap">
+                  <% if (item.product_images && item.product_images.length > 0) { %>
+                    <img src="<%= item.product_images[0].filepath %>" alt="<%= item.product_name %>" class="item-image" />
+                  <% } else { %>
+                    <div class="item-image-placeholder">
+                      <span class="material-symbols-outlined">image_not_supported</span>
+                    </div>
+                  <% } %>
+                </div>
+
+                <!-- Info -->
+                <div class="item-info">
+                  <div class="item-name"><%= item.product_name %></div>
+                  <div class="item-meta">
+                    <span>Size: <strong><%= item.size %></strong></span>
+                    <span>Colour: <strong><%= item.colour %></strong></span>
+                    <span>Qty: <strong><%= item.quantity %></strong></span>
+                    <span>Price: <strong>₹<%= item.price %></strong></span>
+                  </div>
+                </div>
+
+                <!-- Status + controls -->
+                <div class="item-controls">
+                  <% if (item.product_status !== "cancelled") { %>
+                    <div class="status-row">
+                      <span class="item-status-label status-label-<%= item.product_status.replace(/ /g, '-') %>" id="status-label-<%= item.variant_id %>">
+                        <%= item.product_status %>
+                      </span>
+                      <button class="edit-status-btn text-btn" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">
+                        <span class="material-symbols-outlined">edit</span>
+                        Edit
+                      </button>
+                    </div>
+                    <div class="status-edit-row" id="status-edit-<%= item.variant_id %>" style="display:none;">
+                      <select class="status-select" id="status-select-<%= item.variant_id %>">
+                        <option value="processing" <%= item.product_status === 'processing' ? 'selected' : '' %>>Processing</option>
+                        <option value="shipping" <%= item.product_status === 'shipping' ? 'selected' : '' %>>Shipping</option>
+                        <option value="out for delivery" <%= item.product_status === 'out for delivery' ? 'selected' : '' %>>Out for delivery</option>
+                        <option value="delivered" <%= item.product_status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+                      </select>
+                      <button class="save-status-btn" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">Save</button>
+                      <button class="cancel-edit-btn text-btn" data-variantid="<%= item.variant_id %>">Cancel</button>
+                    </div>
+                    <% if (order.order_items.length > 1 && order.payment_status !== "failed") { %>
+                      <button class="cancel-item-btn" data-orderid="<%= order._id %>" data-variantid="<%= item.variant_id %>">
+                        Cancel item
+                      </button>
+                    <% } %>
+                  <% } else { %>
+                    <span class="item-status-label status-label-cancelled">Cancelled</span>
+                  <% } %>
+                </div>
+              </div>
+              <% if (idx < order.order_items.length - 1) { %>
+                <div class="item-divider"></div>
+              <% } %>
+            <% }) %>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
+    </script>
+    <script src="/js/view-order.js"></script>
+  </body>
+</html>

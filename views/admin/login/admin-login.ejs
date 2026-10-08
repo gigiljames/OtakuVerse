@@ -17,15 +17,19 @@
       <div class="right-section">
         <div class="right-outer">
           <div class="form-container">
+            <!-- Logo shown only on mobile/tablet -->
+            <div class="form-logo">OtakuVerse</div>
             <div class="form-title">Log in</div>
             <form id="login-form" method="POST">
               <div class="input-container">
-                <label for="email-input">Email</label>
+                <label for="email-input">Username</label>
                 <input
                   id="email-input"
                   class="login-input"
                   type="text"
                   name="username"
+                  placeholder="Enter your username"
+                  autocomplete="email"
                 />
               </div>
               <div id="email-error" class="error-container"></div>
@@ -37,6 +41,8 @@
                     class="login-input"
                     type="password"
                     name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
                   />
                   <span class="material-symbols-outlined toggle-password" aria-label="Show password">visibility_off</span>
                 </div>

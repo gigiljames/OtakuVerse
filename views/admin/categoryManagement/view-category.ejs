@@ -1,71 +1,104 @@
 <%-include("../../partials/admin-template.ejs")%>
-    <title>Category Management</title>
+    <title>Category Details</title>
     <link rel="stylesheet" href="/admin/categoryManagement/view-category.css" />
-    <%- include('../../partials/font-links.ejs') %>
   </head>
   <body>
-    <%-include("../../partials/alert.ejs")%>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <section class="cat-details">
-          <div class="title">Category Management</div>
-          <form
-            id="edit-cat-form"
-            data-id = "<%= categoryDetails._id %>"
-            method="POST"
-            enctype="multipart/form-data"
-          >
-            <div class="row">
-              <div class="col">
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Breadcrumb -->
+          <div class="breadcrumb">
+            <a href="/admin/category-management">Categories</a>
+            <span class="material-symbols-outlined">chevron_right</span>
+            <span><%= categoryDetails.category_name %></span>
+          </div>
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title"><%= categoryDetails.category_name %></h1>
+            <div class="header-actions">
+              <button type="button" id="delete-button" data-id="<%= categoryDetails._id %>">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
+              </button>
+              <input
+                class="submit-button"
+                id="confirm-button"
+                type="submit"
+                value="Save changes"
+                form="edit-cat-form"
+                disabled
+              />
+            </div>
+          </div>
+
+          <!-- Edit form card -->
+          <div class="section-card">
+            <div class="section-title">Category Details</div>
+            <form id="edit-cat-form" data-id="<%= categoryDetails._id %>" method="POST">
+              <div class="form-col">
                 <div class="input-container">
                   <label for="cat-name">Category name</label>
                   <input
                     id="cat-name"
                     type="text"
                     name="name"
-                    value="<%= categoryDetails.category_name%>"
+                    value="<%= categoryDetails.category_name %>"
+                    placeholder="Category name"
                   />
                   <div class="error-container" id="cat-name-error"></div>
                 </div>
+
                 <div class="input-container">
-                  <label for="cat-id">Category Offer</label>
+                  <label for="cat-offer">Category offer (%)</label>
                   <input
                     id="cat-offer"
                     type="text"
-                    value="<%= categoryDetails.offer%>"
+                    name="offer"
+                    value="<%= categoryDetails.offer %>"
+                    placeholder="e.g. 10"
                   />
                   <div class="error-container" id="cat-offer-error"></div>
                 </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
+
                 <div class="input-container">
                   <label for="cat-desc">Category description</label>
-                  <textarea id="cat-desc" type="text" name="desc"><%= categoryDetails.category_desc%></textarea>
+                  <textarea id="cat-desc" name="desc" placeholder="Describe this category…"><%= categoryDetails.category_desc %></textarea>
                   <div class="error-container" id="cat-desc-error"></div>
                 </div>
               </div>
-            </div>
-          </form>
-          <div class="button-group">
-            <input
-              class="confirm-button"
-              id="confirm-button"
-              type="submit"
-              value="Confirm changes"
-              form="edit-cat-form"
-              disabled
-            />
-            <button type="button" id="delete-button" data-id="<%= categoryDetails._id%>">Delete category</button>
+            </form>
           </div>
-        </section>
-      </div>
+
+        </div>
+      </main>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
+    </script>
     <script src="/js/view-category.js"></script>
   </body>
 </html>

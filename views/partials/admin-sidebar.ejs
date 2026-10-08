@@ -1,38 +1,63 @@
-<div class="sidebar sidebar-visible" id="sidebar-specific">
-  <div class="sidebar-section-1">
-    <div class="section-title">General</div>
-    <ul>
-      <li>
-        <a href="/admin/home">HOME</a>
-      </li>
-      <li>
-        <a href="/admin/category-management">CATEGORY MANAGEMENT</a>
-      </li>
-      <li>
-        <a href="/admin/coupon-management?offset=1">COUPON MANAGEMENT</a>
-      </li>
-      <li>
-        <a href="/admin/customer-management?offset=1">CUSTOMER MANAGEMENT</a>
-      </li>
-      <li>
-        <a href="/admin/order-management">ORDER MANAGEMENT</a>
-      </li>
-      <li>
-        <a href="/admin/product-management?offset=1">PRODUCT MANAGEMENT</a>
-      </li>
-      <li>
-        <a href="/admin/return-requests?offset=1">RETURN REQUESTS</a>
-      </li>
-      
-      <!-- <li>
-        <a href="/admin/wallet-management?offset=1">WALLET MANAGEMENT</a>
-      </li> -->
-      
-    </ul>
+<div class="sidebar collapsed" id="sidebar-specific">
+  <div class="sidebar-header">
+    <a href="/admin" class="sidebar-logo">OtakuVerse</a>
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
   </div>
-  <!-- <div class="sidebar-section-2">
-    <div class="section-title">Categories</div>
+
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">General</span>
     <ul>
+      <li>
+        <a href="/admin/home">
+          <span class="material-symbols-outlined">home</span>
+          <span class="link-text">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/category-management">
+          <span class="material-symbols-outlined">category</span>
+          <span class="link-text">Categories</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/coupon-management?offset=1">
+          <span class="material-symbols-outlined">local_offer</span>
+          <span class="link-text">Coupons</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/customer-management?offset=1">
+          <span class="material-symbols-outlined">group</span>
+          <span class="link-text">Customers</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/order-management">
+          <span class="material-symbols-outlined">shopping_bag</span>
+          <span class="link-text">Orders</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/product-management?offset=1">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <span class="link-text">Products</span>
+        </a>
+      </li>
+      <li>
+        <a href="/admin/return-requests?offset=1">
+          <span class="material-symbols-outlined">assignment_return</span>
+          <span class="link-text">Returns</span>
+        </a>
+      </li>
     </ul>
-  </div> -->
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="/admin/logout" class="logout-link">
+      <span class="material-symbols-outlined">logout</span>
+      <span class="link-text">Logout</span>
+    </a>
+  </div>
 </div>

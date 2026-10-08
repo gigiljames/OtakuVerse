@@ -141,6 +141,7 @@ router.patch(
 
 // ORDER MANAGEMENT
 router.get("/order-management", authMiddleware, orderManagement.getPage);
+router.get("/view-order/:orderID", authMiddleware, orderManagement.viewOrder);
 router.delete(
   "/cancel-order/:orderID",
   authMiddleware,

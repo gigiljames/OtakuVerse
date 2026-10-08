@@ -1,262 +1,259 @@
 <%-include("../../partials/admin-template.ejs")%>
-    <title>Product Management</title>
-    <link rel="stylesheet" href="/admin/admin-navbar.css" />
-    <!-- <link rel="stylesheet" href="/admin/home/admin-home.css" /> -->
+    <title>Product Details</title>
     <link rel="stylesheet" href="/admin/productManagement/view-product.css" />
   </head>
   <body>
-    <%-include("../../partials/alert.ejs")%>
-    <%- include('../../partials/admin-navbar.ejs') %>
-    <div class="main">
-      <div class="main-left">
-        <%- include('../../partials/admin-sidebar.ejs') %>
-      </div>
-      <div class="main-right">
-        <div class="main-right-inner">
-          <!-- <%= productDetails %> -->
-    <section class="product-details">
-      <div class="title-row">
-        <div class="title">Product - <%= productDetails.product_name %></div>
-      </div>
-      <hr />
-      <div class="general-info">
-        <div class="subtitle">General information</div>
-        <form
-          id="edit-form"
-          method="POST"
-          data-productid="<%=productDetails._id%>"
-        >
-          <div class="edit-form-top">
-            <div class="edit-form-left">
-              <div class="input-container">
-                <label for="name-input">Product ID</label>
-                <input
-                  class="login-input"
-                  type="text"
-                  name="id"
-                  disabled
-                  value="<%= productDetails._id %>"
-                />
-              </div>
-              <div class="error-container"></div>
-              <div class="input-container">
-                <label for="name-input">Product name</label>
-                <input
-                  id="name-input"
-                  class="login-input"
-                  type="text"
-                  name="name"
-                  value="<%= productDetails.product_name %>"
-                />
-              </div>
-              <div id="name-error" class="error-container"></div>
-              <div class="input-container">
-                <label for="price-input">Price (In Rupees)</label>
-                <input
-                  id="price-input"
-                  type="text"
-                  name="price"
-                  value="<%= productDetails.price %>"
-                />
-              </div>
-              <div id="price-error" class="error-container"></div>
-              <div class="input-container">
-                <label for="desc-input">Product description</label>
-                <textarea id="desc-input" name="desc" value="Hello">
-<%= productDetails.product_desc.trim() %></textarea>
-              </div>
-              <div id="desc-error" class="error-container"></div>
-            </div>
-            <div class="edit-form-right">
-              <div class="input-container">
-                <label for="category-input">Category</label>
-                <select id="category-input" name="category">
-                  <% categoryList.forEach((category) => { %>
-                  <%if(productDetails.category && category.category_name===productDetails.category.category_name){%>
-                  <option value="<%= category._id %>" selected>
-                    <%= category.category_name %>
-                  </option>
-                  <%}else{%>
-                  <option value="<%= category._id %>">
-                    <%= category.category_name %>
-                  </option>
-                  <%}%> <% }); %>
-                </select>
-              </div>
-              <div id="category-error" class="error-container"></div>
-              <div class="input-container">
-                <label for="discount-input">Discount (%)</label>
-                <input
-                  id="discount-input"
-                  type="text"
-                  name="discount"
-                  value="<%= productDetails.discount %>"
-                />
-              </div>
-              <div id="discount-error" class="error-container"></div>
-              <div class="input-container">
-                <label for="visibility-input">Visibility</label>
-                <select id="visibility-input" name="visibility">
-                  <option id="visibility-true" value="true">Enabled</option>
-                  <option id="visibility-false" value="false">Disabled</option>
-                </select>
-              </div>
-              <div id="visibility-error" class="error-container"></div>
-              <div class="input-container">
-                <label for="specs-input">Product Specifications</label>
-                <textarea id="specs-input" name="specs">
-<%= productDetails.product_specs.trim() %>
-                </textarea>
-              </div>
-              <div id="specs-error" class="error-container"></div>
-            </div>
+    <%- include('../../partials/alert.ejs') %>
+
+    <!-- Mobile top bar -->
+    <div class="mobile-topbar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <a href="/admin" class="mobile-logo">OtakuVerse</a>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <div class="admin-layout">
+      <%- include('../../partials/admin-sidebar.ejs') %>
+
+      <main class="main-content">
+        <div class="page-inner">
+
+          <!-- Breadcrumb -->
+          <div class="breadcrumb">
+            <a href="/admin/product-management?offset=1">Products</a>
+            <span class="material-symbols-outlined">chevron_right</span>
+            <span><%= productDetails.product_name %></span>
           </div>
-          
-        </form>
-        <div class="button-group">
-          <button class="delete-button" data-productid="<%=productDetails._id%>">Delete product</button>
-          <input
-            class="submit-button"
-            type="submit"
-            value="Save changes"
-            form="edit-form"
-          />
-        </div>
-      </div>
-      <div class="input-container product-images">
-        <label for="product-images">Add product images</label>
-        <input id="product-images" type="file" name="images" accept="image/*" />
-        <div id="image-preview" class="image-collection"></div>
-        <div id="crop-modal" style="display: none;">
-          <div class="modal-content">
-            <img id="crop-image" alt="Crop Image" />
-            <div class="crop-buttons">
-              <button id="save-crop">Save Crop</button>
-              <button id="cancel-crop">Cancel</button>
-            </div>
-          </div>
-        </div>
-        <button id="upload-images" data-id="<%=productDetails._id%>">Upload</button>
-      </div>
-      <div class="delete-images">
-        <div class="subtitle">Delete images</div>
-        <div class="image-collection">
-          <% if (productDetails.product_images ) { %>
-          <%productDetails.product_images.forEach((image, index) => { %>
-          <div class="image-card">
-            <img src="<%= image.filepath %>" alt="<%= image.filename %>" />
-            <form
-              id="delete-image-form<%= index %>"
-              method="POST"
-              action="/admin/delete-product-image/<%= productDetails._id %>/<%= image._id %>?_method=DELETE"
-            >
-              <button form="delete-image-form<%= index %>">
-                <span class="material-symbols-outlined delete-icon"
-                  >delete</span
-                >
+
+          <!-- Page header -->
+          <div class="page-header">
+            <h1 class="page-title"><%= productDetails.product_name %></h1>
+            <div class="header-actions">
+              <button class="delete-button" data-productid="<%= productDetails._id %>">
+                <span class="material-symbols-outlined">delete</span>
+                Delete
               </button>
-            </form>
+            </div>
           </div>
-          <% }); %> <% } %>
-        </div>
-      </div>
-      <div class="variants">
-        <div class="title-row">
-          <div class="subtitle">Variants</div>
-          <button class="add-button">Add Variant</button>
-        </div>
-        <%if(locals.variants){%>
-        <div class="variant-cards">
-          <%variants.variants.forEach((variant, index)=>{%>
-          <div class="variant-card">
-            <div class="variant-colour">Colour: <%=variant.colour%></div>
-            <div class="variant-size">Size: <%=variant.size%></div>
-            <div class="variant-stock-container">
-              <div class="variant-stock">
-                Stock:
-                <div class="stock-data">
-                  <%=variant.stock_quantity%>
+
+          <!-- General info section -->
+          <section class="section-card">
+            <div class="section-header-row">
+              <div class="section-title">General Information</div>
+              <input class="submit-button submit-button--inline" type="submit" value="Save changes" form="edit-form" />
+            </div>
+            <form id="edit-form" method="POST" data-productid="<%= productDetails._id %>">
+              <div class="form-grid">
+                <div class="form-col">
+                  <div class="input-container">
+                    <label>Product ID</label>
+                    <input type="text" name="id" disabled value="<%= productDetails._id %>" />
+                  </div>
+                  <div class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="name-input">Product name</label>
+                    <input id="name-input" type="text" name="name" value="<%= productDetails.product_name %>" placeholder="Product name" />
+                  </div>
+                  <div id="name-error" class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="price-input">Price (₹)</label>
+                    <input id="price-input" type="text" name="price" value="<%= productDetails.price %>" placeholder="e.g. 999" />
+                  </div>
+                  <div id="price-error" class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="desc-input">Product description</label>
+                    <textarea id="desc-input" name="desc" placeholder="Describe the product…"><%= productDetails.product_desc.trim() %></textarea>
+                  </div>
+                  <div id="desc-error" class="error-container"></div>
                 </div>
-                <input type="text" class="stock-update-input"/>
+
+                <div class="form-col">
+                  <div class="input-container">
+                    <label for="category-input">Category</label>
+                    <select id="category-input" name="category">
+                      <% categoryList.forEach((category) => { %>
+                        <option value="<%= category._id %>" <%= (productDetails.category && category.category_name === productDetails.category.category_name) ? 'selected' : '' %>>
+                          <%= category.category_name %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <div id="category-error" class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="discount-input">Discount (%)</label>
+                    <input id="discount-input" type="text" name="discount" value="<%= productDetails.discount %>" placeholder="e.g. 10" />
+                  </div>
+                  <div id="discount-error" class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="visibility-input">Visibility</label>
+                    <select id="visibility-input" name="visibility">
+                      <option id="visibility-true" value="true">Enabled</option>
+                      <option id="visibility-false" value="false">Disabled</option>
+                    </select>
+                  </div>
+                  <div id="visibility-error" class="error-container"></div>
+
+                  <div class="input-container">
+                    <label for="specs-input">Product specifications</label>
+                    <textarea id="specs-input" name="specs" placeholder="List key specs…"><%= productDetails.product_specs.trim() %></textarea>
+                  </div>
+                  <div id="specs-error" class="error-container"></div>
+                </div>
               </div>
-              <div class="stock-update-error error-container"></div>
-            </div>
-              <button
-                class="delete-variant-button"
-                data-variantid="<%=variant._id%>"
-                data-productid="<%= productDetails._id %>"
-              >
-                Delete variant
-              </button>
             </form>
-              <button
-                class="edit-stock-button"
-              >
-                Edit Stock
+          </section>
+
+          <!-- Product images section -->
+          <section class="section-card">
+            <div class="section-title">Product Images</div>
+
+            <div class="input-container image-upload-row">
+              <label for="product-images">Add image</label>
+              <input id="product-images" type="file" name="images" accept="image/*" />
+            </div>
+            <div id="image-preview" class="image-collection"></div>
+            <button id="upload-images" data-id="<%= productDetails._id %>">
+              <span class="material-symbols-outlined">upload</span>
+              Upload image
+            </button>
+
+            <!-- Crop modal (managed by view-product.js) -->
+            <div id="crop-modal" style="display: none;">
+              <div class="crop-modal-content">
+                <img id="crop-image" alt="Crop Image" />
+                <div class="crop-buttons">
+                  <button id="save-crop">Save crop</button>
+                  <button id="cancel-crop">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+            <% if (productDetails.product_images && productDetails.product_images.length > 0) { %>
+              <div class="section-subtitle">Existing images</div>
+              <div class="image-collection">
+                <% productDetails.product_images.forEach((image, index) => { %>
+                  <div class="image-card">
+                    <img src="<%= image.filepath %>" alt="<%= image.filename %>" />
+                    <button
+                      type="button"
+                      class="delete-image-btn"
+                      title="Delete image"
+                      data-action="/admin/delete-product-image/<%= productDetails._id %>/<%= image._id %>?_method=DELETE">
+                      <span class="material-symbols-outlined">delete</span>
+                    </button>
+                  </div>
+                <% }); %>
+              </div>
+            <% } %>
+          </section>
+
+          <!-- Variants section -->
+          <section class="section-card">
+            <div class="section-header-row">
+              <div class="section-title">Variants</div>
+              <button class="add-button">
+                <span class="material-symbols-outlined">add</span>
+                Add Variant
               </button>
-              <button
-                class="save-stock-button"
-                data-id = "<%=variant._id%>"
-              >
-                Save
-              </button>
-            
-          </div>
-          <%})%>
+            </div>
+
+            <% if (locals.variants && variants.variants.length > 0) { %>
+              <div class="variant-grid">
+                <% variants.variants.forEach((variant, index) => { %>
+                  <div class="variant-card">
+                    <div class="variant-attr">
+                      <span class="variant-label">Colour</span>
+                      <span class="variant-value"><%= variant.colour %></span>
+                    </div>
+                    <div class="variant-attr">
+                      <span class="variant-label">Size</span>
+                      <span class="variant-value"><%= variant.size %></span>
+                    </div>
+                    <div class="variant-attr">
+                      <span class="variant-label">Stock</span>
+                      <span class="variant-value stock-data"><%= variant.stock_quantity %></span>
+                      <input type="text" class="stock-update-input" placeholder="New qty" />
+                    </div>
+                    <div class="stock-update-error error-container"></div>
+                    <div class="variant-actions">
+                      <button class="edit-stock-button">Edit stock</button>
+                      <button class="save-stock-button" data-id="<%= variant._id %>">Save</button>
+                      <button
+                        class="delete-variant-button"
+                        data-variantid="<%= variant._id %>"
+                        data-productid="<%= productDetails._id %>">
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <p class="empty-note">No variants yet. Add one to get started.</p>
+            <% } %>
+          </section>
+
         </div>
-        <%}%>
-      </div>
-    </section>
-        </div>
-      </div>
+      </main>
     </div>
-    
+
+    <!-- Add Variant Modal -->
     <div class="add-form-outer">
-      <span class="material-symbols-outlined close-button"> close </span>
-      <div class="add-form-inner">
-        <div class="form-title">Add Variant</div>
-        <form
-          id="add-form"
-          method="POST"
-          data-productid ="<%=productDetails._id%>"
-        >
-          <div class="add-form-left">
-            <div class="input-container">
-              <label for="size-input">Size</label>
-              <input
-                id="size-input"
-                class="login-input"
-                type="text"
-                name="size"
-              />
-            </div>
-            <div id="size-error" class="error-container"></div>
-            <div class="input-container">
-              <label for="colour-input">Colour</label>
-              <input id="colour-input" type="text" name="colour" />
-            </div>
-            <div id="colour-error" class="error-container"></div>
-            <div class="input-container">
-              <label for="stock-input">Stock quantity</label>
-              <input id="stock-input" type="text" name="stock" />
-            </div>
-            <div id="stock-error" class="error-container"></div>
-            <input class="submit-button" type="submit" value="SUBMIT" />
+      <div class="add-form-inner add-form-inner--narrow">
+        <div class="modal-header">
+          <div class="form-title">Add Variant</div>
+          <button class="close-button" aria-label="Close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <form id="add-form" method="POST" data-productid="<%= productDetails._id %>">
+          <div class="input-container">
+            <label for="size-input">Size</label>
+            <input id="size-input" type="text" name="size" placeholder="e.g. M, L, XL" autocomplete="off" />
           </div>
+          <div id="size-error" class="error-container"></div>
+
+          <div class="input-container">
+            <label for="colour-input">Colour</label>
+            <input id="colour-input" type="text" name="colour" placeholder="e.g. Black, Navy Blue" autocomplete="off" />
+          </div>
+          <div id="colour-error" class="error-container"></div>
+
+          <div class="input-container">
+            <label for="stock-input">Stock quantity</label>
+            <input id="stock-input" type="text" name="stock" placeholder="e.g. 50" autocomplete="off" />
+          </div>
+          <div id="stock-error" class="error-container"></div>
+
+          <input class="submit-button" type="submit" value="Add Variant" />
         </form>
       </div>
     </div>
-    <script src="/js/view-product.js"></script>
+
     <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const mobileBtn = document.getElementById("mobile-menu-btn");
+        const sidebarToggle = document.getElementById("sidebar-toggle");
+        if (mobileBtn && sidebarToggle) {
+          mobileBtn.addEventListener("click", () => sidebarToggle.click());
+        }
+      });
       const productDetails = <%- JSON.stringify(productDetails) %>;
-      if(productDetails.is_enabled){
-        const trueVisiblity = document.getElementById("visibility-true");
-        trueVisiblity.selected = true;
-      }
-      else{
-        const falseVisiblity = document.getElementById("visibility-false");
-        falseVisiblity.selected = true;
+      if (productDetails.is_enabled) {
+        document.getElementById("visibility-true").selected = true;
+      } else {
+        document.getElementById("visibility-false").selected = true;
       }
     </script>
+    <script src="/js/view-product.js"></script>
   </body>
 </html>

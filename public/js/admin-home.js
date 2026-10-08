@@ -378,20 +378,16 @@ function updateReport(salesData, period = "Overall") {
 
 
 function updateCards(salesData) {
-  const amountCardValue = document.querySelector(".amount-container .amount");
-  const salesCardValue = document.querySelector(".sales-container .sales");
-  const discountCardValue = document.querySelector(
-    ".discount-container .discount"
-  );
-  const newUsersCardValue = document.querySelector(
-    ".new-users-container .new-users"
-  );
-  const couponDiscountValue = document.querySelector(
-    ".coupon-discount-container .coupon-discount"
-  );
-  amountCardValue.innerText = "₹ " + salesData[0].total_amount;
-  salesCardValue.innerText = salesData[0].total_sales;
-  discountCardValue.innerText = "₹ " + salesData[0].total_discount;
-  newUsersCardValue.innerText = salesData[0].total_new_users;
-  couponDiscountValue.innerText = "₹ " + salesData[0].total_coupon_discount;
+  const amountCardValue    = document.querySelector(".stat-value.amount");
+  const salesCardValue     = document.querySelector(".stat-value.sales");
+  const discountCardValue  = document.querySelector(".stat-value.discount");
+  const newUsersCardValue  = document.querySelector(".stat-value.new-users");
+  const couponDiscountValue = document.querySelector(".stat-value.coupon-discount");
+  if (!salesData || !salesData[0]) return;
+  const d = salesData[0];
+  if (amountCardValue)     amountCardValue.innerText     = "₹ " + d.total_amount;
+  if (salesCardValue)      salesCardValue.innerText      = d.total_sales;
+  if (discountCardValue)   discountCardValue.innerText   = "₹ " + d.total_discount;
+  if (newUsersCardValue)   newUsersCardValue.innerText   = d.total_new_users;
+  if (couponDiscountValue) couponDiscountValue.innerText = "₹ " + d.total_coupon_discount;
 }
